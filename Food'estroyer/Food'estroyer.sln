@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35431.28
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Food'estroyer", "Food'estroyer\Food'estroyer.vcxproj", "{067AD77C-6480-4652-A811-04917E7E060B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{067AD77C-6480-4652-A811-04917E7E060B}.Debug|x64.ActiveCfg = Debug|x64
+		{067AD77C-6480-4652-A811-04917E7E060B}.Debug|x64.Build.0 = Debug|x64
+		{067AD77C-6480-4652-A811-04917E7E060B}.Debug|x86.ActiveCfg = Debug|Win32
+		{067AD77C-6480-4652-A811-04917E7E060B}.Debug|x86.Build.0 = Debug|Win32
+		{067AD77C-6480-4652-A811-04917E7E060B}.Release|x64.ActiveCfg = Release|x64
+		{067AD77C-6480-4652-A811-04917E7E060B}.Release|x64.Build.0 = Release|x64
+		{067AD77C-6480-4652-A811-04917E7E060B}.Release|x86.ActiveCfg = Release|Win32
+		{067AD77C-6480-4652-A811-04917E7E060B}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {142019F0-8F12-4EC0-A022-96F8B77C3A00}
+	EndGlobalSection
+EndGlobal
