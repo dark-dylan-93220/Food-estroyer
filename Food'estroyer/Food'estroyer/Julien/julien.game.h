@@ -25,7 +25,8 @@ private:
 	bool m_isRunning;
 	sf::WindowBase windowBase;
 	sf::RenderWindow window;
-	
+	bool startUpScreenOn = true;
+
 private:
 	void setupGraphicalElements();
 	void pollEvents();

@@ -135,6 +135,7 @@
   <ItemGroup>
     <ClCompile Include="Dylan\game.cpp" />
     <ClCompile Include="Dylan\main.cpp" />
+    <ClCompile Include="julien.ennemi.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>

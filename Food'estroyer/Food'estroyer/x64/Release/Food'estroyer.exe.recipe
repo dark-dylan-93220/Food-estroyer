@@ -2,11 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-<<<<<<< HEAD
       <FullPath>C:\Users\jrodrigues\Source\Repos\dark-dylan-93220\Food-estroyer\Food'estroyer\x64\Release\Food'estroyer.exe</FullPath>
-=======
-      <FullPath>C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\x64\Release\Food'estroyer.exe</FullPath>
->>>>>>> 362db4e718e7ff5750e929378a4ae90996032b12
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />
