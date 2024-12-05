@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 PlatformToolSet=v143:VCToolArchitecture=Native64Bit:VCToolsVersion=14.36.32532:TargetPlatformVersion=10.0.26100.0:
 Release|x64|C:\Users\jrodrigues\Source\Repos\dark-dylan-93220\Food-estroyer\Food'estroyer\|
+=======
+PlatformToolSet=v143:VCToolArchitecture=Native64Bit:VCToolsVersion=14.42.34433:TargetPlatformVersion=10.0.26100.0:
+Release|x64|C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\|
+>>>>>>> 362db4e718e7ff5750e929378a4ae90996032b12
