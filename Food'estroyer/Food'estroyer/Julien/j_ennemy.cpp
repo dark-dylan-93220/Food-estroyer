@@ -1,11 +1,12 @@
-#include "julien.game.h" //changer en j.game.h après commit
+#include "j.game.h"
+//#include <SFML/Graphics/RectangleShape.hpp>
 
 //in j.ennemi.h
 class Ennemy : public sf::CircleShape {
 protected:
 	bool alive = true;
-	float posX, posY;
-	float size;
+	/*float posX, posY;
+	float size;*/
 	Ennemy();
 };
 
@@ -25,16 +26,22 @@ private:
 };
 //no more in j.ennemi.h
 
-Ennemy::Ennemy(float x, float y, float s) : posX(x), posY(y), size(s) :
 
-Shooters::Shooters(float x, float y, float s) : Ennemy(x,y,s) {
-	this->setRadius(size);
+
+
+
+Ennemy::Ennemy(float x, float y, float s) : {
+	this->setPosition(x, y);
+	this->setRadius(s);
 }
+
+Shooters::Shooters(float x, float y, float s) : Ennemy(x, y, s) {}
 
 Shooters::shoot() {
 	sf::RectangleShape projectile(sf::Vector2f(5, 1));
 	projectile.setPosition(posX - size/2, posY);
 	projectile.setFillColor(sf::Color::Red);
+	projectiles.push_back(projectile);
 
 
 }

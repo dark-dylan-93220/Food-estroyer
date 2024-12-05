@@ -1,4 +1,4 @@
-#include "game.h"
+#include "j.game.h"
 
 /// THIS FILE CONTAINS THE GLOBAL FUNCTIONS USED EVERYWHERE IN THE GAME
 
