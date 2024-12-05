@@ -1,3 +1,8 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1119,5): warning MSB8027: Deux ou plusieurs fichiers avec le nom main.cpp généreront des sorties vers le même emplacement. Cela peut entraîner une génération incorrecte. Les fichiers impliqués sont Dylan\main.cpp, main.cpp.
-  julien.ennemi.cpp
-c1xx : fatal  error C1083: Impossible d'ouvrir le fichier source : 'julien.ennemi.cpp' : No such file or directory
+x64\Release\main.obj : warning LNK4042: objet spécifié plus d'une fois ; définitions supplémentaires ignorées
+  Génération de code en cours
+  0 of 153 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Fin de la génération du code
+  Food'estroyer.vcxproj -> C:\Users\jrodrigues\Source\Repos\dark-dylan-93220\Food-estroyer\Food'estroyer\x64\Release\Food'estroyer.exe
