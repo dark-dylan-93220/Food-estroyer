@@ -10,7 +10,7 @@ public:
 	float speed;
 	float atkPower;
 
-	Player() {
+	Player() : hp(100), speed(20), atkPower(10) {
 		this->setRadius(30);
 		this->setPosition(50,540);
 	}

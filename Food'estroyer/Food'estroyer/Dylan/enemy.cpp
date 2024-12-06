@@ -1,60 +1,79 @@
 #include "game.h"
+#include "enemy.h"
 
+//sf::Clock Clock;
 std::vector<sf::RectangleShape> projectiles;
+std::vector<sf::CircleShape> vectorShooters;
+//std::chrono::steady_clock::time_point beginTime = std::chrono::high_resolution_clock::now();
+//std::chrono::duration<float> timeElapsed;
 
-class Enemy : public sf::CircleShape {
-protected:
-	bool alive = true;
-	Enemy(float x, float y, float s) {
-		this->setPosition(x, y);
-		this->setRadius(s);
-	}
-};
+Enemy::Enemy(float x, float y, char s) : size(s){
+	this->setPosition(x, y);
+	if (s == 's') this->setRadius(10);
+	else if (s == 'm') this->setRadius(30);
+	else if (s == 'l') this->setRadius(50);
+}
 
-class Normals : public Enemy {
-public:
-	Normals(float x, float y, float s) : Enemy(x, y, s) {}
 
-	void moovement(){
-		move(-1, 0);                                                                  //valeurs à modifier
-	}
-};
+Normals::Normals(float x, float y, float s) : Enemy(x, y, s) {}
 
-class Shooter : public Enemy {
-public:
-	float moveDir = 1;
-	Shooter(float x, float y, float s) : Enemy(x, y, s) {}
+void Normals::behavior() {
+	move(-1, 0);
+}
 
-	void moovement() { //inverser direction si on touche un bord
-		move(0, moveDir);
-		if (getPosition().y + getRadius() >= 1080                                     //pas réussi un WINDOW_WIDTH dans game.cpp
-			|| getPosition().y + getRadius() <= 1080)
-			moveDir = -moveDir;
-	}
-	void shoot() {
-		sf::RectangleShape projectile(sf::Vector2f(5, 1));
-		projectile.setPosition(getPosition().x - getRadius() / 2, getPosition().y);
-		projectile.setFillColor(sf::Color::Red);
-		projectiles.push_back(projectile);
-	}
-};
 
-class Elite : public Enemy {
-public:
-	int trackCooldown = 0;
-	Elite(float x, float y, float s) : Enemy(x, y, s) {}
+Shooter::Shooter(float x, float y, float s) : Enemy(x, y, s) {}
 
-	void moovement(sf::CircleShape player){ //pour tracker le personnage après un délai
-		if (getPosition().x > player.getPosition().x || getPosition().x < player.getPosition().x) {
-			trackCooldown++;
+void Shooter::behavior(std::vector<sf::Vector2f> shooterPositions) { //inverser direction si on touche un bord
+	int index;
+	occupied = shooterPositions;
+	while (!pFound) {
+		index = rand() % occupied.size();
+		pChoice = occupied[index];
+		for (sf::CircleShape &shooter : vectorShooters) {
+			if (shooter.getPosition() != pChoice) {
+				if (pChoice.x < getPosition().x) moveDirX = -1;
+				if (pChoice.x > getPosition().x) moveDirX = 1;
+				if (pChoice.y < getPosition().y) moveDirY = -1;
+				if (pChoice.y > getPosition().y) moveDirY = 1;
+				pFound = true;
+			}
 		}
-		if (trackCooldown > 10) { //à varier selon l'agressivité voulue
-			if (getPosition().x > player.getPosition().x) move(-1, 0);
-			else if (getPosition().x < player.getPosition().x) move(1, 0);
-			else { trackCooldown = 0; }
-		} 
+		occupied.erase(occupied.begin() + index);
+		if (occupied.size() == 0) pFound = true;         // sortir si aucun des emplacements n'est libre
 	}
-};
+
+	if(getPosition() != pChoice) move(moveDirX, moveDirY);
+	else {
+		if (shootCD == 20) {                                                 //ici : varier le nombre de boucle pour que les ennemis shoot +ou- vite
+			sf::RectangleShape projectile(sf::Vector2f(5, 1));
+			projectile.setPosition(getPosition().x - getRadius(), getPosition().y);
+			projectile.setFillColor(sf::Color::Yellow);
+			projectiles.push_back(projectile);
+			shootCD = 0;
+		}
+		else { shootCD++; }
+	}
+}
+
+
+Elite::Elite(float x, float y, float s) : Enemy(x, y, s) {}
+
+void Elite::behavior(sf::CircleShape player){ //pour tracker le personnage après un délai
+	if (getPosition().y > player.getPosition().y || getPosition().y < player.getPosition().y) {
+		trackCooldown++;
+	}
+	if (trackCooldown > 10) { //à varier selon l'agressivité voulue
+		if (getPosition().y > player.getPosition().y) move(-1, 0);
+		else if (getPosition().y < player.getPosition().y) move(1, 0);
+		else { trackCooldown = 0; }
+	} 
+	sf::RectangleShape projectile(sf::Vector2f(5, 1));
+	projectile.setPosition(getPosition().x - getRadius(), getPosition().y);
+	projectile.setFillColor(sf::Color::Red);
+	projectiles.push_back(projectile);
+}
+
 
 
 
