@@ -13,7 +13,10 @@ namespace { // GLOBAL VARIABLES OF THIS FILE HERE
 	sf::Color DARK_THEME;
 	sf::Color LIGHT_GRAY;
 	sf::Color LIGHT_RED;
+	sf::Color LIGHT_GREEN;
+	sf::Color LIGHT_YELLOW;
 	// FONTS
+	sf::Font FPSFont;
 	sf::Font puppy;
 	sf::Font alien;
 	sf::Font graffitiBorders;
@@ -21,6 +24,8 @@ namespace { // GLOBAL VARIABLES OF THIS FILE HERE
 	sf::Font score;
 	sf::Font scoreBold;
 	// TEXTS
+	// FPS
+	sf::Text FPSText;
 	// Start-up screen
 	sf::Text playText;
 	sf::Text shopText;
@@ -46,6 +51,8 @@ namespace { // GLOBAL VARIABLES OF THIS FILE HERE
 	sf::Text pauseFPS120Text;
 	sf::Text pauseFPS240Text;
 	sf::Text pauseFPS360Text;
+	sf::Text pauseFPSVsyncText;
+	sf::Text pauseFPSMaxText;
 	sf::Text pauseLanguageFRText;
 	sf::Text pauseLanguageENText;
 	// MUSICS
@@ -93,17 +100,23 @@ Game::Game() :
 	windowBase(sf::VideoMode(modes[0].width, modes[0].height), "Base"),     // To get relative positions to the native resolution if needed
 	window    (sf::VideoMode(modes[0].width, modes[0].height), "Food'estroyer", sf::Style::Fullscreen)
 {
+	f_ElapsedTime = 0.f;
 	m_isRunning = true;
 	windowBase.setVisible(false);
 	window.setFramerateLimit(60);
+	startingTimePoint = std::chrono::high_resolution_clock::now();
+	currentTimePoint = startingTimePoint;
 }
 
 void Game::setupGraphicalElements() {
 	// COLORS
 	DARK_THEME = sf::Color(30, 30, 30);
 	LIGHT_GRAY = sf::Color(175, 175, 175);
-	LIGHT_RED = sf::Color(230, 30, 30, 180);
+	LIGHT_RED = sf::Color(230, 30, 30);
+	LIGHT_GREEN = sf::Color(30, 230, 20);
+	LIGHT_YELLOW = sf::Color(238, 255, 0);
 	// FONTS
+	FPSFont.loadFromFile          ("Dylan/Assets/Fonts/FPS.TTF");
 	puppy.loadFromFile            ("Dylan/Assets/Fonts/FriskyPuppy.ttf");
 	alien.loadFromFile            ("Dylan/Assets/Fonts/alienAlphabet.ttf");
 	graffitiBorders.loadFromFile  ("Dylan/Assets/Fonts/graffitiBorders.otf");
@@ -113,7 +126,7 @@ void Game::setupGraphicalElements() {
 	// MUSICS
 	// SOUNDS
 	// IMAGES
-	pieCursorImg.loadFromFile("Dylan/Assets/Images/pieCursor.png");
+	pieCursorImg.loadFromFile("Dylan/Assets/Images/pieCursorFromUndertale.png");
 	window.setIcon(pieCursorImg.getSize().x, pieCursorImg.getSize().y, pieCursorImg.getPixelsPtr());
 	// TEXTURES
 	bgStartUpScreen.loadFromFile("Dylan/Assets/Images/bgStartUpScreen.jpg");
@@ -129,7 +142,7 @@ void Game::setupGraphicalElements() {
 	menuPauseTopBar.setOutlineColor(sf::Color::Black);
 	menuPauseTopBarResolution.setSize(sf::Vector2f(menuPauseTopBar.getSize().x / 4.f, menuPauseTopBar.getSize().y));
 	menuPauseTopBarResolution.setPosition(menuPauseTopBar.getPosition());
-	menuPauseTopBarResolution.setFillColor(sf::Color(LIGHT_GRAY));
+	menuPauseTopBarResolution.setFillColor(sf::Color::Transparent);
 	menuPauseTopBarFPS.setSize(menuPauseTopBarResolution.getSize());
 	menuPauseTopBarFPS.setPosition(sf::Vector2f(menuPauseTopBarResolution.getPosition().x + menuPauseTopBarResolution.getLocalBounds().width, menuPauseTopBar.getPosition().y));
 	menuPauseTopBarFPS.setFillColor(sf::Color::Transparent);
@@ -151,23 +164,38 @@ void Game::setupGraphicalElements() {
 	settingsIconSprite.setTexture(settingsIcon);
 	settingsIconSprite.setPosition(sf::Vector2f(20.f, 20.f));
 	// TEXTS
+	// FPS
+	FPSText.setFont(FPSFont);
+	FPSText.setCharacterSize(12);
+	FPSText.setFillColor(sf::Color::Black);
+	FPSText.setString("FPS : 60.00");
+	FPSText.setPosition(sf::Vector2f((window.getSize().x / 2) - (FPSText.getLocalBounds().width / 2), FPSText.getLocalBounds().height));
 	playText.setFont(puppy);
 	playText.setCharacterSize(40);
-	playText.setString("Play");
+	if (language == "EN")
+		playText.setString("Play");
+	else if (language == "FR")
+		playText.setString("Jouer");
 	playText.setFillColor(sf::Color::White);
 	playText.setPosition(sf::Vector2f(((window.getSize().x / 2) - (playText.getLocalBounds().width / 2)), (window.getSize().y / 2) - 70.f));
 	playText.setOutlineThickness(1);
 	playText.setOutlineColor(sf::Color(DARK_THEME));
 	shopText.setFont(puppy);
 	shopText.setCharacterSize(40);
-	shopText.setString("Shop");
+	if (language == "EN")
+		shopText.setString("Shop");
+	else if (language == "FR")
+		shopText.setString("Boutique");
 	shopText.setFillColor(sf::Color::White);
 	shopText.setPosition(sf::Vector2f(((window.getSize().x / 2) - (shopText.getLocalBounds().width / 2)), (window.getSize().y / 2)));
 	shopText.setOutlineThickness(1);
 	shopText.setOutlineColor(sf::Color(DARK_THEME));
 	quitText.setFont(puppy);
 	quitText.setCharacterSize(40);
-	quitText.setString("Quit");
+	if (language == "EN")
+		quitText.setString("Quit");
+	else if (language == "FR")
+		quitText.setString("Quitter");
 	quitText.setFillColor(sf::Color::White);
 	quitText.setPosition(sf::Vector2f(((window.getSize().x / 2) - (quitText.getLocalBounds().width / 2)), (window.getSize().y / 2) + 70.f));
 	quitText.setOutlineThickness(1);
@@ -176,11 +204,16 @@ void Game::setupGraphicalElements() {
 	copyright.setCharacterSize(23);
 	copyright.setString("Dylan Hollemaert & Julien Rodrigues | 2024");
 	copyright.setFillColor(sf::Color::White);
+	copyright.setOutlineThickness(1);
+	copyright.setOutlineColor(sf::Color(DARK_THEME));
 	copyright.setPosition(sf::Vector2f(((window.getSize().x / 2) - (copyright.getLocalBounds().width / 2)), window.getSize().y - 45.f));
 	// Settings menu
 	pauseTopBarResolutionText.setFont(puppy);
 	pauseTopBarResolutionText.setCharacterSize(40);
-	pauseTopBarResolutionText.setString("Resolution");
+	if (language == "EN")
+		pauseTopBarResolutionText.setString("Resolution");
+	else if (language == "FR")
+		pauseTopBarResolutionText.setString("Résolution");
 	pauseTopBarResolutionText.setFillColor(sf::Color::White);
 	pauseTopBarResolutionText.setPosition(sf::Vector2f(menuPauseTopBarResolution.getPosition().x + (menuPauseTopBarResolution.getLocalBounds().width * 0.5f) - (pauseTopBarResolutionText.getLocalBounds().width * 0.5f) - 8.f, menuPauseTopBarResolution.getPosition().y + (menuPauseTopBarResolution.getLocalBounds().height * 0.5f) - (pauseTopBarResolutionText.getLocalBounds().height * 0.5f) - 8.f));
 	pauseTopBarResolutionText.setOutlineThickness(1);
@@ -194,14 +227,20 @@ void Game::setupGraphicalElements() {
 	pauseTopBarFPSText.setOutlineColor(sf::Color(DARK_THEME));
 	pauseTopBarColorThemeText.setFont(puppy);
 	pauseTopBarColorThemeText.setCharacterSize(40);
-	pauseTopBarColorThemeText.setString("Theme");
+	if (language == "EN")
+		pauseTopBarColorThemeText.setString("Theme");
+	else if (language == "FR")
+		pauseTopBarColorThemeText.setString("Thème");
 	pauseTopBarColorThemeText.setFillColor(sf::Color::White);
 	pauseTopBarColorThemeText.setPosition(sf::Vector2f(menuPauseTopBarColorTheme.getPosition().x + (menuPauseTopBarColorTheme.getLocalBounds().width * 0.5f) - (pauseTopBarColorThemeText.getLocalBounds().width * 0.5f) - 8.f, pauseTopBarResolutionText.getPosition().y));
 	pauseTopBarColorThemeText.setOutlineThickness(1);
 	pauseTopBarColorThemeText.setOutlineColor(sf::Color(DARK_THEME));
 	pauseTopBarLanguageText.setFont(puppy);
 	pauseTopBarLanguageText.setCharacterSize(40);
-	pauseTopBarLanguageText.setString("Language");
+	if (language == "EN")
+		pauseTopBarLanguageText.setString("Language");
+	else if (language == "FR")
+		pauseTopBarLanguageText.setString("Langue");
 	pauseTopBarLanguageText.setFillColor(sf::Color::White);
 	pauseTopBarLanguageText.setPosition(sf::Vector2f(menuPauseTopBarLanguage.getPosition().x + (menuPauseTopBarLanguage.getLocalBounds().width * 0.5f) - (pauseTopBarLanguageText.getLocalBounds().width * 0.5f) - 8.f, pauseTopBarResolutionText.getPosition().y));
 	pauseTopBarLanguageText.setOutlineThickness(1);
@@ -284,8 +323,61 @@ void Game::setupGraphicalElements() {
 	pauseResolutionMode8Text.setPosition (sf::Vector2f(pauseTopBarResolutionText.getPosition().x, menuPauseContent.getPosition().y + (window.getSize().x * 0.26f)));
 	pauseResolutionMode9Text.setPosition (sf::Vector2f(pauseTopBarResolutionText.getPosition().x, menuPauseContent.getPosition().y + (window.getSize().x * 0.29f)));
 	pauseResolutionMode10Text.setPosition(sf::Vector2f(pauseTopBarResolutionText.getPosition().x, menuPauseContent.getPosition().y + (window.getSize().x * 0.32f)));
+	pauseFPS60Text.setFont(puppy);
+	pauseFPS120Text.setFont(puppy);
+	pauseFPS240Text.setFont(puppy);
+	pauseFPS360Text.setFont(puppy);
+	pauseFPSVsyncText.setFont(puppy);
+	pauseFPSMaxText.setFont(puppy);
+	pauseFPS60Text.setCharacterSize(40);
+	pauseFPS120Text.setCharacterSize(40);
+	pauseFPS240Text.setCharacterSize(40);
+	pauseFPS360Text.setCharacterSize(40);
+	pauseFPSVsyncText.setCharacterSize(40);
+	pauseFPSMaxText.setCharacterSize(40);
+	pauseFPS60Text.setOutlineThickness(1);
+	pauseFPS120Text.setOutlineThickness(1);
+	pauseFPS240Text.setOutlineThickness(1);
+	pauseFPS360Text.setOutlineThickness(1);
+	pauseFPSVsyncText.setOutlineThickness(1);
+	pauseFPSMaxText.setOutlineThickness(1);
+	pauseFPS60Text.setOutlineColor(DARK_THEME);
+	pauseFPS120Text.setOutlineColor(DARK_THEME);
+	pauseFPS240Text.setOutlineColor(DARK_THEME);
+	pauseFPS360Text.setOutlineColor(DARK_THEME);
+	pauseFPSVsyncText.setOutlineColor(DARK_THEME);
+	pauseFPSMaxText.setOutlineColor(DARK_THEME);
+	pauseFPS60Text.setString("60 FPS");
+	pauseFPS120Text.setString("120 FPS");
+	pauseFPS240Text.setString("240 FPS");
+	pauseFPS360Text.setString("360 FPS");
+	pauseFPSVsyncText.setString("V-SYNC");
+	if (language == "EN")
+		pauseFPSMaxText.setString("Limitless");
+	else if (language == "FR")
+		pauseFPSMaxText.setString("Pas de limite");
+	pauseFPS60Text.setPosition(sf::Vector2f(pauseTopBarFPSText.getPosition().x - (window.getSize().x * 0.02f), pauseResolutionMode0Text.getPosition().y));
+	pauseFPS120Text.setPosition(sf::Vector2f(pauseTopBarFPSText.getPosition().x - (window.getSize().x * 0.02f), pauseResolutionMode2Text.getPosition().y));
+	pauseFPS240Text.setPosition(sf::Vector2f(pauseTopBarFPSText.getPosition().x - (window.getSize().x * 0.02f), pauseResolutionMode4Text.getPosition().y));
+	pauseFPS360Text.setPosition(sf::Vector2f(pauseTopBarFPSText.getPosition().x - (window.getSize().x * 0.02f), pauseResolutionMode6Text.getPosition().y));
+	pauseFPSVsyncText.setPosition(sf::Vector2f(pauseTopBarFPSText.getPosition().x-(window.getSize().x * 0.02f), pauseResolutionMode8Text.getPosition().y));
+	pauseFPSMaxText.setPosition(sf::Vector2f(pauseTopBarFPSText.getPosition().x - (window.getSize().x * 0.02f), pauseResolutionMode10Text.getPosition().y));
+	pauseLanguageENText.setFont(puppy);
+	pauseLanguageENText.setCharacterSize(40);
+	pauseLanguageENText.setString("English");
+	pauseLanguageENText.setFillColor(sf::Color::White);
+	pauseLanguageENText.setOutlineThickness(1);
+	pauseLanguageENText.setOutlineColor(DARK_THEME);
+	pauseLanguageENText.setPosition(sf::Vector2f(pauseTopBarLanguageText.getPosition().x, pauseResolutionMode0Text.getPosition().y));
+	pauseLanguageFRText.setFont(puppy);
+	pauseLanguageFRText.setCharacterSize(40);
+	pauseLanguageFRText.setString("Français");
+	pauseLanguageFRText.setFillColor(sf::Color::White);
+	pauseLanguageFRText.setOutlineThickness(1);
+	pauseLanguageFRText.setOutlineColor(DARK_THEME);
+	pauseLanguageFRText.setPosition(sf::Vector2f(pauseTopBarLanguageText.getPosition().x, pauseResolutionMode2Text.getPosition().y));
 	// CURSORS
-	pie.loadFromPixels(pieCursorImg.getPixelsPtr(), pieCursorImg.getSize(), {1,33});
+	pie.loadFromPixels(pieCursorImg.getPixelsPtr(), pieCursorImg.getSize(), {(pieCursorImg.getSize().x / 2), (pieCursorImg.getSize().y / 2)});
 }
 
 void Game::pollEvents() {
@@ -298,11 +390,11 @@ void Game::pollEvents() {
 	case sf::Event::MouseMoved:
 		if (startUpScreenOn) {
 			if (playText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				playText.setFillColor(LIGHT_GRAY);
+				playText.setFillColor(LIGHT_GREEN);
 			else
 				playText.setFillColor(sf::Color::White);
 			if (shopText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				shopText.setFillColor(LIGHT_GRAY);
+				shopText.setFillColor(LIGHT_YELLOW);
 			else
 				shopText.setFillColor(sf::Color::White);
 			if (quitText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
@@ -310,7 +402,7 @@ void Game::pollEvents() {
 			else
 				quitText.setFillColor(sf::Color::White);
 			if (settingsIconSprite.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				settingsIconSprite.setColor(sf::Color::Red); /* Crash se produisant quand on change la couleur ici en couleur customisée */
+				settingsIconSprite.setColor(LIGHT_GRAY);
 			else
 				settingsIconSprite.setColor(sf::Color::White);
 		}
@@ -377,40 +469,142 @@ void Game::pollEvents() {
 				pauseResolutionMode10Text.setFillColor(LIGHT_GRAY);
 			else
 				pauseResolutionMode10Text.setFillColor(sf::Color::White);
+			// FPS SETTINGS
+			if (pauseFPS60Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+				pauseFPS60Text.setFillColor(LIGHT_GRAY);
+			else
+				pauseFPS60Text.setFillColor(sf::Color::White);
+			if (pauseFPS120Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+				pauseFPS120Text.setFillColor(LIGHT_GRAY);
+			else
+				pauseFPS120Text.setFillColor(sf::Color::White);
+			if (pauseFPS240Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+				pauseFPS240Text.setFillColor(LIGHT_GRAY);
+			else
+				pauseFPS240Text.setFillColor(sf::Color::White);
+			if (pauseFPS360Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+				pauseFPS360Text.setFillColor(LIGHT_GRAY);
+			else
+				pauseFPS360Text.setFillColor(sf::Color::White);
+			if (pauseFPSVsyncText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+				pauseFPSVsyncText.setFillColor(LIGHT_GRAY);
+			else
+				pauseFPSVsyncText.setFillColor(sf::Color::White);
+			if (pauseFPSMaxText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+				pauseFPSMaxText.setFillColor(LIGHT_GRAY);
+			else
+				pauseFPSMaxText.setFillColor(sf::Color::White);
+			// LANGUAGE SETTINGS
+			if (pauseLanguageENText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+				pauseLanguageENText.setFillColor(LIGHT_GRAY);
+			else
+				pauseLanguageENText.setFillColor(sf::Color::White);
+			if (pauseLanguageFRText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+				pauseLanguageFRText.setFillColor(LIGHT_GRAY);
+			else
+				pauseLanguageFRText.setFillColor(sf::Color::White);
 		}
 		break;
 	case sf::Event::MouseButtonPressed:
 		if (event.mouseButton.button == sf::Mouse::Left) {
-			if (settingsScreenOn 
-				&& !menuPauseContent.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y) 
-				&& !menuPauseTopBar.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) 
-			{
-				settingsScreenOn = false;
-				startUpScreenOn = true;
-				settingsIconSprite.setColor(sf::Color::White);
+			if (settingsScreenOn) {
+				if (!menuPauseContent.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y) && !menuPauseTopBar.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					settingsScreenOn = false;
+					startUpScreenOn = true;
+					settingsIconSprite.setColor(sf::Color::White);
+				}
+				if (pauseResolutionMode0Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					window.create(sf::VideoMode(modes[0].width, modes[0].height), "Food'estroyer", sf::Style::Fullscreen);
+					window.setFramerateLimit(currentFramerateLimit);
+					setupGraphicalElements();
+				}
+				if (pauseResolutionMode1Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					window.create(sf::VideoMode(modes[1].width, modes[1].height), "Food'estroyer", sf::Style::Default);
+					window.setFramerateLimit(currentFramerateLimit);
+					setupGraphicalElements();
+				}
+				if (pauseResolutionMode2Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					window.create(sf::VideoMode(modes[2].width, modes[2].height), "Food'estroyer", sf::Style::Default);
+					window.setFramerateLimit(currentFramerateLimit);
+					setupGraphicalElements();
+				}
+				if (pauseResolutionMode3Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					window.create(sf::VideoMode(modes[3].width, modes[3].height), "Food'estroyer", sf::Style::Default);
+					window.setFramerateLimit(currentFramerateLimit);
+					setupGraphicalElements();
+				}
+				if (pauseResolutionMode4Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					window.create(sf::VideoMode(modes[4].width, modes[4].height), "Food'estroyer", sf::Style::Default);
+					window.setFramerateLimit(currentFramerateLimit);
+					setupGraphicalElements();
+				}
+				if (pauseResolutionMode5Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					window.create(sf::VideoMode(modes[5].width, modes[5].height), "Food'estroyer", sf::Style::Default);
+					window.setFramerateLimit(currentFramerateLimit);
+					setupGraphicalElements();
+				}
+				if (pauseResolutionMode6Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					window.create(sf::VideoMode(modes[6].width, modes[6].height), "Food'estroyer", sf::Style::Default);
+					window.setFramerateLimit(currentFramerateLimit);
+					setupGraphicalElements();
+				}
+				if (pauseResolutionMode7Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					window.create(sf::VideoMode(modes[7].width, modes[7].height), "Food'estroyer", sf::Style::Default);
+					window.setFramerateLimit(currentFramerateLimit);
+					setupGraphicalElements();
+				}
+				if (pauseResolutionMode8Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					window.create(sf::VideoMode(modes[8].width, modes[8].height), "Food'estroyer", sf::Style::Default);
+					window.setFramerateLimit(currentFramerateLimit);
+					setupGraphicalElements();
+				}
+				if (pauseResolutionMode9Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					window.create(sf::VideoMode(modes[9].width, modes[9].height), "Food'estroyer", sf::Style::Default);
+					window.setFramerateLimit(currentFramerateLimit);
+					setupGraphicalElements();
+				}
+				if (pauseResolutionMode10Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					window.create(sf::VideoMode(modes[10].width, modes[10].height), "Food'estroyer", sf::Style::Default);
+					window.setFramerateLimit(currentFramerateLimit);
+					setupGraphicalElements();
+				}
+				if (pauseFPS60Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					window.setVerticalSyncEnabled(false);
+					currentFramerateLimit = 60;
+					window.setFramerateLimit(currentFramerateLimit);
+				}
+				if (pauseFPS120Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					window.setVerticalSyncEnabled(false);
+					currentFramerateLimit = 120;
+					window.setFramerateLimit(currentFramerateLimit);
+				}
+				if (pauseFPS240Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					window.setVerticalSyncEnabled(false);
+					currentFramerateLimit = 240;
+					window.setFramerateLimit(currentFramerateLimit);
+				}
+				if (pauseFPS360Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					window.setVerticalSyncEnabled(false);
+					currentFramerateLimit = 360;
+					window.setFramerateLimit(currentFramerateLimit);
+				}
+				if (pauseFPSVsyncText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					window.setVerticalSyncEnabled(true);
+				}
+				if (pauseFPSMaxText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					window.setVerticalSyncEnabled(false);
+					currentFramerateLimit = 9999;
+					window.setFramerateLimit(currentFramerateLimit);
+				}
+				if (pauseLanguageENText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y) && language != "EN") {
+					language = "EN";
+					setupGraphicalElements();
+				}
+				if (pauseLanguageFRText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y) && language != "FR") {
+					language = "FR";
+					setupGraphicalElements();
+				}
 			}
-			if (settingsScreenOn && pauseResolutionMode0Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
-				window.setSize(sf::Vector2u(modes[0].width, modes[0].height));
-			if (settingsScreenOn && pauseResolutionMode1Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
-				window.setSize(sf::Vector2u(modes[1].width, modes[1].height));
-			if (settingsScreenOn && pauseResolutionMode2Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
-				window.setSize(sf::Vector2u(modes[2].width, modes[2].height));
-			if (settingsScreenOn && pauseResolutionMode3Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
-				window.setSize(sf::Vector2u(modes[3].width, modes[3].height));
-			if (settingsScreenOn && pauseResolutionMode4Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
-				window.setSize(sf::Vector2u(modes[4].width, modes[4].height));
-			if (settingsScreenOn && pauseResolutionMode5Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
-				window.setSize(sf::Vector2u(modes[5].width, modes[5].height));
-			if (settingsScreenOn && pauseResolutionMode6Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
-				window.setSize(sf::Vector2u(modes[6].width, modes[6].height));
-			if (settingsScreenOn && pauseResolutionMode7Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
-				window.setSize(sf::Vector2u(modes[7].width, modes[7].height));
-			if (settingsScreenOn && pauseResolutionMode8Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
-				window.setSize(sf::Vector2u(modes[8].width, modes[8].height));
-			if (settingsScreenOn && pauseResolutionMode9Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
-				window.setSize(sf::Vector2u(modes[9].width, modes[9].height));
-			if (settingsScreenOn && pauseResolutionMode10Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
-				window.setSize(sf::Vector2u(modes[10].width, modes[10].height));
 			// "Fermer"
 			if (quitText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 				m_isRunning = false;
@@ -448,6 +642,15 @@ void Game::run() {
 	setupGraphicalElements();
 
 	while (m_isRunning) {
+		// FPS calculation
+		f_ElapsedTime = Clock.restart().asSeconds();
+		float f_FPS = (1.f / f_ElapsedTime);
+		std::ostringstream oss;
+		oss << std::fixed << std::setprecision(2) << f_FPS;
+		std::string FPSValue = oss.str();
+		FPSText.setString("FPS : " + FPSValue);
+
+		// Funtctions loop
 		pollEvents();
 		update();
 		render();
@@ -469,7 +672,6 @@ void Game::render() {
 	if (settingsScreenOn) {
 		window.draw(bgStartUpScreenSprite);
 		// window.draw(screenShadowWhenBlured);
-		// Menu
 		// TopBar
 		window.draw(menuPauseTopBar);
 		window.draw(menuPauseTopBarResolution);
@@ -482,6 +684,7 @@ void Game::render() {
 		window.draw(pauseTopBarLanguageText);
 		// Content
 		window.draw(menuPauseContent);
+		// ... Resolution
 		window.draw(pauseResolutionMode0Text);
 		window.draw(pauseResolutionMode1Text);
 		window.draw(pauseResolutionMode2Text);
@@ -493,9 +696,18 @@ void Game::render() {
 		window.draw(pauseResolutionMode8Text);
 		window.draw(pauseResolutionMode9Text);
 		window.draw(pauseResolutionMode10Text);
-
+		// ... FPS
+		window.draw(pauseFPS60Text);
+		window.draw(pauseFPS120Text);
+		window.draw(pauseFPS240Text);
+		window.draw(pauseFPS360Text);
+		window.draw(pauseFPSVsyncText);
+		window.draw(pauseFPSMaxText);
+		// ... Language
+		window.draw(pauseLanguageENText);
+		window.draw(pauseLanguageFRText);
 	}
-	// DRAWING
+
 	if (startUpScreenOn) {
 		window.draw(bgStartUpScreenSprite);
 		window.draw(playText);
@@ -503,9 +715,9 @@ void Game::render() {
 		window.draw(quitText);
 		window.draw(copyright);
 		window.draw(settingsIconSprite);
-		window.setMouseCursor(pie);
 	}
-
+	window.draw(FPSText);
+	window.setMouseCursor(pie);
 	window.display();
 }
 
