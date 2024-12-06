@@ -1,36 +1,12 @@
-<<<<<<< HEAD
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1119,5): warning MSB8027: Deux ou plusieurs fichiers avec le nom main.cpp généreront des sorties vers le même emplacement. Cela peut entraîner une génération incorrecte. Les fichiers impliqués sont Dylan\main.cpp, main.cpp.
-  Food'estroyer.vcxproj -> C:\Users\jrodrigues\Source\Repos\dark-dylan-93220\Food-estroyer\Food'estroyer\x64\Debug\Food'estroyer.exe
-=======
-﻿La génération a démarré 04/12/2024 22:05:10.
-La verbosité de la journalisation a la valeur Normal.     1>Projet "C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Food'estroyer.vcxproj" sur le nœud 2 (Build cible(s)).
-     1>PrepareForBuild:
-         La sortie structurée est activée. La mise en forme du compilateur diagnostics reflète la hiérarchie des erreurs. Pour plus d’informations, consultez https://aka.ms/cpp/structured-output.
-       InitializeBuildStatus:
-         Création de "x64\Debug\Food'estroyer.tlog\unsuccessfulbuild", car "AlwaysCreate" a été spécifié.
-         Mise à jour de l'horodatage "x64\Debug\Food'estroyer.tlog\unsuccessfulbuild".
-     1>D:\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1119,5): warning MSB8027: Deux ou plusieurs fichiers avec le nom main.cpp généreront des sorties vers le même emplacement. Cela peut entraîner une génération incorrecte. Les fichiers impliqués sont Dylan\main.cpp, main.cpp.
-       ClCompile:
-         D:\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\bin\HostX64\x64\CL.exe /c /I"C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\include" /ZI /JMC /nologo /W3 /WX- /diagnostics:column /sdl /Od /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /permissive- /Fo"x64\Debug\\" /Fd"x64\Debug\vc143.pdb" /external:W3 /Gd /TP /FC /errorReport:prompt Dylan\game.cpp
-         game.cpp
-       Link:
-         D:\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\bin\HostX64\x64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\x64\Debug\Food'estroyer.exe" /INCREMENTAL /ILK:"x64\Debug\Food'estroyer.ilk" /NOLOGO /LIBPATH:"C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\lib" "sfml-system-d.lib" "sfml-window-d.lib" "sfml-graphics-d.lib" "sfml-audio-d.lib" "sfml-network-d.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\x64\Debug\Food'estroyer.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\x64\Debug\Food'estroyer.lib" /MACHINE:X64 x64\Debug\game.obj
-         x64\Debug\main.obj
-         x64\Debug\main.obj
-         Food'estroyer.vcxproj -> C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\x64\Debug\Food'estroyer.exe
-       FinalizeBuildStatus:
-         Suppression du fichier "x64\Debug\Food'estroyer.tlog\unsuccessfulbuild".
-         Mise à jour de l'horodatage "x64\Debug\Food'estroyer.tlog\Food'estroyer.lastbuildstate".
-     1>Génération du projet "C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Food'estroyer.vcxproj" terminée (Build cible(s)).
-
-La génération a réussi.
-
-       "C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Food'estroyer.vcxproj" (Build cible) (1) ->
-       (WarnCompileDuplicatedFilename cible) -> 
-         D:\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1119,5): warning MSB8027: Deux ou plusieurs fichiers avec le nom main.cpp généreront des sorties vers le même emplacement. Cela peut entraîner une génération incorrecte. Les fichiers impliqués sont Dylan\main.cpp, main.cpp.
-
-    1 Avertissement(s)
-    0 Erreur(s)
-
-Temps écoulé 00:00:02.08
->>>>>>> 362db4e718e7ff5750e929378a4ae90996032b12
+  game.cpp
+C:\Users\dhollemaert\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(190,124): warning C4244: 'argument' : conversion de 'T' en 'T', perte possible de données
+          with
+          [
+              T=unsigned int
+          ]
+          and
+          [
+              T=float
+          ]
+  Food'estroyer.vcxproj -> C:\Users\dhollemaert\Source\Repos\dark-dylan-93220\Food-estroyer\Food'estroyer\x64\Debug\Food'estroyer.exe
