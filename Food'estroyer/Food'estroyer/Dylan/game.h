@@ -26,6 +26,7 @@ private:
 	sf::WindowBase windowBase;
 	sf::RenderWindow window;
 	bool startUpScreenOn = true;
+	bool settingsScreenOn = false;
 
 private:
 	void setupGraphicalElements();
