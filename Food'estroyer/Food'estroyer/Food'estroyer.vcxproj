@@ -133,8 +133,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Dylan\enemy.cpp" />
     <ClCompile Include="Dylan\game.cpp" />
     <ClCompile Include="Dylan\main.cpp" />
+    <ClCompile Include="Dylan\player.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
