@@ -7,6 +7,8 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
+#include <chrono>
+#include <ctime>
 // --- SFML --- //
 #include "SFML/System.hpp"
 #include "SFML/Audio.hpp"
@@ -19,6 +21,7 @@ public:
 	Game();
 
 	void run();
+	std::vector<sf::Vector2f> shooterPositions;
 
 private:
 
@@ -42,6 +45,7 @@ private:
 
 private:
 	void setupGraphicalElements();
+	void setShooterPositions();
 	void pollEvents();
 	void update();
 	void render();

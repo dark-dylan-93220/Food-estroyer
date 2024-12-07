@@ -1,4 +1,5 @@
 #include "game.h"
+#include "enemy.h"
 
 /// THIS FILE CONTAINS THE GLOBAL FUNCTIONS USED EVERYWHERE IN THE GAME
 
@@ -89,7 +90,6 @@ namespace { // GLOBAL VARIABLES OF THIS FILE HERE
 	// SPRITES
 	sf::Sprite bgStartUpScreenSprite;
 	sf::Sprite settingsIconSprite;
-	sf::Sprite bgStartUpScreen;
 	sf::Sprite levelOneBackgroundStartSprite;
 	sf::Sprite levelOneParralax01Sprite;
 	sf::Sprite levelOneParralax02Sprite;
@@ -388,6 +388,18 @@ void Game::setupGraphicalElements() {
 	pie.loadFromPixels(pieCursorImg.getPixelsPtr(), pieCursorImg.getSize(), {(pieCursorImg.getSize().x / 2), (pieCursorImg.getSize().y / 2)});
 }
 
+void Game::setShooterPositions() {
+	for (float i = 0; i < 3; i++) { //i et j doivent être des positions relatives à la taille de la fenetre
+		for (float j = 0; j < 5; j++) {
+			shooterPositions.push_back({ i, j });
+
+		}
+	}
+	for (int i = 0; i < 3; i++) {
+		std::cout << shooterPositions[i].x << " " << shooterPositions[i].y << std::endl;
+	}
+}
+
 void Game::pollEvents() {
 	sf::Event event;
 	window.pollEvent(event);
@@ -669,6 +681,8 @@ void Game::run() {
 
 	setupGraphicalElements();
 
+	setShooterPositions();
+
 	while (m_isRunning) {
 		// FPS calculation
 		f_ElapsedTime = Clock.restart().asSeconds();
@@ -693,6 +707,8 @@ void Game::run() {
 
 void Game::update() {
 	// MECHANICS
+	Shooter shooter(2000, 500,30);
+	shooter.behavior(shooterPositions);
 }
 
 void Game::render() {
