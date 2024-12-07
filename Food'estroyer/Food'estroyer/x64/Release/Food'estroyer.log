@@ -1,8 +1,55 @@
-﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1119,5): warning MSB8027: Deux ou plusieurs fichiers avec le nom main.cpp généreront des sorties vers le même emplacement. Cela peut entraîner une génération incorrecte. Les fichiers impliqués sont Dylan\main.cpp, main.cpp.
-x64\Release\main.obj : warning LNK4042: objet spécifié plus d'une fois ; définitions supplémentaires ignorées
-  Génération de code en cours
-  0 of 153 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
-  Fin de la génération du code
-  Food'estroyer.vcxproj -> C:\Users\jrodrigues\Source\Repos\dark-dylan-93220\Food-estroyer\Food'estroyer\x64\Release\Food'estroyer.exe
+﻿La génération a démarré 07/12/2024 23:30:46.
+La verbosité de la journalisation a la valeur Normal.     1>Projet "C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Food'estroyer.vcxproj" sur le nœud 2 (Build cible(s)).
+     1>PrepareForBuild:
+         La sortie structurée est activée. La mise en forme du compilateur diagnostics reflète la hiérarchie des erreurs. Pour plus d’informations, consultez https://aka.ms/cpp/structured-output.
+       InitializeBuildStatus:
+         Création de "x64\Release\Food'estroyer.tlog\unsuccessfulbuild", car "AlwaysCreate" a été spécifié.
+         Mise à jour de l'horodatage "x64\Release\Food'estroyer.tlog\unsuccessfulbuild".
+     1>D:\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1119,5): warning MSB8027: Deux ou plusieurs fichiers avec le nom main.cpp généreront des sorties vers le même emplacement. Cela peut entraîner une génération incorrecte. Les fichiers impliqués sont Dylan\main.cpp, main.cpp.
+       ClCompile:
+         D:\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\bin\HostX64\x64\CL.exe /c /I"C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\include" /Zi /nologo /W3 /WX- /diagnostics:column /sdl /O2 /Oi /GL /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /permissive- /Fo"x64\Release\\" /Fd"x64\Release\vc143.pdb" /external:W3 /Gd /TP /FC /errorReport:prompt Dylan\game.cpp Dylan\main.cpp
+         game.cpp
+     1>C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(92,13): error C2371: '`anonymous-namespace'::bgStartUpScreen' : redéfinition ; types de base différents
+             C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(64,14):
+             voir la déclaration de '`anonymous-namespace'::bgStartUpScreen'
+         
+     1>C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(198,124): warning C4244: 'argument' : conversion de 'T' en 'T', perte possible de données
+C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(198,124): warning C4244:         with
+C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(198,124): warning C4244:         [
+C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(198,124): warning C4244:             T=unsigned int
+C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(198,124): warning C4244:         ]
+C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(198,124): warning C4244:         and
+C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(198,124): warning C4244:         [
+C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(198,124): warning C4244:             T=float
+C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(198,124): warning C4244:         ]
+         main.cpp
+     1>Génération du projet "C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Food'estroyer.vcxproj" terminée (Build cible(s)) -- ÉCHEC.
+
+ÉCHEC de la build.
+
+       "C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Food'estroyer.vcxproj" (Build cible) (1) ->
+       (WarnCompileDuplicatedFilename cible) -> 
+         D:\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1119,5): warning MSB8027: Deux ou plusieurs fichiers avec le nom main.cpp généreront des sorties vers le même emplacement. Cela peut entraîner une génération incorrecte. Les fichiers impliqués sont Dylan\main.cpp, main.cpp.
+
+
+       "C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Food'estroyer.vcxproj" (Build cible) (1) ->
+       (ClCompile cible) -> 
+         C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(198,124): warning C4244: 'argument' : conversion de 'T' en 'T', perte possible de données
+       C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(198,124): warning C4244:         with
+       C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(198,124): warning C4244:         [
+       C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(198,124): warning C4244:             T=unsigned int
+       C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(198,124): warning C4244:         ]
+       C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(198,124): warning C4244:         and
+       C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(198,124): warning C4244:         [
+       C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(198,124): warning C4244:             T=float
+       C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(198,124): warning C4244:         ]
+
+
+       "C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Food'estroyer.vcxproj" (Build cible) (1) ->
+       (ClCompile cible) -> 
+         C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(92,13): error C2371: '`anonymous-namespace'::bgStartUpScreen' : redéfinition ; types de base différents
+
+    2 Avertissement(s)
+    1 Erreur(s)
+
+Temps écoulé 00:00:05.62

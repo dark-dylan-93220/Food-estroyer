@@ -23,9 +23,22 @@ public:
 private:
 
 	bool m_isRunning;
+	// Window
 	sf::WindowBase windowBase;
 	sf::RenderWindow window;
+	// Views
 	bool startUpScreenOn = true;
+	bool settingsScreenOn = false;
+	bool playScreenOn = false;
+	// Time gestion
+	sf::Clock Clock;
+	int currentFramerateLimit = 60;
+	float f_ElapsedTime;
+	std::chrono::steady_clock::time_point startingTimePoint, currentTimePoint;
+	// Language
+	std::string language = "EN";
+	// Testing
+	bool levelOneOn = true;
 
 private:
 	void setupGraphicalElements();
