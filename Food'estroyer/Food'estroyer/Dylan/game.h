@@ -41,7 +41,7 @@ private:
 	// Language
 	std::string language = "EN";
 	// Testing
-	bool levelOneOn = true;
+	bool levelOneOn = false;
 
 private:
 	void setupGraphicalElements();
