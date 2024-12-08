@@ -1,4 +1,4 @@
-﻿La génération a démarré 08/12/2024 02:47:55.
+﻿La génération a démarré 08/12/2024 17:53:29.
 La verbosité de la journalisation a la valeur Normal.     1>Projet "C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Food'estroyer.vcxproj" sur le nœud 2 (Build cible(s)).
      1>PrepareForBuild:
          La sortie structurée est activée. La mise en forme du compilateur diagnostics reflète la hiérarchie des erreurs. Pour plus d’informations, consultez https://aka.ms/cpp/structured-output.
@@ -26,9 +26,9 @@ C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cp
          x64\Release\main.obj
      1>x64\Release\main.obj : warning LNK4042: objet spécifié plus d'une fois ; définitions supplémentaires ignorées
          Génération de code en cours
-         1 of 548 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+         0 of 548 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
            0 functions were new in current compilation
-           1 functions had inline decision re-evaluated but remain unchanged
+           0 functions had inline decision re-evaluated but remain unchanged
          Fin de la génération du code
          Food'estroyer.vcxproj -> C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\x64\Release\Food'estroyer.exe
        FinalizeBuildStatus:
@@ -63,4 +63,4 @@ La génération a réussi.
     3 Avertissement(s)
     0 Erreur(s)
 
-Temps écoulé 00:00:03.50
+Temps écoulé 00:00:03.15
