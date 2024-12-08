@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClInclude Include="Dylan\enemy.h" />
     <ClInclude Include="Dylan\game.h" />
+    <ClInclude Include="Dylan\player.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

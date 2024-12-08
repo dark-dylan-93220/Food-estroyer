@@ -21,7 +21,7 @@ public:
 	Game();
 
 	void run();
-	std::vector<sf::Vector2f> shooterPositions;
+
 
 private:
 
@@ -42,11 +42,12 @@ private:
 	std::string language = "EN";
 	// Testing
 	bool levelOneOn = false;
-	bool backgroundActive = true;
 
 private:
 	void setupGraphicalElements();
 	void setShooterPositions();
+	void setEnemySpawn();
+	void playerInput();
 	void pollEvents();
 	void update();
 	void render();

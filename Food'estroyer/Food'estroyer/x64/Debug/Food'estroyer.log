@@ -1,7 +1,17 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1119,5): warning MSB8027: Deux ou plusieurs fichiers avec le nom main.cpp généreront des sorties vers le même emplacement. Cela peut entraîner une génération incorrecte. Les fichiers impliqués sont Dylan\main.cpp, main.cpp.
-  enemy.cpp
-C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\enemy.cpp(18,59): warning C4244: 'argument' : conversion de 'float' en 'char', perte possible de données
-C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\enemy.cpp(25,59): warning C4244: 'argument' : conversion de 'float' en 'char', perte possible de données
-C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\enemy.cpp(60,55): warning C4244: 'argument' : conversion de 'float' en 'char', perte possible de données
-x64\Debug\main.obj : warning LNK4042: objet spécifié plus d'une fois ; définitions supplémentaires ignorées
-  Food'estroyer.vcxproj -> C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\x64\Debug\Food'estroyer.exe
+  game.cpp
+C:\Users\Julien Rodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(250,124): warning C4244: 'argument' : conversion de 'T' en 'T', perte possible de données
+C:\Users\Julien Rodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(250,124): warning C4244:         with
+C:\Users\Julien Rodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(250,124): warning C4244:         [
+C:\Users\Julien Rodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(250,124): warning C4244:             T=unsigned int
+C:\Users\Julien Rodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(250,124): warning C4244:         ]
+C:\Users\Julien Rodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(250,124): warning C4244:         and
+C:\Users\Julien Rodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(250,124): warning C4244:         [
+C:\Users\Julien Rodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(250,124): warning C4244:             T=float
+C:\Users\Julien Rodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(250,124): warning C4244:         ]
+C:\Users\Julien Rodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(764,35): warning C4244: 'argument' : conversion de 'T' en 'float', perte possible de données
+C:\Users\Julien Rodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(764,35): warning C4244:         with
+C:\Users\Julien Rodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(764,35): warning C4244:         [
+C:\Users\Julien Rodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(764,35): warning C4244:             T=unsigned int
+C:\Users\Julien Rodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\Dylan\game.cpp(764,35): warning C4244:         ]
+  Food'estroyer.vcxproj -> C:\Users\Julien Rodrigues\Source\Repos\dark-dylan-93220\Food-estroyer\Food'estroyer\x64\Debug\Food'estroyer.exe
