@@ -3,7 +3,7 @@
 
 #include "game.h" // Surtout pour avoir accès aux propriétés de window
 
-class Enemy : public sf::CircleShape {
+class Enemy : public sf::Sprite {
 protected:
 	bool alive = true;
 	char size;

@@ -4,9 +4,9 @@
 Enemy::Enemy(float x, float y, char s, sf::RenderWindow &window) : size(s) {
 	this->setPosition(x, y);
 	// Valeurs à changer en pourcentage de taille de la fenêtre.
-	if (s == 's') this->setRadius(10);
-	else if (s == 'm') this->setRadius(30);
-	else if (s == 'l') this->setRadius(50);
+	if (s == 's') this->setScale(0.09, 0.09);
+	else if (s == 'm') this->setScale(0.13, 0.13);
+	else if (s == 'l') this->setScale(0.19, 0.19);
 }
 
 Normal::Normal(float x, float y, char s, sf::RenderWindow& window) : Enemy(x, y, s, window) {}
@@ -80,7 +80,7 @@ void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, s
 			// Shoots here
 			if (shootCooldown >= 0.7f) { // ici : varier le nombre de boucle pour que les ennemis shoot +ou- vite - A remplacer par une durée de temps variable
 				sf::RectangleShape *projectile = new sf::RectangleShape(sf::Vector2f(20, 10));
-				projectile->setPosition(getPosition().x - getRadius(), getPosition().y + getRadius() - projectile->getSize().y / 2);
+				projectile->setPosition(getPosition().x - (getLocalBounds().width * getScale().x) / 2, getPosition().y + (getLocalBounds().height * getScale().y) / 2 - projectile->getSize().y / 2);
 				projectile->setFillColor(sf::Color::Yellow);
 				projectiles.push_back(projectile);
 				shootCooldown = 0;
@@ -96,9 +96,9 @@ void Elite::behavior(float timeElapsed, sf::CircleShape player, std::vector<sf::
 	//GAUCHE DROITE
 	move(moveDirX * timeElapsed, 0);
 	if (getPosition().x <= window.getSize().x && getPosition().x >= 0) {
-		if (getPosition().x <= window.getSize().x / 2 + getRadius() * 2)
+		if (getPosition().x <= window.getSize().x / 2 + getLocalBounds().width * getScale().x)
 			moveDirX = -moveDirX;
-		if (getPosition().x >= window.getSize().x - getRadius() * 2)
+		if (getPosition().x >= window.getSize().x - getLocalBounds().width * getScale().x)
 			moveDirX = -moveDirX;
 	}
 	
@@ -106,17 +106,25 @@ void Elite::behavior(float timeElapsed, sf::CircleShape player, std::vector<sf::
 	if (getPosition().y > player.getPosition().y || getPosition().y < player.getPosition().y) {
 		trackCooldown += timeElapsed; //set un chrono
 	}
-	if (trackCooldown > 0.02f) { //à varier selon l'agressivité voulue
-		if (getPosition().y > player.getPosition().y) 
-			move(0, -300 * timeElapsed);
-		else if (getPosition().y < player.getPosition().y)
-			move(0, 300 * timeElapsed);
-		else { trackCooldown = 0; }
+	if (trackCooldown > 3.f) { //à varier selon l'agressivité voulue
+		if ((getPosition().y - player.getPosition().y < 0.5f && getPosition().y - player.getPosition().y > -0.5f))
+			trackCooldown = 0;
+		else if (getPosition().y > player.getPosition().y) {
+			if (getPosition().y - player.getPosition().y > 3.f)
+				move(0, -300 * timeElapsed);
+			else { move(0, -1 * timeElapsed); }
+		}
+		else if (getPosition().y < player.getPosition().y) {
+			if (player.getPosition().y - getPosition().y > 3.f)
+				move(0, 300 * timeElapsed);
+			else { move(0, 1 * timeElapsed); }
+		}
+		
 	}
 	//TIRER
 	if (shootCooldown >= 0.3f) {
 		sf::RectangleShape *projectile = new sf::RectangleShape(sf::Vector2f(30, 15));
-		projectile->setPosition(getPosition().x - getRadius(), getPosition().y + getRadius() - projectile->getSize().y/2);
+		projectile->setPosition(getPosition().x - (getLocalBounds().width * getScale().x) / 2, getPosition().y + (getLocalBounds().height * getScale().y) / 2 - projectile->getSize().y / 2);
 		projectile->setFillColor(sf::Color::Red);
 		projectiles.push_back(projectile);
 		shootCooldown = 0;
