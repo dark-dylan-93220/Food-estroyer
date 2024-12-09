@@ -1,6 +1,9 @@
-#include <iostream>
-#include "SFML/Graphics.hpp"
+#include "game.h"
 
 int main() {
-	std::cout << "Hello" << std::endl;
+
+	srand(time(NULL));
+	Game FoodEstroyer;
+	FoodEstroyer.run();
+
 }

@@ -133,16 +133,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Dylan\enemy.cpp" />
-    <ClCompile Include="Dylan\game.cpp" />
-    <ClCompile Include="Dylan\main.cpp" />
-    <ClCompile Include="Dylan\player.cpp" />
+    <ClCompile Include="enemy.cpp" />
+    <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="player.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Dylan\enemy.h" />
-    <ClInclude Include="Dylan\game.h" />
-    <ClInclude Include="Dylan\player.h" />
+    <ClInclude Include="enemy.h" />
+    <ClInclude Include="game.h" />
+    <ClInclude Include="player.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
