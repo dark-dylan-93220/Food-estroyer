@@ -747,16 +747,24 @@ void Game::pollEvents() {
 void Game::playerInput() {
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
-		player.move(0, -5);
+		player.move(0, -10);
+		if (player.getPosition().y <= 0)
+			player.setPosition(player.getPosition().x, 0);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-		player.move(0, 5);
+		player.move(0, 10);
+		if (player.getPosition().y + player.getRadius() * 2 >= window.getSize().y)
+			player.setPosition(player.getPosition().x, window.getSize().y - player.getRadius() *  2);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-		player.move(5, 0);
+		player.move(10, 0);
+		if (player.getPosition().x >= window.getSize().x - player.getRadius() * 2)
+			player.setPosition(window.getSize().x - player.getRadius() * 2, player.getPosition().y);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
-		player.move(-5, 0);
+		player.move(-10, 0);
+		if (player.getPosition().x <= 0)
+			player.setPosition(0, player.getPosition().y);
 	}
 }
 
