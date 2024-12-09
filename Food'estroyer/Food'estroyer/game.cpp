@@ -58,6 +58,11 @@ namespace { // GLOBAL VARIABLES OF THIS FILE HERE
 	sf::Text pauseFPSMaxText;
 	sf::Text pauseLanguageFRText;
 	sf::Text pauseLanguageENText;
+	sf::Text gameplayPauseGoBackText;
+	sf::Text gameplayPauseExitText;
+	sf::Text gameplayPauseTitleText;
+	sf::Text gameplayPauseSFXText;
+	sf::Text gameplayPauseMusicText;
 	// MUSICS
 	// SOUNDS
 	// IMAGES
@@ -100,6 +105,16 @@ namespace { // GLOBAL VARIABLES OF THIS FILE HERE
 	sf::RectangleShape menuPauseLanguageSelectionBox;
 	sf::RectangleShape menuPauseLanguageFR;
 	sf::RectangleShape menuPauseLanguageEN;
+	sf::RectangleShape gameplayPauseContent;
+	sf::RectangleShape gameplayPauseGoBackBtn;
+	sf::RectangleShape gameplayPauseExitBtn;
+	sf::RectangleShape gameplayPauseMusicControlZone;
+	sf::RectangleShape gameplayPauseSFXControlZone;
+	sf::RectangleShape gameplayPauseMusicControlPlusBtn;
+	sf::RectangleShape gameplayPauseMusicControlMinusBtn;
+	sf::RectangleShape gameplayPauseSFXControlPlusBtn;
+	sf::RectangleShape gameplayPauseSFXControlMinusBtn;
+	sf::RectangleShape gameplayPauseSettingsMenuBtn;
 	// SPRITES
 	sf::Sprite bgStartUpScreenSprite;
 	sf::Sprite settingsIconSprite;
@@ -218,6 +233,21 @@ void Game::setupGraphicalElements() {
 	menuPauseContent.setFillColor(sf::Color(200,200,200,200));
 	menuPauseContent.setOutlineThickness(2.f);
 	menuPauseContent.setOutlineColor(sf::Color::Black);
+	gameplayPauseContent.setSize(sf::Vector2f((window.getSize().x * 0.66f), (window.getSize().y * 0.65f)));
+	gameplayPauseContent.setPosition(sf::Vector2f(window.getSize().x / 2 - gameplayPauseContent.getLocalBounds().width / 2, window.getSize().y / 2 - gameplayPauseContent.getLocalBounds().height / 2));
+	gameplayPauseContent.setFillColor(sf::Color(200, 200, 200, 200));
+	gameplayPauseContent.setOutlineThickness(2.f);
+	gameplayPauseContent.setOutlineColor(sf::Color::Black);
+	gameplayPauseGoBackBtn.setSize(sf::Vector2f(gameplayPauseContent.getSize().x / 5, window.getSize().y / 16.f));
+	gameplayPauseExitBtn.setSize(gameplayPauseGoBackBtn.getSize());
+	gameplayPauseGoBackBtn.setPosition(sf::Vector2f(gameplayPauseContent.getPosition().x + window.getSize().x * 0.01f, gameplayPauseContent.getPosition().y + gameplayPauseContent.getLocalBounds().height - gameplayPauseGoBackBtn.getLocalBounds().height - window.getSize().x * 0.01f));
+	gameplayPauseExitBtn.setPosition(sf::Vector2f(gameplayPauseContent.getPosition().x + gameplayPauseContent.getLocalBounds().width  - gameplayPauseExitBtn.getLocalBounds().width - window.getSize().x * 0.01f, gameplayPauseContent.getPosition().y + gameplayPauseContent.getLocalBounds().height - gameplayPauseExitBtn.getLocalBounds().height - window.getSize().x * 0.01f));
+	gameplayPauseGoBackBtn.setFillColor(sf::Color(200,200,200,200));
+	gameplayPauseExitBtn.setFillColor(sf::Color(200,200,200,200));
+	gameplayPauseGoBackBtn.setOutlineThickness(1.f);
+	gameplayPauseExitBtn.setOutlineThickness(1.f);
+	gameplayPauseGoBackBtn.setOutlineColor(sf::Color::Black);
+	gameplayPauseExitBtn.setOutlineColor(sf::Color::Black);
 	// SPRITES
 	bgStartUpScreenSprite.setTexture(bgStartUpScreen);
 	bgStartUpScreenSprite.setScale(sf::Vector2f((window.getSize().x / bgStartUpScreenSprite.getLocalBounds().width), (window.getSize().y / bgStartUpScreenSprite.getLocalBounds().height)));
@@ -282,7 +312,9 @@ void Game::setupGraphicalElements() {
 	playerDeath6Sprite.setScale(sf::Vector2f((window.getSize().x * 0.05f) / (playerDeath6Sprite.getLocalBounds().width), (window.getSize().y * 0.10f) / (playerDeath6Sprite.getLocalBounds().height)));
 	playerCurrentSprite.setTexture(playerMove1);
 	playerCurrentSprite.setScale(playerMove1Sprite.getScale());
-	playerCurrentSprite.setPosition(sf::Vector2f(window.getSize().x * 0.07f, (window.getSize().y / 2) + (playerCurrentSprite.getLocalBounds().height)));
+	playerCurrentSprite.setPosition(sf::Vector2f(window.getSize().x * 0.07f, (window.getSize().y / 2) - (playerCurrentSprite.getGlobalBounds().height / 2)));
+	playerMove1Sprite.setPosition(playerCurrentSprite.getPosition());
+	player.setPosition(playerCurrentSprite.getPosition());
 	// TEXTS
 	// FPS
 	FPSText.setFont(FPSFont);
@@ -496,8 +528,36 @@ void Game::setupGraphicalElements() {
 	pauseLanguageFRText.setOutlineThickness(1);
 	pauseLanguageFRText.setOutlineColor(DARK_THEME);
 	pauseLanguageFRText.setPosition(sf::Vector2f(pauseTopBarLanguageText.getPosition().x, pauseResolutionMode2Text.getPosition().y));
+	// Gameplay pause menu
+	gameplayPauseTitleText.setFont(puppy);
+	gameplayPauseTitleText.setCharacterSize(60);
+	gameplayPauseTitleText.setFillColor(sf::Color::White);
+	gameplayPauseTitleText.setOutlineThickness(1.f);
+	gameplayPauseTitleText.setOutlineColor(sf::Color::Black);
+	gameplayPauseTitleText.setString("Pause");
+	gameplayPauseTitleText.setPosition(sf::Vector2f(window.getSize().x / 2 - gameplayPauseTitleText.getLocalBounds().width / 2, gameplayPauseContent.getPosition().y + window.getSize().x * 0.01f));
+	gameplayPauseGoBackText.setFont(puppy);
+	gameplayPauseGoBackText.setCharacterSize(35);
+	gameplayPauseGoBackText.setFillColor(sf::Color::White);
+	gameplayPauseGoBackText.setOutlineThickness(1.f);
+	gameplayPauseGoBackText.setOutlineColor(sf::Color::Black);
+	if (language == "EN")
+		gameplayPauseGoBackText.setString("Go back");
+	else if (language == "FR")
+		gameplayPauseGoBackText.setString("Reprendre");
+	gameplayPauseGoBackText.setPosition(sf::Vector2f(gameplayPauseGoBackBtn.getPosition().x + gameplayPauseGoBackBtn.getLocalBounds().width / 2 - gameplayPauseGoBackText.getLocalBounds().width / 2, gameplayPauseGoBackBtn.getPosition().y + gameplayPauseGoBackBtn.getSize().y / 6));
+	gameplayPauseExitText.setFont(puppy);
+	gameplayPauseExitText.setCharacterSize(35);
+	gameplayPauseExitText.setFillColor(sf::Color::White);
+	gameplayPauseExitText.setOutlineThickness(1.f);
+	gameplayPauseExitText.setOutlineColor(sf::Color::Black);
+	if (language == "EN")
+		gameplayPauseExitText.setString("Exit");
+	else if (language == "FR")
+		gameplayPauseExitText.setString("Quitter");
+	gameplayPauseExitText.setPosition(sf::Vector2f(gameplayPauseExitBtn.getPosition().x + gameplayPauseExitBtn.getLocalBounds().width / 2 - gameplayPauseExitText.getLocalBounds().width / 2, gameplayPauseExitBtn.getPosition().y + gameplayPauseExitBtn.getSize().y / 6));
 	// CURSORS
-	pie.loadFromPixels(pieCursorImg.getPixelsPtr(), pieCursorImg.getSize(), {(pieCursorImg.getSize().x / 2), (pieCursorImg.getSize().y / 2)});
+	pie.loadFromPixels(pieCursorImg.getPixelsPtr(), pieCursorImg.getSize(), {1, 32});
 }
 
 void Game::setShooterPositions() {
@@ -645,6 +705,16 @@ void Game::pollEvents() {
 		}
 		if (playScreenOn) {
 			// To be defined
+			if (showPauseMenu) {
+				if (gameplayPauseExitBtn.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					gameplayPauseExitText.setFillColor(LIGHT_RED);
+				else
+					gameplayPauseExitText.setFillColor(sf::Color::White);
+				if (gameplayPauseGoBackBtn.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					gameplayPauseGoBackText.setFillColor(LIGHT_GREEN);
+				else
+					gameplayPauseGoBackText.setFillColor(sf::Color::White);
+			}
 		}
 		break;
 	case sf::Event::MouseButtonPressed:
@@ -758,6 +828,7 @@ void Game::pollEvents() {
 					playScreenOn = true;
 					startUpScreenOn = false;
 					levelOneOn = true;
+					backgroundActive = true;
 				}
 				// Quitter
 				if (quitText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
@@ -766,6 +837,18 @@ void Game::pollEvents() {
 			}
 			if (playScreenOn) {
 				// To be defined
+				if (showPauseMenu) {
+					if (gameplayPauseExitBtn.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						levelOneOn = false;
+						backgroundActive = false;
+						showPauseMenu = false;
+						startUpScreenOn = true;
+					}
+					if (gameplayPauseGoBackBtn.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						backgroundActive = true;
+						showPauseMenu = false;
+					}
+				}
 			}
 		}
 		// For dragging
@@ -798,25 +881,25 @@ void Game::playerInput() {
 		player.move(0, -800 * f_ElapsedTime);
 		if (player.getPosition().y <= 0)
 			player.setPosition(player.getPosition().x, 0);
-		playerCurrentSprite.setPosition(sf::Vector2f(player.getPosition()));
+		playerCurrentSprite.setPosition(player.getPosition());
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
 		player.move(0, 800 * f_ElapsedTime);
 		if (player.getPosition().y + player.getRadius() * 2 >= window.getSize().y)
 			player.setPosition(player.getPosition().x, window.getSize().y - player.getRadius() *  2);
-		playerCurrentSprite.setPosition(sf::Vector2f(player.getPosition()));
+		playerCurrentSprite.setPosition(player.getPosition());
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 		player.move(800 * f_ElapsedTime, 0);
 		if (player.getPosition().x >= window.getSize().x - player.getRadius() * 2)
 			player.setPosition(window.getSize().x - player.getRadius() * 2, player.getPosition().y);
-		playerCurrentSprite.setPosition(sf::Vector2f(player.getPosition()));
+		playerCurrentSprite.setPosition(player.getPosition());
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
 		player.move(-800 * f_ElapsedTime, 0);
 		if (player.getPosition().x <= 0)
 			player.setPosition(0, player.getPosition().y);
-		playerCurrentSprite.setPosition(sf::Vector2f(player.getPosition()));
+		playerCurrentSprite.setPosition(player.getPosition());
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 		if (levelOneOn && backgroundActive) {
@@ -902,15 +985,12 @@ void Game::FPSCalculation() {
 void Game::run() {
 
 	setupGraphicalElements();
-
 	setShooterPositions();
-
 	setEnemySpawn();                                          //////////////////////
 
 	while (m_isRunning) {
-		FPSCalculation();
-
 		// Funtctions loop
+		FPSCalculation();
 		pollEvents();
 		update();
 		render();
@@ -1077,7 +1157,7 @@ void Game::render() {
 	window.clear(sf::Color::Black);
 	if (settingsScreenOn) {
 		window.draw(bgStartUpScreenSprite);
-		// window.draw(screenShadowWhenBlured);
+		window.draw(screenShadowWhenBlured);
 		// TopBar
 		window.draw(menuPauseTopBar);
 		window.draw(menuPauseTopBarResolution);
@@ -1125,6 +1205,7 @@ void Game::render() {
 
 	if (playScreenOn) {
 		if (levelOneOn) {
+			// --- FOND PARRALAXE --- //
 			window.draw(levelOneParralax01Sprite);
 			window.draw(levelOneParralax01SpriteCopy);
 			window.draw(levelOneParralax02Sprite);
@@ -1137,8 +1218,15 @@ void Game::render() {
 			window.draw(levelOneParralax05SpriteCopy);
 			window.draw(levelOneParralax06Sprite);
 			window.draw(levelOneParralax06SpriteCopy);
-			
-			for (Normal& normal : vectorNormal) {                   ///////////////////////////////////////////////////
+			// --- ENNEMIS & JOUEUR --- //
+			for (sf::RectangleShape* &projectile : projectiles) {
+				sf::RectangleShape projectileDraw;
+				projectileDraw.setSize(projectile->getSize());
+				projectileDraw.setFillColor(projectile->getFillColor());
+				projectileDraw.setPosition(projectile->getPosition());
+				window.draw(projectileDraw);
+			}
+			for (Normal& normal : vectorNormal) {
 				window.draw(normal);
 			}
 			for (Shooter& shooter : vectorShooter) {
@@ -1147,15 +1235,17 @@ void Game::render() {
 			for (Elite& elite : vectorElite) {
 				window.draw(elite);
 			}
-			for (sf::RectangleShape* &projectile : projectiles) {
-				sf::RectangleShape projectileDraw;
-				projectileDraw.setSize(projectile->getSize());
-				projectileDraw.setFillColor(projectile->getFillColor());
-				projectileDraw.setPosition(projectile->getPosition());
-				window.draw(projectileDraw);
-			}
 			window.draw(playerCurrentSprite);
 			// window.draw(player);
+		}
+		if (showPauseMenu) {
+			window.draw(screenShadowWhenBlured);
+			window.draw(gameplayPauseContent);
+			window.draw(gameplayPauseGoBackBtn);
+			window.draw(gameplayPauseExitBtn);
+			window.draw(gameplayPauseTitleText);
+			window.draw(gameplayPauseGoBackText);
+			window.draw(gameplayPauseExitText);
 		}
 	}
 

@@ -1,4 +1,4 @@
-﻿La génération a démarré 09/12/2024 11:24:17.
+﻿La génération a démarré 09/12/2024 23:08:15.
 La verbosité de la journalisation a la valeur Normal.     1>Projet "C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Food'estroyer.vcxproj" sur le nœud 2 (Build cible(s)).
      1>PrepareForBuild:
          La sortie structurée est activée. La mise en forme du compilateur diagnostics reflète la hiérarchie des erreurs. Pour plus d’informations, consultez https://aka.ms/cpp/structured-output.
@@ -14,7 +14,7 @@ La verbosité de la journalisation a la valeur Normal.     1>Projet "C:\Users\PC
          x64\Release\main.obj
          x64\Release\player.obj
          Génération de code en cours
-         2 of 865 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+         1 of 890 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
            0 functions were new in current compilation
            2 functions had inline decision re-evaluated but remain unchanged
          Fin de la génération du code
@@ -28,4 +28,4 @@ La génération a réussi.
     0 Avertissement(s)
     0 Erreur(s)
 
-Temps écoulé 00:00:02.63
+Temps écoulé 00:00:04.44

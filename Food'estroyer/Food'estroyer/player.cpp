@@ -5,7 +5,6 @@ std::vector<sf::CircleShape> vectorPies;
 
 Player::Player() : hp(100), speed(20), atkPower(10) {
 	this->setRadius(50);
-	this->setPosition(50,50);
 	this->setFillColor(sf::Color::Green);
 }
 
