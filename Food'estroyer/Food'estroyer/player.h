@@ -14,14 +14,6 @@ public:
 	
 	Player();
 
-	/*bool collision(Enemy enemy) {
-		if (getGlobalBounds().intersects(enemy.getGlobalBounds())) {
-			hp -= 1;                                                     // Dégats de collision fixes ou varient selon ennemi ?
-			return true;												 // Varient selon les ennemis.
-		}
-		else { return false; }
-	}*/
-
 	void throwPie();
 
 	// Allez un peu d'encapsulation :)

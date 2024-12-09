@@ -13,11 +13,11 @@ Normal::Normal(float x, float y, char s, sf::RenderWindow& window) : Enemy(x, y,
 Shooter::Shooter(float x, float y, char s, sf::RenderWindow &window) : Enemy(x, y, s, window) {}
 Elite::Elite(float x, float y, char s, sf::RenderWindow& window) : Enemy(x, y, s, window) {}
 
-void Normal::behavior() {
-	move(-5, 0);
+void Normal::behavior(float timeElapsed) {
+	move(-500 * timeElapsed, 0);
 }
 
-void Shooter::behavior(std::vector<Shooter>& vectorShooter, std::vector<sf::Vector2f>& shooterPositions, std::vector<sf::RectangleShape*>& projectiles, std::vector<bool>& positionsOccupied){
+void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, std::vector<sf::Vector2f>& shooterPositions, std::vector<sf::RectangleShape>& projectiles, std::vector<bool>& positionsOccupied){
 	int counter(0);
 	possiblePositions = shooterPositions;
 	while (!positionFound || waitingForPosition) {
@@ -71,12 +71,12 @@ void Shooter::behavior(std::vector<Shooter>& vectorShooter, std::vector<sf::Vect
 		
 		if (positionChoice.x < getPosition().x) moveDirX = -moveDirX;
 		if (positionChoice.x > getPosition().x) moveDirX = moveDirX;
-		if (positionChoice.x == getPosition().x) moveDirX = 0;
+		if ((positionChoice.x - getPosition().x < 1.f) || (getPosition().x - positionChoice.x < 1.f)) setPosition(positionChoice.x, getPosition().y);
 		if (positionChoice.y < getPosition().y) moveDirY = -moveDirY;
 		if (positionChoice.y > getPosition().y) moveDirY = moveDirY;
-		if (positionChoice.y == getPosition().y) moveDirY = 0;
+		if ((positionChoice.y - getPosition().y < 1.f) || (getPosition().y - positionChoice.y < 1.f)) setPosition(getPosition().x, positionChoice.y);
 
-		if (getPosition() != positionChoice) move(moveDirX, moveDirY);
+		if (getPosition() != positionChoice) move((moveDirX * 100) * timeElapsed, (moveDirY * 100) * timeElapsed);
 		else 
 		{
 			// Shoots here
@@ -87,15 +87,15 @@ void Shooter::behavior(std::vector<Shooter>& vectorShooter, std::vector<sf::Vect
 				projectiles.push_back(projectile);
 				shootCooldown = 0;
 			}
-			else { shootCooldown++; }
+			else { shootCooldown += timeElapsed; }
 		}
 	}
 }
 
-void Elite::behavior(sf::CircleShape player, std::vector<sf::RectangleShape*> &projectiles, sf::RenderWindow &window){ //pour tracker le personnage après un délai
+void Elite::behavior(float timeElapsed, sf::CircleShape player, std::vector<sf::RectangleShape> &projectiles, sf::RenderWindow &window){ //pour tracker le personnage après un délai
 
 	//GAUCHE DROITE
-	move(moveDirX, 0);
+	move(moveDirX * timeElapsed, 0);
 	if (getPosition().x <= window.getSize().x && getPosition().x >= 0) {
 		if (getPosition().x <= window.getSize().x / 2 + getRadius() * 2)
 			moveDirX = -moveDirX;
@@ -105,16 +105,20 @@ void Elite::behavior(sf::CircleShape player, std::vector<sf::RectangleShape*> &p
 	
 	//SUIVRE LE JOUEUR SUR L'AXE Y
 	if (getPosition().y > player.getPosition().y || getPosition().y < player.getPosition().y) {
-		trackCooldown++;                                                                             //set un chrono
+		trackCooldown += timeElapsed; //set un chrono
 	}
-	if (trackCooldown > 10) { //à varier selon l'agressivité voulue
+	if (trackCooldown > 0.02f) { //à varier selon l'agressivité voulue
 		if (getPosition().y > player.getPosition().y) 
-			move(0, -1);
+			move(0, -300 * timeElapsed);
 		else if (getPosition().y < player.getPosition().y)
-			move(0, 1);
+			move(0, 300 * timeElapsed);
 		else { trackCooldown = 0; }
 	}
 	//TIRER
+	if (shootCooldown >= 0.4f) {
+		sf::RectangleShape projectile(sf::Vector2f(30, 15));
+		projectile.setPosition(getPosition().x - getRadius(), getPosition().y + getRadius() - projectile.getSize().y/2);
+		projectile.setFillColor(sf::Color::Red);
 	if (shootCooldown == 50) {
 		sf::RectangleShape *projectile = new sf::RectangleShape(sf::Vector2f(30, 15));
 		projectile->setPosition(getPosition().x - getRadius(), getPosition().y + getRadius() - projectile->getSize().y/2);
@@ -122,5 +126,5 @@ void Elite::behavior(sf::CircleShape player, std::vector<sf::RectangleShape*> &p
 		projectiles.push_back(projectile);
 		shootCooldown = 0;
 	}
-	else { shootCooldown++; }
+	else { shootCooldown += timeElapsed; }
 }

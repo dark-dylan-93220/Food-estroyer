@@ -935,13 +935,13 @@ void Game::update() {
 				}
 			}
 			for (Normal& normal : vectorNormal) {
-				normal.behavior();
+				normal.behavior(f_ElapsedTime);
 			}
 			for (Shooter& shooter : vectorShooter) {
-				shooter.behavior(vectorShooter, shooterPositions, projectiles, positionsOccupied);
+				shooter.behavior(f_ElapsedTime, vectorShooter, shooterPositions, projectiles, positionsOccupied);
 			}
 			for (Elite& elite : vectorElite) {
-				elite.behavior(player, projectiles, window);
+				elite.behavior(f_ElapsedTime, player, projectiles, window);
 			}
 			
 			if (clownWalkAnimationTime >= 0.1f) playerCurrentSprite.setTexture(playerMove2);

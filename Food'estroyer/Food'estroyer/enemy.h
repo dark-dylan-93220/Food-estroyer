@@ -21,7 +21,7 @@ public:
 
 	Normal(float x, float y, char s, sf::RenderWindow& window);
 
-	void behavior();
+	void behavior(float timeElapsed);
 };
 
 class Shooter : public Enemy {
@@ -33,26 +33,26 @@ public:
 	float moveDirX = 0;
 	float moveDirY = 0;
 	int randomPositionChoice = 0;
-	int shootCooldown = 0;
+	float shootCooldown = 0;
 	sf::Vector2f positionChoice = { 0, 0 };
 	std::vector<sf::Vector2f> possiblePositions;
 
 	Shooter(float x, float y, char s, sf::RenderWindow& window);
 
-	void behavior(std::vector<Shooter>& vectorShooters, std::vector<sf::Vector2f> &shooterPositions, std::vector<sf::RectangleShape*> &projectiles, std::vector<bool>& positionsOccupied);
+	void behavior(float timeElapsed, std::vector<Shooter>& vectorShooters, std::vector<sf::Vector2f> &shooterPositions, std::vector<sf::RectangleShape> &projectiles, std::vector<bool>& positionsOccupied);
 };
 
 class Elite : public Enemy {
 public:
 	std::string id = "elite";
 
-	float moveDirX = -5;
-	int shootCooldown = 0;
+	float moveDirX = -400;
+	float shootCooldown = 0;
 	int trackCooldown = 0;
 
 	Elite(float x, float y, char s, sf::RenderWindow& window);
 
-	void behavior(sf::CircleShape player, std::vector<sf::RectangleShape*> &projectiles, sf::RenderWindow &window);
+	void behavior(float timeElapsed, sf::CircleShape player, std::vector<sf::RectangleShape> &projectiles, sf::RenderWindow &window);
 };
 
 #endif

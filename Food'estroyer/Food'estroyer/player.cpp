@@ -9,15 +9,6 @@ Player::Player() : hp(100), speed(20), atkPower(10) {
 	this->setFillColor(sf::Color::Green);
 }
 
-/*bool Player::collision(Enemy enemy) {
-	if (getGlobalBounds().intersects(enemy.getGlobalBounds())) {
-		hp -= 1;                                                     // Dégats de collision fixes ou varient selon ennemi ?
-																	 // Dylan : Varient selon les ennemis.
-		return true;
-	}
-	else { return false; }
-}*/
-
 void Player::throwPie() { // Ajouter le cooldown dans les KeyPressed ?
 						  // Pourquoi pas, dans tout les cas il s'agira d'une durée de temps donc n'importe où ça peut contôler une durée de temps.
 	sf::CircleShape pie(10);                                        // Quel rayon ?
