@@ -32,14 +32,14 @@ public:
 	bool waitingForPosition = true;
 	float moveDirX = 0;
 	float moveDirY = 0;
-	int index = 0;
+	int randomPositionChoice = 0;
 	int shootCooldown = 0;
 	sf::Vector2f positionChoice = { 0, 0 };
 	std::vector<sf::Vector2f> possiblePositions;
 
 	Shooter(float x, float y, char s, sf::RenderWindow& window);
 
-	void behavior(std::vector<Shooter>& vectorShooters, std::vector<sf::Vector2f> &shooterPositions, std::vector<sf::RectangleShape> &projectiles);
+	void behavior(std::vector<Shooter>& vectorShooters, std::vector<sf::Vector2f> &shooterPositions, std::vector<sf::RectangleShape> &projectiles, std::vector<bool>& positionsOccupied);
 };
 
 class Elite : public Enemy {

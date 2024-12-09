@@ -19,12 +19,15 @@ class Game {
 public:
 
 	Game();
-
 	void run();
 
-
+public:
+	// Time gestion
+	sf::Clock Clock;
+	float f_ElapsedTime;
+	std::chrono::steady_clock::time_point startingTimePoint, currentTimePoint;
+	
 private:
-
 	bool m_isRunning;
 	// Window
 	sf::WindowBase windowBase;
@@ -34,15 +37,14 @@ private:
 	bool settingsScreenOn = false;
 	bool playScreenOn = false;
 	// Time gestion
-	sf::Clock Clock;
 	int currentFramerateLimit = 60;
-	float f_ElapsedTime;
-	std::chrono::steady_clock::time_point startingTimePoint, currentTimePoint;
 	// Language
 	std::string language = "EN";
 	// Testing
 	bool levelOneOn = false;
 	bool backgroundActive = true;
+	// Ennemies
+	std::vector<bool> positionsOccupied;
 
 private:
 	void setupGraphicalElements();
