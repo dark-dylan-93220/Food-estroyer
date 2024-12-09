@@ -17,7 +17,7 @@ void Normal::behavior(float timeElapsed) {
 	move(-500 * timeElapsed, 0);
 }
 
-void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, std::vector<sf::Vector2f>& shooterPositions, std::vector<sf::RectangleShape>& projectiles, std::vector<bool>& positionsOccupied){
+void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, std::vector<sf::Vector2f>& shooterPositions, std::vector<sf::RectangleShape*>& projectiles, std::vector<bool>& positionsOccupied){
 	int counter(0);
 	possiblePositions = shooterPositions;
 	while (!positionFound || waitingForPosition) {
@@ -33,7 +33,6 @@ void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, s
 			positionChoice = { -500.f,-500.f };
 			positionFound = true;
 			waitingForPosition = false;
-			std::cout << "ALL OCCUPIED" << std::endl;
 			counter = 0;
 		}
 		randomPositionChoice = rand() % shooterPositions.size(); // Between 0 and 14
@@ -43,7 +42,6 @@ void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, s
 			positionsOccupied[randomPositionChoice] = true;
 			positionChoice = possiblePositions[randomPositionChoice];
 		}
-		std::cout << "Current state of spaces : " << positionsOccupied[0] << " " << positionsOccupied[1] << " " << positionsOccupied[2] << " " << positionsOccupied[3] << " " << positionsOccupied[4] << " " << positionsOccupied[5] << " " << positionsOccupied[6] << " " << positionsOccupied[7] << " " << positionsOccupied[8] << " " << positionsOccupied[9] << " " << positionsOccupied[10] << " " << positionsOccupied[11] << " " << positionsOccupied[12] << " " << positionsOccupied[13] << " " << positionsOccupied[14] << std::endl;
 	}
 	// REDUCE SPEED IF SHOOTER IS APPROACHING POSITION
 	if (positionFound == true && waitingForPosition == false) {
@@ -80,7 +78,7 @@ void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, s
 		else 
 		{
 			// Shoots here
-			if (shootCooldown >= 100) { // ici : varier le nombre de boucle pour que les ennemis shoot +ou- vite - A remplacer par une durée de temps variable
+			if (shootCooldown >= 0.7f) { // ici : varier le nombre de boucle pour que les ennemis shoot +ou- vite - A remplacer par une durée de temps variable
 				sf::RectangleShape *projectile = new sf::RectangleShape(sf::Vector2f(20, 10));
 				projectile->setPosition(getPosition().x - getRadius(), getPosition().y + getRadius() - projectile->getSize().y / 2);
 				projectile->setFillColor(sf::Color::Yellow);
@@ -92,8 +90,9 @@ void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, s
 	}
 }
 
-void Elite::behavior(float timeElapsed, sf::CircleShape player, std::vector<sf::RectangleShape> &projectiles, sf::RenderWindow &window){ //pour tracker le personnage après un délai
-
+void Elite::behavior(float timeElapsed, sf::CircleShape player, std::vector<sf::RectangleShape*> &projectiles, sf::RenderWindow &window) 
+{ 
+	//pour tracker le personnage après un délai
 	//GAUCHE DROITE
 	move(moveDirX * timeElapsed, 0);
 	if (getPosition().x <= window.getSize().x && getPosition().x >= 0) {
@@ -115,11 +114,7 @@ void Elite::behavior(float timeElapsed, sf::CircleShape player, std::vector<sf::
 		else { trackCooldown = 0; }
 	}
 	//TIRER
-	if (shootCooldown >= 0.4f) {
-		sf::RectangleShape projectile(sf::Vector2f(30, 15));
-		projectile.setPosition(getPosition().x - getRadius(), getPosition().y + getRadius() - projectile.getSize().y/2);
-		projectile.setFillColor(sf::Color::Red);
-	if (shootCooldown == 50) {
+	if (shootCooldown >= 0.3f) {
 		sf::RectangleShape *projectile = new sf::RectangleShape(sf::Vector2f(30, 15));
 		projectile->setPosition(getPosition().x - getRadius(), getPosition().y + getRadius() - projectile->getSize().y/2);
 		projectile->setFillColor(sf::Color::Red);

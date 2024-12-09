@@ -1,5 +1,2 @@
 ﻿  enemy.cpp
-C:\Users\dhollemaert\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\enemy.cpp(109,20): warning C4244: '+=' : conversion de 'float' en 'int', perte possible de données
-  game.cpp
-  Génération de code en cours...
   Food'estroyer.vcxproj -> C:\Users\dhollemaert\Source\Repos\dark-dylan-93220\Food-estroyer\Food'estroyer\x64\Debug\Food'estroyer.exe

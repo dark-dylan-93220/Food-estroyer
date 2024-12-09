@@ -39,7 +39,7 @@ public:
 
 	Shooter(float x, float y, char s, sf::RenderWindow& window);
 
-	void behavior(float timeElapsed, std::vector<Shooter>& vectorShooters, std::vector<sf::Vector2f> &shooterPositions, std::vector<sf::RectangleShape> &projectiles, std::vector<bool>& positionsOccupied);
+	void behavior(float timeElapsed, std::vector<Shooter>& vectorShooters, std::vector<sf::Vector2f> &shooterPositions, std::vector<sf::RectangleShape*> &projectiles, std::vector<bool>& positionsOccupied);
 };
 
 class Elite : public Enemy {
@@ -48,11 +48,11 @@ public:
 
 	float moveDirX = -400;
 	float shootCooldown = 0;
-	int trackCooldown = 0;
+	float trackCooldown = 0;
 
 	Elite(float x, float y, char s, sf::RenderWindow& window);
 
-	void behavior(float timeElapsed, sf::CircleShape player, std::vector<sf::RectangleShape> &projectiles, sf::RenderWindow &window);
+	void behavior(float timeElapsed, sf::CircleShape player, std::vector<sf::RectangleShape*> &projectiles, sf::RenderWindow &window);
 };
 
 #endif
