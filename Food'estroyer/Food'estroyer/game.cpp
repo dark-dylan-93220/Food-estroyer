@@ -9,6 +9,7 @@ namespace { // GLOBAL VARIABLES OF THIS FILE HERE
 	int mouseLastDownX, mouseLastDownY;
 	bool isMouseDragging;
 	std::vector<sf::VideoMode> modes = sf::VideoMode::getFullscreenModes(); // Gets the native resolutions of the machine this program is running on
+	float clownWalkAnimationTime = 0.f;
 	// CURSORS
 	sf::Cursor pie;
 	// COLORS
@@ -70,6 +71,16 @@ namespace { // GLOBAL VARIABLES OF THIS FILE HERE
 	sf::Texture levelOneParralax04;
 	sf::Texture levelOneParralax05;
 	sf::Texture levelOneParralax06;
+	sf::Texture playerMove1;
+	sf::Texture playerMove2;
+	sf::Texture playerAttack1;
+	sf::Texture playerAttack2;
+	sf::Texture playerDeath1;
+	sf::Texture playerDeath2;
+	sf::Texture playerDeath3;
+	sf::Texture playerDeath4;
+	sf::Texture playerDeath5;
+	sf::Texture playerDeath6;
 	// SHAPES
 	sf::RectangleShape screenShadowWhenBlured;
 	sf::RectangleShape menuPauseTopBar; 
@@ -104,8 +115,19 @@ namespace { // GLOBAL VARIABLES OF THIS FILE HERE
 	sf::Sprite levelOneParralax04SpriteCopy;
 	sf::Sprite levelOneParralax05SpriteCopy;
 	sf::Sprite levelOneParralax06SpriteCopy;
+	sf::Sprite playerMove1Sprite;
+	sf::Sprite playerMove2Sprite;
+	sf::Sprite playerAttack1Sprite;
+	sf::Sprite playerAttack2Sprite;
+	sf::Sprite playerDeath1Sprite;
+	sf::Sprite playerDeath2Sprite;
+	sf::Sprite playerDeath3Sprite;
+	sf::Sprite playerDeath4Sprite;
+	sf::Sprite playerDeath5Sprite;
+	sf::Sprite playerDeath6Sprite;
+	sf::Sprite playerCurrentSprite;
 	// VECTORS
-	std::vector<sf::Vector2f> shooterPositions;                                                 ////////////////////////////////
+	std::vector<sf::Vector2f> shooterPositions; ////////////////////////////////
 	std::vector<sf::RectangleShape> projectiles;
 	std::vector<Normal> vectorNormal;
 	std::vector<Shooter> vectorShooter;
@@ -118,6 +140,7 @@ Game::Game() :
 	windowBase(sf::VideoMode(modes[0].width, modes[0].height), "Base"),     // To get relative positions to the native resolution if needed
 	window    (sf::VideoMode(modes[0].width, modes[0].height), "Food'estroyer", sf::Style::Fullscreen)
 {
+	// Time gestion
 	f_ElapsedTime = 0.f;
 	m_isRunning = true;
 	windowBase.setVisible(false);
@@ -130,10 +153,10 @@ Game::Game() :
 
 void Game::setupGraphicalElements() {
 	// COLORS
-	DARK_THEME = sf::Color(30, 30, 30);
-	LIGHT_GRAY = sf::Color(175, 175, 175);
-	LIGHT_RED = sf::Color(230, 30, 30);
-	LIGHT_GREEN = sf::Color(30, 230, 20);
+	DARK_THEME   = sf::Color(30, 30, 30);
+	LIGHT_GRAY   = sf::Color(175, 175, 175);
+	LIGHT_RED    = sf::Color(230, 30, 30);
+	LIGHT_GREEN  = sf::Color(30, 230, 20);
 	LIGHT_YELLOW = sf::Color(238, 255, 0);
 	// FONTS
 	FPSFont.loadFromFile          ("Assets/Fonts/FPS.TTF");
@@ -157,6 +180,16 @@ void Game::setupGraphicalElements() {
 	levelOneParralax04.loadFromFile("Assets/Images/Level1/level1Background04.png");
 	levelOneParralax05.loadFromFile("Assets/Images/Level1/level1Background05.png");
 	levelOneParralax06.loadFromFile("Assets/Images/Level1/level1Background06.png");
+	playerMove1.loadFromFile("Assets/Images/Clown/Walk/frame_0_walk_clown.png");
+	playerMove2.loadFromFile("Assets/Images/Clown/Walk/frame_1_walk_clown.png");
+	playerAttack1.loadFromFile("Assets/Images/Clown/Attack/frame_0_attack_clown.png");
+	playerAttack2.loadFromFile("Assets/Images/Clown/Attack/frame_1_attack_clown.png");
+	playerDeath1.loadFromFile("Assets/Images/Clown/Death/frame_0_death_clown.png");
+	playerDeath2.loadFromFile("Assets/Images/Clown/Death/frame_1_death_clown.png");
+	playerDeath3.loadFromFile("Assets/Images/Clown/Death/frame_2_death_clown.png");
+	playerDeath4.loadFromFile("Assets/Images/Clown/Death/frame_3_death_clown.png");
+	playerDeath5.loadFromFile("Assets/Images/Clown/Death/frame_4_death_clown.png");
+	playerDeath6.loadFromFile("Assets/Images/Clown/Death/frame_5_death_clown.png");
 	// SHAPES
 	screenShadowWhenBlured.setSize(sf::Vector2f(window.getSize()));
 	screenShadowWhenBlured.setPosition(0.f, 0.f);
@@ -225,6 +258,29 @@ void Game::setupGraphicalElements() {
 	levelOneParralax04SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x,0));
 	levelOneParralax05SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x,0));
 	levelOneParralax06SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x,0));
+	playerMove1Sprite.setTexture(playerMove1);
+	playerMove2Sprite.setTexture(playerMove2);
+	playerAttack1Sprite.setTexture(playerAttack1);
+	playerAttack2Sprite.setTexture(playerAttack2);
+	playerDeath1Sprite.setTexture(playerDeath1);
+	playerDeath2Sprite.setTexture(playerDeath2);
+	playerDeath3Sprite.setTexture(playerDeath3);
+	playerDeath4Sprite.setTexture(playerDeath4);
+	playerDeath5Sprite.setTexture(playerDeath5);
+	playerDeath6Sprite.setTexture(playerDeath6);
+	playerMove1Sprite.setScale(sf::Vector2f((window.getSize().x * 0.05f) / (playerMove1Sprite.getLocalBounds().width), (window.getSize().y * 0.10f) / (playerMove1Sprite.getLocalBounds().height)));
+	playerMove2Sprite.setScale(sf::Vector2f((window.getSize().x * 0.05f) / (playerMove2Sprite.getLocalBounds().width), (window.getSize().y * 0.10f) / (playerMove2Sprite.getLocalBounds().height)));
+	playerAttack1Sprite.setScale(sf::Vector2f((window.getSize().x * 0.05f) / (playerAttack1Sprite.getLocalBounds().width), (window.getSize().y * 0.10f) / (playerAttack1Sprite.getLocalBounds().height)));
+	playerAttack2Sprite.setScale(sf::Vector2f((window.getSize().x * 0.05f) / (playerAttack2Sprite.getLocalBounds().width), (window.getSize().y * 0.10f) / (playerAttack2Sprite.getLocalBounds().height)));
+	playerDeath1Sprite.setScale(sf::Vector2f((window.getSize().x * 0.05f) / (playerDeath1Sprite.getLocalBounds().width), (window.getSize().y * 0.10f) / (playerDeath1Sprite.getLocalBounds().height)));
+	playerDeath2Sprite.setScale(sf::Vector2f((window.getSize().x * 0.05f) / (playerDeath2Sprite.getLocalBounds().width), (window.getSize().y * 0.10f) / (playerDeath2Sprite.getLocalBounds().height)));
+	playerDeath3Sprite.setScale(sf::Vector2f((window.getSize().x * 0.05f) / (playerDeath3Sprite.getLocalBounds().width), (window.getSize().y * 0.10f) / (playerDeath3Sprite.getLocalBounds().height)));
+	playerDeath4Sprite.setScale(sf::Vector2f((window.getSize().x * 0.05f) / (playerDeath4Sprite.getLocalBounds().width), (window.getSize().y * 0.10f) / (playerDeath4Sprite.getLocalBounds().height)));
+	playerDeath5Sprite.setScale(sf::Vector2f((window.getSize().x * 0.05f) / (playerDeath5Sprite.getLocalBounds().width), (window.getSize().y * 0.10f) / (playerDeath5Sprite.getLocalBounds().height)));
+	playerDeath6Sprite.setScale(sf::Vector2f((window.getSize().x * 0.05f) / (playerDeath6Sprite.getLocalBounds().width), (window.getSize().y * 0.10f) / (playerDeath6Sprite.getLocalBounds().height)));
+	playerCurrentSprite.setTexture(playerMove1);
+	playerCurrentSprite.setScale(playerMove1Sprite.getScale());
+	playerCurrentSprite.setPosition(sf::Vector2f(window.getSize().x * 0.07f, (window.getSize().y / 2) + (playerCurrentSprite.getLocalBounds().height)));
 	// TEXTS
 	// FPS
 	FPSText.setFont(FPSFont);
@@ -708,7 +764,6 @@ void Game::pollEvents() {
 			}
 			if (playScreenOn) {
 				// To be defined
-				backgroundActive = !backgroundActive;
 			}
 		}
 		// For dragging
@@ -729,18 +784,6 @@ void Game::pollEvents() {
 			else if(startUpScreenOn) {
 				m_isRunning = false;
 			}
-			else if (playScreenOn) {
-				// Some view to be defined for a quick pause menu.
-				// Maybe a boolean
-				if (playText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y)) {
-					playText.setFillColor(sf::Color(LIGHT_GREEN));
-				}
-				else {
-					playText.setFillColor(sf::Color::White);
-				}
-				startUpScreenOn = true;
-				levelOneOn = false;
-			}
 		}
 	default:
 		break;
@@ -753,56 +796,72 @@ void Game::playerInput() {
 		player.move(0, -800 * f_ElapsedTime);
 		if (player.getPosition().y <= 0)
 			player.setPosition(player.getPosition().x, 0);
+		playerCurrentSprite.setPosition(sf::Vector2f(player.getPosition()));
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
 		player.move(0, 800 * f_ElapsedTime);
 		if (player.getPosition().y + player.getRadius() * 2 >= window.getSize().y)
 			player.setPosition(player.getPosition().x, window.getSize().y - player.getRadius() *  2);
+		playerCurrentSprite.setPosition(sf::Vector2f(player.getPosition()));
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 		player.move(800 * f_ElapsedTime, 0);
 		if (player.getPosition().x >= window.getSize().x - player.getRadius() * 2)
 			player.setPosition(window.getSize().x - player.getRadius() * 2, player.getPosition().y);
+		playerCurrentSprite.setPosition(sf::Vector2f(player.getPosition()));
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
 		player.move(-800 * f_ElapsedTime, 0);
 		if (player.getPosition().x <= 0)
 			player.setPosition(0, player.getPosition().y);
+		playerCurrentSprite.setPosition(sf::Vector2f(player.getPosition()));
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+		if (levelOneOn && backgroundActive) {
+			backgroundActive = false;
+			showPauseMenu = true;
+		}
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+		if (levelOneOn && backgroundActive) {
+			// Ici y'aura le shoot
+			playerCurrentSprite.setTexture(playerAttack1);
+		}
 	}
 }
 
 void Game::setEnemySpawn() {                                    // TEMPORAIRE /////////////////////////////////////////
-	Shooter shooter1(500, 800, 'm', window);
+	Shooter shooter1(window.getSize().x + 100.f, 800, 'm', window);
 	vectorShooter.push_back(shooter1);
-	Shooter shooter2(500, 900, 'm', window);
+	Shooter shooter2(window.getSize().x + 100.f, 900, 'm', window);
 	vectorShooter.push_back(shooter2);
-	Shooter shooter3(500, 1000, 'm', window);
+	Shooter shooter3(window.getSize().x + 100.f, 1000, 'm', window);
 	vectorShooter.push_back(shooter3);
-	Shooter shooter4(500, 100, 'm', window);
+	Shooter shooter4(window.getSize().x + 100.f, 100, 'm', window);
 	vectorShooter.push_back(shooter4);
-	Shooter shooter5(500, 200, 'm', window);
+	Shooter shooter5(window.getSize().x + 100.f, 200, 'm', window);
 	vectorShooter.push_back(shooter5);
-	Shooter shooter6(500, 300, 'm', window);
+	Shooter shooter6(window.getSize().x + 100.f, 300, 'm', window);
 	vectorShooter.push_back(shooter6);
-	Shooter shooter7(500, 400, 'm', window);
+	Shooter shooter7(window.getSize().x + 100.f, 400, 'm', window);
 	vectorShooter.push_back(shooter7);
-	Shooter shooter8(500, 500, 'm', window);
+	Shooter shooter8(window.getSize().x + 100.f, 500, 'm', window);
 	vectorShooter.push_back(shooter8);
-	Shooter shooter9(500, 600, 'm', window);
+	Shooter shooter9(window.getSize().x + 100.f, 600, 'm', window);
 	vectorShooter.push_back(shooter9);
-	Shooter shooter10(500, 700, 'm', window);
+	Shooter shooter10(window.getSize().x + 100.f, 700, 'm', window);
 	vectorShooter.push_back(shooter10);
-	Shooter shooter11(600, 900, 'm', window);
+	Shooter shooter11(window.getSize().x + 100.f, 900, 'm', window);
 	vectorShooter.push_back(shooter11);
-	Shooter shooter12(700, 900, 'm', window);
+	Shooter shooter12(window.getSize().x + 100.f, 900, 'm', window);
 	vectorShooter.push_back(shooter12);
-	Shooter shooter13(800, 900, 'm', window);
+	Shooter shooter13(window.getSize().x + 100.f, 900, 'm', window);
 	vectorShooter.push_back(shooter13);
-	Shooter shooter14(900, 900, 'm', window);
+	Shooter shooter14(window.getSize().x + 100.f, 900, 'm', window);
 	vectorShooter.push_back(shooter14);
-	Shooter shooter15(100, 200, 'm', window);
+	Shooter shooter15(window.getSize().x + 100.f, 200, 'm', window);
 	vectorShooter.push_back(shooter15);
-	Shooter shooter16(100, 300, 'm', window);
+	Shooter shooter16(window.getSize().x + 100.f, 300, 'm', window);
 	vectorShooter.push_back(shooter16);
 	Normal normal1(1900, 500, 'l', window);
 	vectorNormal.push_back(normal1);
@@ -863,32 +922,42 @@ void Game::update() {
 	
 
 	if (levelOneOn) {
-		playerInput();														 ///////////////////////////////////////////////
+		
+		if (backgroundActive) {
+			clownWalkAnimationTime += f_ElapsedTime;
+			playerInput();														 ///////////////////////////////////////////////
 
-		for (sf::RectangleShape &projectile : projectiles) {
-			projectile.move(-600 * f_ElapsedTime, 0);
+			for (sf::RectangleShape& projectile : projectiles) {
+				projectile.move(-600 * f_ElapsedTime, 0);
+			}
+			for (Normal& normal : vectorNormal) {
+				normal.behavior();
+			}
+			for (Shooter& shooter : vectorShooter) {
+				shooter.behavior(vectorShooter, shooterPositions, projectiles, positionsOccupied);
+			}
+			for (Elite& elite : vectorElite) {
+				elite.behavior(player, projectiles, window);
+			}
+			
+			if (clownWalkAnimationTime >= 0.1f) playerCurrentSprite.setTexture(playerMove2);
+			if (clownWalkAnimationTime >= 0.2f) {
+				playerCurrentSprite.setTexture(playerMove1);
+				clownWalkAnimationTime = 0.f;
+			}
+			levelOneParralax01Sprite.move(sf::Vector2f(-100 * f_ElapsedTime, 0));
+			levelOneParralax02Sprite.move(sf::Vector2f(-200 * f_ElapsedTime, 0));
+			levelOneParralax03Sprite.move(sf::Vector2f(-300 * f_ElapsedTime, 0));
+			levelOneParralax04Sprite.move(sf::Vector2f(-400 * f_ElapsedTime, 0));
+			levelOneParralax05Sprite.move(sf::Vector2f(-500 * f_ElapsedTime, 0));
+			levelOneParralax06Sprite.move(sf::Vector2f(-600 * f_ElapsedTime, 0));
+			levelOneParralax01SpriteCopy.move(sf::Vector2f(-100 * f_ElapsedTime, 0));
+			levelOneParralax02SpriteCopy.move(sf::Vector2f(-200 * f_ElapsedTime, 0));
+			levelOneParralax03SpriteCopy.move(sf::Vector2f(-300 * f_ElapsedTime, 0));
+			levelOneParralax04SpriteCopy.move(sf::Vector2f(-400 * f_ElapsedTime, 0));
+			levelOneParralax05SpriteCopy.move(sf::Vector2f(-500 * f_ElapsedTime, 0));
+			levelOneParralax06SpriteCopy.move(sf::Vector2f(-600 * f_ElapsedTime, 0));
 		}
-		for (Normal& normal : vectorNormal) {
-			normal.behavior();
-		}
-		for (Shooter& shooter : vectorShooter) {
-			shooter.behavior(vectorShooter, shooterPositions, projectiles, positionsOccupied);
-		}
-		for (Elite& elite : vectorElite) {
-			elite.behavior(player, projectiles, window);
-		}   
-		levelOneParralax01Sprite.move(sf::Vector2f(-100 * f_ElapsedTime, 0));
-		levelOneParralax02Sprite.move(sf::Vector2f(-200 * f_ElapsedTime, 0));
-		levelOneParralax03Sprite.move(sf::Vector2f(-300 * f_ElapsedTime, 0));
-		levelOneParralax04Sprite.move(sf::Vector2f(-400 * f_ElapsedTime, 0));
-		levelOneParralax05Sprite.move(sf::Vector2f(-500 * f_ElapsedTime, 0));
-		levelOneParralax06Sprite.move(sf::Vector2f(-600 * f_ElapsedTime, 0));
-		levelOneParralax01SpriteCopy.move(sf::Vector2f(-100 * f_ElapsedTime, 0));
-		levelOneParralax02SpriteCopy.move(sf::Vector2f(-200 * f_ElapsedTime, 0));
-		levelOneParralax03SpriteCopy.move(sf::Vector2f(-300 * f_ElapsedTime, 0));
-		levelOneParralax04SpriteCopy.move(sf::Vector2f(-400 * f_ElapsedTime, 0));
-		levelOneParralax05SpriteCopy.move(sf::Vector2f(-500 * f_ElapsedTime, 0));
-		levelOneParralax06SpriteCopy.move(sf::Vector2f(-600 * f_ElapsedTime, 0));
 		// 1 Original
 		if (levelOneParralax01Sprite.getPosition().x <= 0) {
 			levelOneParralax01SpriteCopy.setPosition(sf::Vector2f(levelOneParralax01Sprite.getPosition().x + (levelOneParralax01Sprite.getLocalBounds().width * levelOneParralax01Sprite.getScale().x), 0));
@@ -1053,7 +1122,8 @@ void Game::render() {
 			for (sf::RectangleShape &projectile : projectiles) {
 				window.draw(projectile);
 			}
-			window.draw(player);
+			window.draw(playerCurrentSprite);
+			// window.draw(player);
 		}
 	}
 

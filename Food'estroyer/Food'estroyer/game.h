@@ -43,6 +43,7 @@ private:
 	// Testing
 	bool levelOneOn = false;
 	bool backgroundActive = true;
+	bool showPauseMenu = false;
 	// Ennemies
 	std::vector<bool> positionsOccupied;
 
