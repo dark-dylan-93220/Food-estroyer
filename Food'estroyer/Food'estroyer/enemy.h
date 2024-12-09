@@ -39,7 +39,7 @@ public:
 
 	Shooter(float x, float y, char s, sf::RenderWindow& window);
 
-	void behavior(std::vector<Shooter>& vectorShooters, std::vector<sf::Vector2f> &shooterPositions, std::vector<sf::RectangleShape> &projectiles, std::vector<bool>& positionsOccupied);
+	void behavior(std::vector<Shooter>& vectorShooters, std::vector<sf::Vector2f> &shooterPositions, std::vector<sf::RectangleShape*> &projectiles, std::vector<bool>& positionsOccupied);
 };
 
 class Elite : public Enemy {
@@ -52,7 +52,7 @@ public:
 
 	Elite(float x, float y, char s, sf::RenderWindow& window);
 
-	void behavior(sf::CircleShape player, std::vector<sf::RectangleShape> &projectiles, sf::RenderWindow &window);
+	void behavior(sf::CircleShape player, std::vector<sf::RectangleShape*> &projectiles, sf::RenderWindow &window);
 };
 
 #endif

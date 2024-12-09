@@ -17,7 +17,7 @@ void Normal::behavior() {
 	move(-5, 0);
 }
 
-void Shooter::behavior(std::vector<Shooter>& vectorShooter, std::vector<sf::Vector2f>& shooterPositions, std::vector<sf::RectangleShape>& projectiles, std::vector<bool>& positionsOccupied){
+void Shooter::behavior(std::vector<Shooter>& vectorShooter, std::vector<sf::Vector2f>& shooterPositions, std::vector<sf::RectangleShape*>& projectiles, std::vector<bool>& positionsOccupied){
 	int counter(0);
 	possiblePositions = shooterPositions;
 	while (!positionFound || waitingForPosition) {
@@ -81,9 +81,9 @@ void Shooter::behavior(std::vector<Shooter>& vectorShooter, std::vector<sf::Vect
 		{
 			// Shoots here
 			if (shootCooldown >= 100) { // ici : varier le nombre de boucle pour que les ennemis shoot +ou- vite - A remplacer par une durée de temps variable
-				sf::RectangleShape projectile(sf::Vector2f(20, 10));
-				projectile.setPosition(getPosition().x - getRadius(), getPosition().y + getRadius() - projectile.getSize().y / 2);
-				projectile.setFillColor(sf::Color::Yellow);
+				sf::RectangleShape *projectile = new sf::RectangleShape(sf::Vector2f(20, 10));
+				projectile->setPosition(getPosition().x - getRadius(), getPosition().y + getRadius() - projectile->getSize().y / 2);
+				projectile->setFillColor(sf::Color::Yellow);
 				projectiles.push_back(projectile);
 				shootCooldown = 0;
 			}
@@ -92,7 +92,7 @@ void Shooter::behavior(std::vector<Shooter>& vectorShooter, std::vector<sf::Vect
 	}
 }
 
-void Elite::behavior(sf::CircleShape player, std::vector<sf::RectangleShape> &projectiles, sf::RenderWindow &window){ //pour tracker le personnage après un délai
+void Elite::behavior(sf::CircleShape player, std::vector<sf::RectangleShape*> &projectiles, sf::RenderWindow &window){ //pour tracker le personnage après un délai
 
 	//GAUCHE DROITE
 	move(moveDirX, 0);
@@ -116,9 +116,9 @@ void Elite::behavior(sf::CircleShape player, std::vector<sf::RectangleShape> &pr
 	}
 	//TIRER
 	if (shootCooldown == 50) {
-		sf::RectangleShape projectile(sf::Vector2f(30, 15));
-		projectile.setPosition(getPosition().x - getRadius(), getPosition().y + getRadius() - projectile.getSize().y/2);
-		projectile.setFillColor(sf::Color::Red);
+		sf::RectangleShape *projectile = new sf::RectangleShape(sf::Vector2f(30, 15));
+		projectile->setPosition(getPosition().x - getRadius(), getPosition().y + getRadius() - projectile->getSize().y/2);
+		projectile->setFillColor(sf::Color::Red);
 		projectiles.push_back(projectile);
 		shootCooldown = 0;
 	}

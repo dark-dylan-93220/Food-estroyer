@@ -128,7 +128,7 @@ namespace { // GLOBAL VARIABLES OF THIS FILE HERE
 	sf::Sprite playerCurrentSprite;
 	// VECTORS
 	std::vector<sf::Vector2f> shooterPositions; ////////////////////////////////
-	std::vector<sf::RectangleShape> projectiles;
+	std::vector<sf::RectangleShape*> projectiles;
 	std::vector<Normal> vectorNormal;
 	std::vector<Shooter> vectorShooter;
 	std::vector<Elite> vectorElite;
@@ -927,8 +927,12 @@ void Game::update() {
 			clownWalkAnimationTime += f_ElapsedTime;
 			playerInput();														 ///////////////////////////////////////////////
 
-			for (sf::RectangleShape& projectile : projectiles) {
-				projectile.move(-600 * f_ElapsedTime, 0);
+			for (int i = 0; i < projectiles.size(); i++) {
+				projectiles[i]->move(-600 * f_ElapsedTime, 0);
+				if (projectiles[i]->getPosition().x < 0) {
+					delete projectiles[i];
+					projectiles.erase(projectiles.begin() + i);
+				}
 			}
 			for (Normal& normal : vectorNormal) {
 				normal.behavior();
@@ -1119,8 +1123,12 @@ void Game::render() {
 			for (Elite& elite : vectorElite) {
 				window.draw(elite);
 			}
-			for (sf::RectangleShape &projectile : projectiles) {
-				window.draw(projectile);
+			for (sf::RectangleShape* &projectile : projectiles) {
+				sf::RectangleShape projectileDraw;
+				projectileDraw.setSize(projectile->getSize());
+				projectileDraw.setFillColor(projectile->getFillColor());
+				projectileDraw.setPosition(projectile->getPosition());
+				window.draw(projectileDraw);
 			}
 			window.draw(playerCurrentSprite);
 			// window.draw(player);
