@@ -1,2 +1,7 @@
 ﻿  enemy.cpp
-  Food'estroyer.vcxproj -> C:\Users\dhollemaert\Source\Repos\dark-dylan-93220\Food-estroyer\Food'estroyer\x64\Debug\Food'estroyer.exe
+  game.cpp
+  main.cpp
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\main.cpp(5,12): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
+  player.cpp
+  Génération de code en cours...
+  Food'estroyer.vcxproj -> C:\Users\jrodrigues\Source\Repos\dark-dylan-93220\Food-estroyer\Food'estroyer\x64\Debug\Food'estroyer.exe

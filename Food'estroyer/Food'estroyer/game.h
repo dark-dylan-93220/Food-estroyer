@@ -52,6 +52,7 @@ private:
 	void setShooterPositions();
 	void setEnemySpawn();
 	void playerInput();
+	void FPSCalculation();
 	void pollEvents();
 	void update();
 	void render();

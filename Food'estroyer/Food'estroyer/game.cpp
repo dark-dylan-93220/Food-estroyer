@@ -869,6 +869,16 @@ void Game::setEnemySpawn() {                                    // TEMPORAIRE //
 	vectorElite.push_back(elite1);
 }
 
+void Game::FPSCalculation() {
+	// FPS calculation
+	f_ElapsedTime = Clock.restart().asSeconds();
+	float f_FPS = (1.f / f_ElapsedTime);
+	std::ostringstream oss;
+	oss << std::fixed << std::setprecision(2) << f_FPS;
+	std::string FPSValue = oss.str();
+	FPSText.setString("FPS : " + FPSValue);
+}
+
 void Game::run() {
 
 	setupGraphicalElements();
@@ -878,13 +888,7 @@ void Game::run() {
 	setEnemySpawn();                                          //////////////////////
 
 	while (m_isRunning) {
-		// FPS calculation
-		f_ElapsedTime = Clock.restart().asSeconds();
-		float f_FPS = (1.f / f_ElapsedTime);
-		std::ostringstream oss;
-		oss << std::fixed << std::setprecision(2) << f_FPS;
-		std::string FPSValue = oss.str();
-		FPSText.setString("FPS : " + FPSValue);
+		FPSCalculation();
 
 		// Funtctions loop
 		pollEvents();
