@@ -8,12 +8,16 @@ protected:
 	bool alive = true;
 	char size;
 	float moveSpeed = -300;
+	float hp = 1;
+	float hpSize = 3;
 	Enemy(float x, float y, char s, sf::RenderWindow &window);
 public:
 	bool getAlive() { return alive; }
 	char getSize(){ return size; }
+	float getHp() { return hp; }
 
 	void setAlive(bool newState) { alive = newState; }
+	void setHp(float degats) { hp -= degats; }
 };
 
 class Projectile : public sf::RectangleShape {
@@ -46,12 +50,14 @@ private:
 	std::string id = "shooter";
 public:
 	bool positionFound = false;
+	bool positionReached = false;
 	bool waitingForPosition = true;
 	float moveDirX = 0;
 	float moveDirY = 0;
 	int randomPositionChoice = 0;
 	float shootCooldown = 0;
 	sf::Vector2f positionChoice = { 0, 0 };
+	sf::Vector2f targetPosition = { getPosition().x - (getLocalBounds().width * getScale().x) / 2, getPosition().y - (getLocalBounds().height * getScale().y) / 2 };
 	std::vector<sf::Vector2f> possiblePositions;
 
 	Shooter(float x, float y, char s, sf::RenderWindow& window);

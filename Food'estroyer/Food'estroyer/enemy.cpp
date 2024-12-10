@@ -4,28 +4,47 @@
 Enemy::Enemy(float x, float y, char s, sf::RenderWindow &window) : size(s) {
 	this->setPosition(x, y);
 	// Valeurs à changer en pourcentage de taille de la fenêtre.
-	if (s == 's') this->setScale(0.09, 0.09);
-	else if (s == 'm') this->setScale(0.13, 0.13);
-	else if (s == 'l') this->setScale(0.19, 0.19);
+	if (s == 's') { 
+		this->setScale(0.09, 0.09);
+		this->hpSize = 0.5;              // multiplier les hp de l'ennemi pas rapport à sa taille
+	}
+	else if (s == 'm') { 
+		this->setScale(0.13, 0.13);
+		this->hpSize = 1;
+	}
+	else if (s == 'l') {
+		this->setScale(0.19, 0.19);
+		this->hpSize = 1.5;
+	}
 }
 
 Normal::Normal(float x, float y, char s, sf::RenderWindow& window) : Enemy(x, y, s, window) {
-	if (size == 's') moveSpeed = -700;
-	if (size == 'm') moveSpeed = -500;
-	if (size == 'l') moveSpeed = -300;
+	if (size == 's') { moveSpeed = -700; }
+	if (size == 'm') { moveSpeed = -500; }
+	if (size == 'l') { moveSpeed = -300; }
+	hp = 100 * hpSize;
 }
-Shooter::Shooter(float x, float y, char s, sf::RenderWindow &window) : Enemy(x, y, s, window) {}
+Shooter::Shooter(float x, float y, char s, sf::RenderWindow &window) : Enemy(x, y, s, window) {
+	this->setPosition(sf::Vector2f(window.getSize().x + 100.f, -100.f));
+	hp = 150 * hpSize;
+}
 Elite::Elite(float x, float y, char s, sf::RenderWindow& window) : Enemy(x, y, s, window) {
 	if (s == 's') moveSpeed = -700;
 	if (s == 'm') moveSpeed = -500;
 	if (s == 'l') moveSpeed = -300;
+	hp = 200 * hpSize;
 }
 
 void Normal::behavior(float timeElapsed) {
+	if (hp <= 0) { alive = false; }
 	move(moveSpeed * timeElapsed, 0);
 }
 
-void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, std::vector<sf::Vector2f>& shooterPositions, std::vector<Projectile*>& projectiles, std::vector<bool>& positionsOccupied){
+void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, std::vector<sf::Vector2f>& shooterPositions, 
+	std::vector<Projectile*>& projectiles, std::vector<bool>& positionsOccupied){
+
+	if (hp <= 0) { alive = false; }
+
 	int counter(0);
 	possiblePositions = shooterPositions;
 	while (!positionFound || waitingForPosition) {
@@ -77,16 +96,24 @@ void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, s
 		
 		if (positionChoice.x < getPosition().x) moveDirX = -moveDirX;
 		if (positionChoice.x > getPosition().x) moveDirX = moveDirX;
-		if ((positionChoice.x - getPosition().x < 1.f) || (getPosition().x - positionChoice.x < 1.f)) setPosition(positionChoice.x, getPosition().y);
 		if (positionChoice.y < getPosition().y) moveDirY = -moveDirY;
 		if (positionChoice.y > getPosition().y) moveDirY = moveDirY;
-		if ((positionChoice.y - getPosition().y < 1.f) || (getPosition().y - positionChoice.y < 1.f)) setPosition(getPosition().x, positionChoice.y);
-
-		if (getPosition() != positionChoice) move((moveDirX * 100) * timeElapsed, (moveDirY * 100) * timeElapsed);
-		else 
+		if (getPosition().x - positionChoice.x > 3.f && !positionReached)
+			move((moveDirX * 100) * timeElapsed, 0);
+		if (positionChoice.y - getPosition().y > 3.f && !positionReached)
+			move(0, (moveDirY * 100) * timeElapsed);
+		if(!(getPosition().x - positionChoice.x > 3.f) && !(positionChoice.y - getPosition().y > 3.f))
 		{
+			//Center shooter position in relation to his size
+			positionReached = true;
+			if (positionReached) {
+				if (getPosition().x - targetPosition.x > 3.f)
+					move((moveDirX * 10) * timeElapsed, 0);
+				if (targetPosition.y - getPosition().y > 3.f)
+					move(0, (moveDirY * 10) * timeElapsed);
+			}
 			// Shoots here
-			if (shootCooldown >= 0.7f) { // ici : varier le nombre de boucle pour que les ennemis shoot +ou- vite - A remplacer par une durée de temps variable
+			if (shootCooldown >= 1.5f) { // ici : varier le nombre de boucle pour que les ennemis shoot +ou- vite - A remplacer par une durée de temps variable
 				Projectile *projectile = new Projectile;
 				projectile->setId(getId());
 				projectile->setSize(sf::Vector2f(20, 10));
@@ -104,6 +131,8 @@ void Elite::behavior(float timeElapsed, sf::CircleShape player, std::vector<Proj
 {
 	//pour tracker le personnage après un délai
 	//GAUCHE DROITE
+
+	if (hp <= 0) { alive = false; }
 
 	if (getPosition().x <= window.getSize().x && getPosition().x >= 0) {
 		if (getPosition().x < window.getSize().x / 2 + getLocalBounds().width * getScale().x) {
