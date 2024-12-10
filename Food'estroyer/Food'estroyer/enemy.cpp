@@ -138,30 +138,32 @@ void Elite::behavior(float timeElapsed, sf::CircleShape player, std::vector<Proj
 
 	if (getPosition().x <= window.getSize().x && getPosition().x >= 0) {
 		if (getPosition().x < window.getSize().x / 2 + getLocalBounds().width * getScale().x) {
+			setPosition(window.getSize().x / 2 + 50.f, getPosition().y);
 			moveSpeed = -moveSpeed;
 		}
 		else if (getPosition().x > window.getSize().x - getLocalBounds().width * getScale().x) {
+			setPosition(window.getSize().x - 50.f, getPosition().y);
 			moveSpeed = -moveSpeed;
 		}
 	}
 	move(moveSpeed* timeElapsed, 0);
 	
 	//SUIVRE LE JOUEUR SUR L'AXE Y
-	if ((getPosition().y - playerPosition.y > 2.f || getPosition().y - playerPosition.y < -2.f))
+	if ((getPosition().y - playerPosition.y > 10.f || getPosition().y - playerPosition.y < -10.f))
 		trackCooldown += timeElapsed; //set un chrono
 
 	if (trackCooldown > 1.f) { //à varier selon l'agressivité voulue
-		if ((getPosition().y - playerPosition.y <= 2.f && getPosition().y - playerPosition.y >= -2.f)) {
+		if ((getPosition().y - playerPosition.y <= 10.f && getPosition().y - playerPosition.y >= -10.f)) {
 			trackCooldown = 0;
 		}
 
 		else if (getPosition().y > playerPosition.y) {
-			if (getPosition().y - playerPosition.y > 3.f)
+			if (getPosition().y - playerPosition.y > 10.f)
 				move(0, -300 * timeElapsed);
 			else { move(0, -1 * timeElapsed); }
 		}
 		else if (getPosition().y < playerPosition.y) {
-			if (playerPosition.y - getPosition().y > 3.f)
+			if (playerPosition.y - getPosition().y > 10.f)
 				move(0, 300 * timeElapsed);
 			else { move(0, 1 * timeElapsed); }
 		}
