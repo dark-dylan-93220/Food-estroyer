@@ -3,35 +3,56 @@
 
 #include "game.h" // Surtout pour avoir accès aux propriétés de window
 
+//SUGAR DROPPING FROM ENEMIES
+class Sugar : public sf::Sprite {
+private :
+	char size = 'z';
+	bool state = true;
+public:
+	char getSize() const { return size; }
+	bool getState() const { return state; }
+
+	void setState(bool newState) {
+		state = newState;
+	}
+};
+
+//CLASSE DE BASE : ENEMY
 class Enemy : public sf::Sprite {
 protected:
 	bool alive = true;
 	char size;
-	float moveSpeed = -300;
+	float moveSpeedX = -300;
+	float moveSpeedY = -300;
 	float hp = 1;
 	float hpSize = 3;
+	bool dropedSugar = false;
 	Enemy(float x, float y, char s, sf::RenderWindow &window);
 public:
-	bool getAlive() { return alive; }
-	char getSize(){ return size; }
-	float getHp() { return hp; }
+	bool getAlive() const { return alive; }
+	char getSize() const { return size; }
+	float getHp() const { return hp; }
 
 	void setAlive(bool newState) { alive = newState; }
 	void setHp(float degats) { hp -= degats; }
+
+	void dropSugar(std::vector<Sugar*>& vectorSugar, Enemy& enemy);
 };
 
-class Projectile : public sf::RectangleShape {
+//PROJECTILES
+class Projectile : public sf::Sprite {
 private:
 	std::string id;
+	bool state = true;
 public:
-	std::string getId() {
-		return id;
-	}
-	void setId(std::string newId) {
-		id = newId;
-	}
+	std::string getId() const { return id; }
+	bool getState() const { return state; }
+
+	void setId(std::string newId) { id = newId; }
+	void setState(bool newState) { state = newState; }
 };
 
+//NORMAL ENEMIES (ONLY MOVING LEFT)
 class Normal : public Enemy {
 private:
 	std::string id = "normal";
@@ -40,11 +61,10 @@ public:
 
 	void behavior(float timeElapsed);
 
-	std::string getId() {
-		return id;
-	}
+	std::string getId() const { return id; }
 };
 
+//SHOOTERS (FIXED POSITIONS, CAN SHOOT)
 class Shooter : public Enemy {
 private:
 	std::string id = "shooter";
@@ -64,11 +84,10 @@ public:
 
 	void behavior(float timeElapsed, std::vector<Shooter>& vectorShooters, std::vector<sf::Vector2f> &shooterPositions, std::vector<Projectile*> &projectiles, std::vector<bool>& positionsOccupied);
 
-	std::string getId() {
-		return id;
-	}
+	std::string getId() const { return id; }
 };
 
+//ELITES (TRACK THE PLAYER, CAN SHOOT)
 class Elite : public Enemy {
 private:
 	std::string id = "elite";
@@ -81,9 +100,7 @@ public:
 
 	void behavior(float timeElapsed, sf::CircleShape player, std::vector<Projectile*> &projectiles, sf::RenderWindow &window);
 
-	std::string getId() {
-		return id;
-	}
+	std::string getId() const { return id; }
 };
 
 #endif

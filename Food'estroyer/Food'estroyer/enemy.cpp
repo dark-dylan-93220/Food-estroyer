@@ -4,24 +4,27 @@
 Enemy::Enemy(float x, float y, char s, sf::RenderWindow &window) : size(s) {
 	this->setPosition(x, y);
 	// Valeurs à changer en pourcentage de taille de la fenêtre.
-	if (s == 's') { 
-		this->setScale(0.09, 0.09);
-		this->hpSize = 0.5;              // multiplier les hp de l'ennemi pas rapport à sa taille
-	}
-	else if (s == 'm') { 
-		this->setScale(0.13, 0.13);
-		this->hpSize = 1;
-	}
-	else if (s == 'l') {
-		this->setScale(0.19, 0.19);
-		this->hpSize = 1.5;
+	switch (s) {
+	case ('s') :
+			this->setScale(0.09, 0.09);
+			this->hpSize = 0.5;              // multiplier les hp de l'ennemi pas rapport à sa taille
+			moveSpeedX = -400; moveSpeedY = -400;
+			break;
+	case('m') :
+			this->setScale(0.13, 0.13);
+			this->hpSize = 1;
+			moveSpeedX = -300; moveSpeedY = -300;
+			break;
+	case('l') :
+			this->setScale(0.19, 0.19);
+			this->hpSize = 1.5;
+			moveSpeedX = -200; moveSpeedY = -200;
+			break;
+	default: std::cout << "taille d'un ennemi mal initialisée (choisir 's', 'm' ou 'l')" << std::endl; break;
 	}
 }
 
 Normal::Normal(float x, float y, char s, sf::RenderWindow& window) : Enemy(x, y, s, window) {
-	if (size == 's') { moveSpeed = -700; }
-	if (size == 'm') { moveSpeed = -500; }
-	if (size == 'l') { moveSpeed = -300; }
 	hp = 100 * hpSize;
 }
 Shooter::Shooter(float x, float y, char s, sf::RenderWindow &window) : Enemy(x, y, s, window) {
@@ -29,15 +32,27 @@ Shooter::Shooter(float x, float y, char s, sf::RenderWindow &window) : Enemy(x, 
 	hp = 150 * hpSize;
 }
 Elite::Elite(float x, float y, char s, sf::RenderWindow& window) : Enemy(x, y, s, window) {
-	if (s == 's') moveSpeed = -700;
-	if (s == 'm') moveSpeed = -500;
-	if (s == 'l') moveSpeed = -300;
 	hp = 200 * hpSize;
 }
 
 void Normal::behavior(float timeElapsed) {
 	if (hp <= 0) { alive = false; }
-	move(moveSpeed * timeElapsed, 0);
+	move(moveSpeedX * timeElapsed, 0);
+}
+
+void Enemy::dropSugar(std::vector<Sugar*> &vectorSugar, Enemy &enemy) {
+	if (!alive && !dropedSugar) {
+		dropedSugar = true;
+		Sugar* sugar = new Sugar;
+		sugar->setPosition(enemy.getPosition().x - (enemy.getLocalBounds().width * enemy.getScale().x) / 2,
+			enemy.getPosition().y + (enemy.getLocalBounds().height * enemy.getScale().y) / 2 - (sugar->getLocalBounds().height * sugar->getScale().y) / 2);
+		switch (getSize()) {
+		case 's': sugar->setScale(0.05, 0.05); break;
+		case 'm': sugar->setScale(0.08, 0.08); break;
+		case 'l': sugar->setScale(0.11, 0.11); break;
+		}
+		vectorSugar.push_back(sugar);
+	}
 }
 
 void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, std::vector<sf::Vector2f>& shooterPositions, 
@@ -116,9 +131,13 @@ void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, s
 			if (shootCooldown >= 1.5f) { // ici : varier le nombre de boucle pour que les ennemis shoot +ou- vite - A remplacer par une durée de temps variable
 				Projectile *projectile = new Projectile;
 				projectile->setId(getId());
-				projectile->setSize(sf::Vector2f(20, 10));
-				projectile->setPosition(getPosition().x - (getLocalBounds().width * getScale().x) / 2, getPosition().y + (getLocalBounds().height * getScale().y) / 2 - projectile->getSize().y / 2);
-				projectile->setFillColor(sf::Color::Yellow);
+				switch (getSize()) {
+				case 's': projectile->setScale(0.05, 0.05); break;
+				case 'm': projectile->setScale(0.10, 0.10); break;
+				case 'l': projectile->setScale(0.15, 0.15); break;
+				}
+				projectile->setPosition(getPosition().x - (getLocalBounds().width * getScale().x) / 2, 
+					getPosition().y + (getLocalBounds().height * getScale().y) / 2 - (projectile->getLocalBounds().height * projectile->getScale().y) / 2);
 				projectiles.push_back(projectile);
 				shootCooldown = 0;
 			}
@@ -138,15 +157,27 @@ void Elite::behavior(float timeElapsed, sf::CircleShape player, std::vector<Proj
 
 	if (getPosition().x <= window.getSize().x && getPosition().x >= 0) {
 		if (getPosition().x < window.getSize().x / 2 + getLocalBounds().width * getScale().x) {
-			setPosition(window.getSize().x / 2 + 50.f, getPosition().y);
-			moveSpeed = -moveSpeed;
+			if (size == 's')
+				setPosition(window.getSize().x / 2 + 50.f, getPosition().y);
+			if (size == 'm')
+				setPosition(window.getSize().x / 2 + 65.f, getPosition().y);
+			if (size == 'l')
+				setPosition(window.getSize().x / 2 + 95.f, getPosition().y);
+
+			moveSpeedX = -moveSpeedX;
 		}
 		else if (getPosition().x > window.getSize().x - getLocalBounds().width * getScale().x) {
-			setPosition(window.getSize().x - 50.f, getPosition().y);
-			moveSpeed = -moveSpeed;
+			if (size == 's')
+				setPosition(window.getSize().x - 50.f, getPosition().y);
+			if (size == 'm') 
+				setPosition(window.getSize().x - 65.f, getPosition().y);
+			if (size == 'l')
+				setPosition(window.getSize().x - 95.f, getPosition().y);
+
+			moveSpeedX = -moveSpeedX;
 		}
 	}
-	move(moveSpeed* timeElapsed, 0);
+	move(moveSpeedX* timeElapsed, 0);
 	
 	//SUIVRE LE JOUEUR SUR L'AXE Y
 	if ((getPosition().y - playerPosition.y > 10.f || getPosition().y - playerPosition.y < -10.f))
@@ -159,22 +190,26 @@ void Elite::behavior(float timeElapsed, sf::CircleShape player, std::vector<Proj
 
 		else if (getPosition().y > playerPosition.y) {
 			if (getPosition().y - playerPosition.y > 10.f)
-				move(0, -300 * timeElapsed);
+				move(0, moveSpeedY * timeElapsed);
 			else { move(0, -1 * timeElapsed); }
 		}
 		else if (getPosition().y < playerPosition.y) {
 			if (playerPosition.y - getPosition().y > 10.f)
-				move(0, 300 * timeElapsed);
+				move(0, -moveSpeedY * timeElapsed);
 			else { move(0, 1 * timeElapsed); }
 		}
 	}
 	//TIRER
-	if (shootCooldown >= 0.3f) {
-		Projectile *projectile = new Projectile;
+	if (shootCooldown >= 1.f) {
+		Projectile* projectile = new Projectile;
 		projectile->setId(getId());
-		projectile->setSize(sf::Vector2f(30, 15));
-		projectile->setPosition(getPosition().x - (getLocalBounds().width * getScale().x) / 2, getPosition().y + (getLocalBounds().height * getScale().y) / 2 - projectile->getSize().y / 2);
-		projectile->setFillColor(sf::Color::Red);
+		switch (getSize()) {
+		case 's': projectile->setScale(0.05, 0.05); break;
+		case 'm': projectile->setScale(0.10, 0.10); break;
+		case 'l': projectile->setScale(0.15, 0.15); break;
+		}
+		projectile->setPosition(getPosition().x - (getLocalBounds().width * getScale().x) / 2,
+			getPosition().y + (getLocalBounds().height * getScale().y) / 2 - (projectile->getLocalBounds().height * projectile->getScale().y) / 2);
 		projectiles.push_back(projectile);
 		shootCooldown = 0;
 	}

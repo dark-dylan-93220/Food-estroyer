@@ -92,7 +92,11 @@ namespace { // GLOBAL VARIABLES OF THIS FILE HERE
 	sf::Texture playerDeath4;
 	sf::Texture playerDeath5;
 	sf::Texture playerDeath6;
-	sf::Texture shooterM;
+	sf::Texture painBizarre;
+	sf::Texture tomato;
+	sf::Texture sugarTexture;
+	sf::Texture shooterProjectile;
+	sf::Texture eliteProjectile;
 	sf::Texture gameplayUILifeBar01Active;
 	sf::Texture gameplayUILifeBar02Active;
 	sf::Texture gameplayUILifeBar03Active;
@@ -180,6 +184,7 @@ namespace { // GLOBAL VARIABLES OF THIS FILE HERE
 	// VECTORS
 	std::vector<sf::Vector2f> shooterPositions; ////////////////////////////////
 	std::vector<Projectile*> projectiles;
+	std::vector<Sugar*> vectorSugar;
 	std::vector<Normal> vectorNormal;
 	std::vector<Shooter> vectorShooter;
 	std::vector<Elite> vectorElite;
@@ -241,7 +246,11 @@ void Game::setupGraphicalElements() {
 	playerDeath4.loadFromFile("Assets/Images/Clown/Death/frame_3_death_clown.png");
 	playerDeath5.loadFromFile("Assets/Images/Clown/Death/frame_4_death_clown.png");
 	playerDeath6.loadFromFile("Assets/Images/Clown/Death/frame_5_death_clown.png");
-	shooterM.loadFromFile("Assets/Images/Enemy/Shooter/m.png");
+	painBizarre.loadFromFile("Assets/Images/Enemy/Shooter/m.png");
+	tomato.loadFromFile("Assets/Images/Enemy/Shooter/tomato.png");
+	sugarTexture.loadFromFile("Assets/Images/Enemy/sugarSquare.png");
+	shooterProjectile.loadFromFile("Assets/Images/Enemy/Projectiles/shooterProjectile.png");
+	eliteProjectile.loadFromFile("Assets/Images/Enemy/Projectiles/eliteProjectile.png");
 	gameplayUILifeBar01Active.loadFromFile("Assets/Images/GameplayUI/01-active.png");
 	gameplayUILifeBar02Active.loadFromFile("Assets/Images/GameplayUI/02-active.png");
 	gameplayUILifeBar03Active.loadFromFile("Assets/Images/GameplayUI/03-active.png");
@@ -643,59 +652,65 @@ void Game::setShooterPositions() {
 
 void Game::setEnemySpawn() {                                    // TEMPORAIRE /////////////////////////////////////////
 	Shooter shooter1(window.getSize().x + 100.f, 800, 'm', window);
-	shooter1.setTexture(shooterM);
+	shooter1.setTexture(painBizarre);
 	vectorShooter.push_back(shooter1);
 	Shooter shooter2(window.getSize().x + 100.f, 900, 'm', window);
-	shooter2.setTexture(shooterM);
+	shooter2.setTexture(painBizarre);
 	vectorShooter.push_back(shooter2);
 	Shooter shooter3(window.getSize().x + 100.f, 1000, 'm', window);
-	shooter3.setTexture(shooterM);
+	shooter3.setTexture(painBizarre);
 	vectorShooter.push_back(shooter3);
 	Shooter shooter4(window.getSize().x + 100.f, 100, 'm', window);
-	shooter4.setTexture(shooterM);
+	shooter4.setTexture(painBizarre);
 	vectorShooter.push_back(shooter4);
 	Shooter shooter5(window.getSize().x + 100.f, 200, 'm', window);
-	shooter5.setTexture(shooterM);
+	shooter5.setTexture(painBizarre);
 	vectorShooter.push_back(shooter5);
 	Shooter shooter6(window.getSize().x + 100.f, 300, 'm', window);
-	shooter6.setTexture(shooterM);
+	shooter6.setTexture(painBizarre);
 	vectorShooter.push_back(shooter6);
 	Shooter shooter7(window.getSize().x + 100.f, 400, 'm', window);
-	shooter7.setTexture(shooterM);
+	shooter7.setTexture(painBizarre);
 	vectorShooter.push_back(shooter7);
 	Shooter shooter8(window.getSize().x + 100.f, 500, 'm', window);
-	shooter8.setTexture(shooterM);
+	shooter8.setTexture(painBizarre);
 	vectorShooter.push_back(shooter8);
 	Shooter shooter9(window.getSize().x + 100.f, 600, 'm', window);
-	shooter9.setTexture(shooterM);
+	shooter9.setTexture(painBizarre);
 	vectorShooter.push_back(shooter9);
 	Shooter shooter10(window.getSize().x + 100.f, 700, 'm', window);
-	shooter10.setTexture(shooterM);
+	shooter10.setTexture(painBizarre);
 	vectorShooter.push_back(shooter10);
 	Shooter shooter11(window.getSize().x + 100.f, 900, 'm', window);
-	shooter11.setTexture(shooterM);
+	shooter11.setTexture(painBizarre);
 	vectorShooter.push_back(shooter11);
 	Shooter shooter12(window.getSize().x + 100.f, 900, 'm', window);
-	shooter12.setTexture(shooterM);
+	shooter12.setTexture(painBizarre);
 	vectorShooter.push_back(shooter12);
 	Shooter shooter13(window.getSize().x + 100.f, 900, 'm', window);
-	shooter13.setTexture(shooterM);
+	shooter13.setTexture(painBizarre);
 	vectorShooter.push_back(shooter13);
 	Shooter shooter14(window.getSize().x + 100.f, 900, 'm', window);
-	shooter14.setTexture(shooterM);
+	shooter14.setTexture(painBizarre);
 	vectorShooter.push_back(shooter14);
 	Shooter shooter15(window.getSize().x + 100.f, 200, 'm', window);
-	shooter15.setTexture(shooterM);
+	shooter15.setTexture(painBizarre);
 	vectorShooter.push_back(shooter15);
 	Shooter shooter16(window.getSize().x + 100.f, 300, 'm', window);
-	shooter16.setTexture(shooterM);
+	shooter16.setTexture(painBizarre);
 	vectorShooter.push_back(shooter16);
 	Normal normal1(1900, 500, 's', window);
-	normal1.setTexture(shooterM);
+	normal1.setTexture(painBizarre);
 	vectorNormal.push_back(normal1);
 	Elite elite1(1200, 800, 's', window);
-	elite1.setTexture(shooterM);
+	elite1.setTexture(tomato);
 	vectorElite.push_back(elite1);
+	Elite elite2(1500, 700, 'm', window); //pour comparer les vitesses de déplacement
+	elite2.setTexture(tomato);
+	vectorElite.push_back(elite2);
+	Elite elite3(1300, 400, 'l', window);
+	elite3.setTexture(tomato);
+	vectorElite.push_back(elite3);
 }
 
 void Game::FPSCalculation() {
@@ -1106,21 +1121,33 @@ void Game::update() {
 
 			playerInput();
 
+			for (int i = 0; i < vectorSugar.size(); i++) {
+				vectorSugar[i]->move(-300 * f_ElapsedTime, 0);
+				if (vectorSugar[i]->getPosition().x < 0 - /*(vectorSugar[i]->getLocalBounds().width * vectorSugar[i]->getScale().x)*/ 100.f
+					|| vectorSugar[i]->getState() == false) {
+					delete vectorSugar[i];
+					vectorSugar.erase(vectorSugar.begin() + i);
+				}
+			}
 			for (int i = 0; i < projectiles.size(); i++) {
 				projectiles[i]->move(-600 * f_ElapsedTime, 0);
-				if (projectiles[i]->getPosition().x < 0) {
+				if (projectiles[i]->getPosition().x < 0 - /*(projectiles[i]->getLocalBounds().width * projectiles[i]->getScale().x)*/ 100.f 
+					|| projectiles[i]->getState() == false) {
 					delete projectiles[i];
 					projectiles.erase(projectiles.begin() + i);
 				}
 			}
 			for (Normal& normal : vectorNormal) {
 				normal.behavior(f_ElapsedTime);
+				normal.dropSugar(vectorSugar, normal);
 			}
 			for (Shooter& shooter : vectorShooter) {
 				shooter.behavior(f_ElapsedTime, vectorShooter, shooterPositions, projectiles, positionsOccupied);
+				shooter.dropSugar(vectorSugar, shooter);
 			}
 			for (Elite& elite : vectorElite) {
 				elite.behavior(f_ElapsedTime, player, projectiles, window);
+				elite.dropSugar(vectorSugar, elite);
 			}
 			
 			if (clownWalkAnimationTime >= 0.1f) playerCurrentSprite.setTexture(playerMove2);
@@ -1296,11 +1323,21 @@ void Game::render() {
 			window.draw(levelOneParralax06SpriteCopy);
 			// --- ENNEMIS & JOUEUR --- //
 			for (Projectile* &projectile : projectiles) {
-				sf::RectangleShape projectileDraw;
-				projectileDraw.setSize(projectile->getSize());
-				projectileDraw.setFillColor(projectile->getFillColor());
+				Projectile projectileDraw;
+				projectileDraw.setScale(projectile->getScale());
+				if(projectile->getId() == "shooter") 
+					projectileDraw.setTexture(shooterProjectile);
+				if (projectile->getId() == "elite")
+					projectileDraw.setTexture(eliteProjectile);
 				projectileDraw.setPosition(projectile->getPosition());
 				window.draw(projectileDraw);
+			}
+			for (Sugar*& sugar : vectorSugar) {
+				Sugar sugarDraw;
+				sugarDraw.setScale(sugar->getScale());
+				sugarDraw.setTexture(sugarTexture);
+				sugarDraw.setPosition(sugar->getPosition());
+				window.draw(sugarDraw);
 			}
 			for (Normal& normal : vectorNormal) {
 				window.draw(normal);
