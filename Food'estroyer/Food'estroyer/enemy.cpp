@@ -9,15 +9,23 @@ Enemy::Enemy(float x, float y, char s, sf::RenderWindow &window) : size(s) {
 	else if (s == 'l') this->setScale(0.19, 0.19);
 }
 
-Normal::Normal(float x, float y, char s, sf::RenderWindow& window) : Enemy(x, y, s, window) {}
+Normal::Normal(float x, float y, char s, sf::RenderWindow& window) : Enemy(x, y, s, window) {
+	if (size == 's') moveSpeed = -700;
+	if (size == 'm') moveSpeed = -500;
+	if (size == 'l') moveSpeed = -300;
+}
 Shooter::Shooter(float x, float y, char s, sf::RenderWindow &window) : Enemy(x, y, s, window) {}
-Elite::Elite(float x, float y, char s, sf::RenderWindow& window) : Enemy(x, y, s, window) {}
-
-void Normal::behavior(float timeElapsed) {
-	move(-500 * timeElapsed, 0);
+Elite::Elite(float x, float y, char s, sf::RenderWindow& window) : Enemy(x, y, s, window) {
+	if (s == 's') moveSpeed = -700;
+	if (s == 'm') moveSpeed = -500;
+	if (s == 'l') moveSpeed = -300;
 }
 
-void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, std::vector<sf::Vector2f>& shooterPositions, std::vector<sf::RectangleShape*>& projectiles, std::vector<bool>& positionsOccupied){
+void Normal::behavior(float timeElapsed) {
+	move(moveSpeed * timeElapsed, 0);
+}
+
+void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, std::vector<sf::Vector2f>& shooterPositions, std::vector<Projectile*>& projectiles, std::vector<bool>& positionsOccupied){
 	int counter(0);
 	possiblePositions = shooterPositions;
 	while (!positionFound || waitingForPosition) {
@@ -79,7 +87,9 @@ void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, s
 		{
 			// Shoots here
 			if (shootCooldown >= 0.7f) { // ici : varier le nombre de boucle pour que les ennemis shoot +ou- vite - A remplacer par une durée de temps variable
-				sf::RectangleShape *projectile = new sf::RectangleShape(sf::Vector2f(20, 10));
+				Projectile *projectile = new Projectile;
+				projectile->setId(getId());
+				projectile->setSize(sf::Vector2f(20, 10));
 				projectile->setPosition(getPosition().x - (getLocalBounds().width * getScale().x) / 2, getPosition().y + (getLocalBounds().height * getScale().y) / 2 - projectile->getSize().y / 2);
 				projectile->setFillColor(sf::Color::Yellow);
 				projectiles.push_back(projectile);
@@ -90,17 +100,20 @@ void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, s
 	}
 }
 
-void Elite::behavior(float timeElapsed, sf::CircleShape player, std::vector<sf::RectangleShape*> &projectiles, sf::RenderWindow &window) 
-{ 
+void Elite::behavior(float timeElapsed, sf::CircleShape player, std::vector<Projectile*> &projectiles, sf::RenderWindow &window) 
+{
 	//pour tracker le personnage après un délai
 	//GAUCHE DROITE
-	move(moveDirX * timeElapsed, 0);
+
 	if (getPosition().x <= window.getSize().x && getPosition().x >= 0) {
-		if (getPosition().x <= window.getSize().x / 2 + getLocalBounds().width * getScale().x)
-			moveDirX = -moveDirX;
-		if (getPosition().x >= window.getSize().x - getLocalBounds().width * getScale().x)
-			moveDirX = -moveDirX;
+		if (getPosition().x < window.getSize().x / 2 + getLocalBounds().width * getScale().x) {
+			moveSpeed = -moveSpeed;
+		}
+		else if (getPosition().x > window.getSize().x - getLocalBounds().width * getScale().x) {
+			moveSpeed = -moveSpeed;
+		}
 	}
+	move(moveSpeed* timeElapsed, 0);
 	
 	//SUIVRE LE JOUEUR SUR L'AXE Y
 	if (getPosition().y > player.getPosition().y || getPosition().y < player.getPosition().y) {
@@ -123,7 +136,9 @@ void Elite::behavior(float timeElapsed, sf::CircleShape player, std::vector<sf::
 	}
 	//TIRER
 	if (shootCooldown >= 0.3f) {
-		sf::RectangleShape *projectile = new sf::RectangleShape(sf::Vector2f(30, 15));
+		Projectile *projectile = new Projectile;
+		projectile->setId(getId());
+		projectile->setSize(sf::Vector2f(30, 15));
 		projectile->setPosition(getPosition().x - (getLocalBounds().width * getScale().x) / 2, getPosition().y + (getLocalBounds().height * getScale().y) / 2 - projectile->getSize().y / 2);
 		projectile->setFillColor(sf::Color::Red);
 		projectiles.push_back(projectile);

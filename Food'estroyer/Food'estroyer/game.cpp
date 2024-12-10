@@ -144,7 +144,7 @@ namespace { // GLOBAL VARIABLES OF THIS FILE HERE
 	sf::Sprite playerCurrentSprite;
 	// VECTORS
 	std::vector<sf::Vector2f> shooterPositions; ////////////////////////////////
-	std::vector<sf::RectangleShape*> projectiles;
+	std::vector<Projectile*> projectiles;
 	std::vector<Normal> vectorNormal;
 	std::vector<Shooter> vectorShooter;
 	std::vector<Elite> vectorElite;
@@ -964,10 +964,10 @@ void Game::setEnemySpawn() {                                    // TEMPORAIRE //
 	Shooter shooter16(window.getSize().x + 100.f, 300, 'm', window);
 	shooter16.setTexture(shooterM);
 	vectorShooter.push_back(shooter16);
-	Normal normal1(1900, 500, 'l', window);
+	Normal normal1(1900, 500, 's', window);
 	normal1.setTexture(shooterM);
 	vectorNormal.push_back(normal1);
-	Elite elite1(1200, 800, 'l', window);
+	Elite elite1(1200, 800, 's', window);
 	elite1.setTexture(shooterM);
 	vectorElite.push_back(elite1);
 }
@@ -1219,7 +1219,7 @@ void Game::render() {
 			window.draw(levelOneParralax06Sprite);
 			window.draw(levelOneParralax06SpriteCopy);
 			// --- ENNEMIS & JOUEUR --- //
-			for (sf::RectangleShape* &projectile : projectiles) {
+			for (Projectile* &projectile : projectiles) {
 				sf::RectangleShape projectileDraw;
 				projectileDraw.setSize(projectile->getSize());
 				projectileDraw.setFillColor(projectile->getFillColor());

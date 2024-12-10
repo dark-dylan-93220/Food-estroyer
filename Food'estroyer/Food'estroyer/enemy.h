@@ -7,27 +7,44 @@ class Enemy : public sf::Sprite {
 protected:
 	bool alive = true;
 	char size;
-	std::string id;
+	float moveSpeed = -300;
 	Enemy(float x, float y, char s, sf::RenderWindow &window);
 public:
+	bool getAlive() { return alive; }
+	char getSize(){ return size; }
+
+	void setAlive(bool newState) { alive = newState; }
+};
+
+class Projectile : public sf::RectangleShape {
+private:
+	std::string id;
+public:
+	std::string getId() {
+		return id;
+	}
+	void setId(std::string newId) {
+		id = newId;
+	}
+};
+
+class Normal : public Enemy {
+private:
+	std::string id = "normal";
+public:
+	Normal(float x, float y, char s, sf::RenderWindow& window);
+
+	void behavior(float timeElapsed);
+
 	std::string getId() {
 		return id;
 	}
 };
 
-class Normal : public Enemy {
-public:
-	std::string id = "normal";
-
-	Normal(float x, float y, char s, sf::RenderWindow& window);
-
-	void behavior(float timeElapsed);
-};
-
 class Shooter : public Enemy {
-public:
+private:
 	std::string id = "shooter";
-
+public:
 	bool positionFound = false;
 	bool waitingForPosition = true;
 	float moveDirX = 0;
@@ -39,20 +56,27 @@ public:
 
 	Shooter(float x, float y, char s, sf::RenderWindow& window);
 
-	void behavior(float timeElapsed, std::vector<Shooter>& vectorShooters, std::vector<sf::Vector2f> &shooterPositions, std::vector<sf::RectangleShape*> &projectiles, std::vector<bool>& positionsOccupied);
+	void behavior(float timeElapsed, std::vector<Shooter>& vectorShooters, std::vector<sf::Vector2f> &shooterPositions, std::vector<Projectile*> &projectiles, std::vector<bool>& positionsOccupied);
+
+	std::string getId() {
+		return id;
+	}
 };
 
 class Elite : public Enemy {
-public:
+private:
 	std::string id = "elite";
-
-	float moveDirX = -400;
+public:
 	float shootCooldown = 0;
 	float trackCooldown = 0;
 
 	Elite(float x, float y, char s, sf::RenderWindow& window);
 
-	void behavior(float timeElapsed, sf::CircleShape player, std::vector<sf::RectangleShape*> &projectiles, sf::RenderWindow &window);
+	void behavior(float timeElapsed, sf::CircleShape player, std::vector<Projectile*> &projectiles, sf::RenderWindow &window);
+
+	std::string getId() {
+		return id;
+	}
 };
 
 #endif
