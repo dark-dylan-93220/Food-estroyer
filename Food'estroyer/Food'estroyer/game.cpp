@@ -7,6 +7,7 @@
 namespace { // GLOBAL VARIABLES OF THIS FILE HERE
 	// DATA STL (STandard Library)
 	int mouseLastDownX, mouseLastDownY;
+	int scoreCounter;
 	bool isMouseDragging;
 	std::vector<sf::VideoMode> modes = sf::VideoMode::getFullscreenModes(); // Gets the native resolutions of the machine this program is running on
 	float clownWalkAnimationTime = 0.f;
@@ -63,6 +64,11 @@ namespace { // GLOBAL VARIABLES OF THIS FILE HERE
 	sf::Text gameplayPauseTitleText;
 	sf::Text gameplayPauseSFXText;
 	sf::Text gameplayPauseMusicText;
+	sf::Text gameplayUIScoreText;
+	sf::Text gameplayUIPlayerLife;
+	sf::Text gameplayUIPlayerCombo;
+	sf::Text gameplayUISugarForUpgrades;
+	sf::Text gameplayUIBossLife;
 	// MUSICS
 	// SOUNDS
 	// IMAGES
@@ -87,7 +93,44 @@ namespace { // GLOBAL VARIABLES OF THIS FILE HERE
 	sf::Texture playerDeath5;
 	sf::Texture playerDeath6;
 	sf::Texture shooterM;
-	sf::Texture tomato;
+	sf::Texture gameplayUILifeBar01Active;
+	sf::Texture gameplayUILifeBar02Active;
+	sf::Texture gameplayUILifeBar03Active;
+	sf::Texture gameplayUILifeBar04Active;
+	sf::Texture gameplayUILifeBar05Active;
+	sf::Texture gameplayUILifeBar06Active;
+	sf::Texture gameplayUILifeBar07Active;
+	sf::Texture gameplayUILifeBar08Active;
+	sf::Texture gameplayUILifeBar09Active;
+	sf::Texture gameplayUILifeBar10Active;
+	sf::Texture gameplayUILifeBar11Active;
+	sf::Texture gameplayUILifeBar12Active;
+	sf::Texture gameplayUILifeBar13Active;
+	sf::Texture gameplayUILifeBar14Active;
+	sf::Texture gameplayUILifeBar15Active;
+	sf::Texture gameplayUILifeBar16Active;
+	sf::Texture gameplayUILifeBar17Active;
+	sf::Texture gameplayUILifeBar18Active;
+	sf::Texture gameplayUILifeBar19Active;
+	sf::Texture gameplayUILifeBar01Inactive;
+	sf::Texture gameplayUILifeBar02Inactive;
+	sf::Texture gameplayUILifeBar03Inactive;
+	sf::Texture gameplayUILifeBar04Inactive;
+	sf::Texture gameplayUILifeBar05Inactive;
+	sf::Texture gameplayUILifeBar06Inactive;
+	sf::Texture gameplayUILifeBar07Inactive;
+	sf::Texture gameplayUILifeBar08Inactive;
+	sf::Texture gameplayUILifeBar09Inactive;
+	sf::Texture gameplayUILifeBar10Inactive;
+	sf::Texture gameplayUILifeBar11Inactive;
+	sf::Texture gameplayUILifeBar12Inactive;
+	sf::Texture gameplayUILifeBar13Inactive;
+	sf::Texture gameplayUILifeBar14Inactive;
+	sf::Texture gameplayUILifeBar15Inactive;
+	sf::Texture gameplayUILifeBar16Inactive;
+	sf::Texture gameplayUILifeBar17Inactive;
+	sf::Texture gameplayUILifeBar18Inactive;
+	sf::Texture gameplayUILifeBar19Inactive;
 	// SHAPES
 	sf::RectangleShape screenShadowWhenBlured;
 	sf::RectangleShape menuPauseTopBar; 
@@ -132,17 +175,8 @@ namespace { // GLOBAL VARIABLES OF THIS FILE HERE
 	sf::Sprite levelOneParralax04SpriteCopy;
 	sf::Sprite levelOneParralax05SpriteCopy;
 	sf::Sprite levelOneParralax06SpriteCopy;
-	sf::Sprite playerMove1Sprite;
-	sf::Sprite playerMove2Sprite;
-	sf::Sprite playerAttack1Sprite;
-	sf::Sprite playerAttack2Sprite;
-	sf::Sprite playerDeath1Sprite;
-	sf::Sprite playerDeath2Sprite;
-	sf::Sprite playerDeath3Sprite;
-	sf::Sprite playerDeath4Sprite;
-	sf::Sprite playerDeath5Sprite;
-	sf::Sprite playerDeath6Sprite;
 	sf::Sprite playerCurrentSprite;
+	sf::Sprite gameplayUILifeBarCurrentSprite;
 	// VECTORS
 	std::vector<sf::Vector2f> shooterPositions; ////////////////////////////////
 	std::vector<Projectile*> projectiles;
@@ -208,7 +242,44 @@ void Game::setupGraphicalElements() {
 	playerDeath5.loadFromFile("Assets/Images/Clown/Death/frame_4_death_clown.png");
 	playerDeath6.loadFromFile("Assets/Images/Clown/Death/frame_5_death_clown.png");
 	shooterM.loadFromFile("Assets/Images/Enemy/Shooter/m.png");
-	tomato.loadFromFile("Assets/Images/Enemy/Shooter/tomato1.png");
+	gameplayUILifeBar01Active.loadFromFile("Assets/Images/GameplayUI/01-active.png");
+	gameplayUILifeBar02Active.loadFromFile("Assets/Images/GameplayUI/02-active.png");
+	gameplayUILifeBar03Active.loadFromFile("Assets/Images/GameplayUI/03-active.png");
+	gameplayUILifeBar04Active.loadFromFile("Assets/Images/GameplayUI/04-active.png");
+	gameplayUILifeBar05Active.loadFromFile("Assets/Images/GameplayUI/05-active.png");
+	gameplayUILifeBar06Active.loadFromFile("Assets/Images/GameplayUI/06-active.png");
+	gameplayUILifeBar07Active.loadFromFile("Assets/Images/GameplayUI/07-active.png");
+	gameplayUILifeBar08Active.loadFromFile("Assets/Images/GameplayUI/08-active.png");
+	gameplayUILifeBar09Active.loadFromFile("Assets/Images/GameplayUI/09-active.png");
+	gameplayUILifeBar10Active.loadFromFile("Assets/Images/GameplayUI/10-active.png");
+	gameplayUILifeBar11Active.loadFromFile("Assets/Images/GameplayUI/11-active.png");
+	gameplayUILifeBar12Active.loadFromFile("Assets/Images/GameplayUI/12-active.png");
+	gameplayUILifeBar13Active.loadFromFile("Assets/Images/GameplayUI/13-active.png");
+	gameplayUILifeBar14Active.loadFromFile("Assets/Images/GameplayUI/14-active.png");
+	gameplayUILifeBar15Active.loadFromFile("Assets/Images/GameplayUI/15-active.png");
+	gameplayUILifeBar16Active.loadFromFile("Assets/Images/GameplayUI/16-active.png");
+	gameplayUILifeBar17Active.loadFromFile("Assets/Images/GameplayUI/17-active.png");
+	gameplayUILifeBar18Active.loadFromFile("Assets/Images/GameplayUI/18-active.png");
+	gameplayUILifeBar19Active.loadFromFile("Assets/Images/GameplayUI/19-active.png");
+	gameplayUILifeBar01Inactive.loadFromFile("Assets/Images/GameplayUI/01-inactive.png");
+	gameplayUILifeBar02Inactive.loadFromFile("Assets/Images/GameplayUI/02-inactive.png");
+	gameplayUILifeBar03Inactive.loadFromFile("Assets/Images/GameplayUI/03-inactive.png");
+	gameplayUILifeBar04Inactive.loadFromFile("Assets/Images/GameplayUI/04-inactive.png");
+	gameplayUILifeBar05Inactive.loadFromFile("Assets/Images/GameplayUI/05-inactive.png");
+	gameplayUILifeBar06Inactive.loadFromFile("Assets/Images/GameplayUI/06-inactive.png");
+	gameplayUILifeBar07Inactive.loadFromFile("Assets/Images/GameplayUI/07-inactive.png");
+	gameplayUILifeBar08Inactive.loadFromFile("Assets/Images/GameplayUI/08-inactive.png");
+	gameplayUILifeBar09Inactive.loadFromFile("Assets/Images/GameplayUI/09-inactive.png");
+	gameplayUILifeBar10Inactive.loadFromFile("Assets/Images/GameplayUI/10-inactive.png");
+	gameplayUILifeBar11Inactive.loadFromFile("Assets/Images/GameplayUI/11-inactive.png");
+	gameplayUILifeBar12Inactive.loadFromFile("Assets/Images/GameplayUI/12-inactive.png");
+	gameplayUILifeBar13Inactive.loadFromFile("Assets/Images/GameplayUI/13-inactive.png");
+	gameplayUILifeBar14Inactive.loadFromFile("Assets/Images/GameplayUI/14-inactive.png");
+	gameplayUILifeBar15Inactive.loadFromFile("Assets/Images/GameplayUI/15-inactive.png");
+	gameplayUILifeBar16Inactive.loadFromFile("Assets/Images/GameplayUI/16-inactive.png");
+	gameplayUILifeBar17Inactive.loadFromFile("Assets/Images/GameplayUI/17-inactive.png");
+	gameplayUILifeBar18Inactive.loadFromFile("Assets/Images/GameplayUI/18-inactive.png");
+	gameplayUILifeBar19Inactive.loadFromFile("Assets/Images/GameplayUI/19-inactive.png");
 	// SHAPES
 	screenShadowWhenBlured.setSize(sf::Vector2f(window.getSize()));
 	screenShadowWhenBlured.setPosition(0.f, 0.f);
@@ -292,37 +363,20 @@ void Game::setupGraphicalElements() {
 	levelOneParralax04SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x,0));
 	levelOneParralax05SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x,0));
 	levelOneParralax06SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x,0));
-	playerMove1Sprite.setTexture(playerMove1);
-	playerMove2Sprite.setTexture(playerMove2);
-	playerAttack1Sprite.setTexture(playerAttack1);
-	playerAttack2Sprite.setTexture(playerAttack2);
-	playerDeath1Sprite.setTexture(playerDeath1);
-	playerDeath2Sprite.setTexture(playerDeath2);
-	playerDeath3Sprite.setTexture(playerDeath3);
-	playerDeath4Sprite.setTexture(playerDeath4);
-	playerDeath5Sprite.setTexture(playerDeath5);
-	playerDeath6Sprite.setTexture(playerDeath6);
-	playerMove1Sprite.setScale(sf::Vector2f((window.getSize().x * 0.05f) / (playerMove1Sprite.getLocalBounds().width), (window.getSize().y * 0.10f) / (playerMove1Sprite.getLocalBounds().height)));
-	playerMove2Sprite.setScale(sf::Vector2f((window.getSize().x * 0.05f) / (playerMove2Sprite.getLocalBounds().width), (window.getSize().y * 0.10f) / (playerMove2Sprite.getLocalBounds().height)));
-	playerAttack1Sprite.setScale(sf::Vector2f((window.getSize().x * 0.05f) / (playerAttack1Sprite.getLocalBounds().width), (window.getSize().y * 0.10f) / (playerAttack1Sprite.getLocalBounds().height)));
-	playerAttack2Sprite.setScale(sf::Vector2f((window.getSize().x * 0.05f) / (playerAttack2Sprite.getLocalBounds().width), (window.getSize().y * 0.10f) / (playerAttack2Sprite.getLocalBounds().height)));
-	playerDeath1Sprite.setScale(sf::Vector2f((window.getSize().x * 0.05f) / (playerDeath1Sprite.getLocalBounds().width), (window.getSize().y * 0.10f) / (playerDeath1Sprite.getLocalBounds().height)));
-	playerDeath2Sprite.setScale(sf::Vector2f((window.getSize().x * 0.05f) / (playerDeath2Sprite.getLocalBounds().width), (window.getSize().y * 0.10f) / (playerDeath2Sprite.getLocalBounds().height)));
-	playerDeath3Sprite.setScale(sf::Vector2f((window.getSize().x * 0.05f) / (playerDeath3Sprite.getLocalBounds().width), (window.getSize().y * 0.10f) / (playerDeath3Sprite.getLocalBounds().height)));
-	playerDeath4Sprite.setScale(sf::Vector2f((window.getSize().x * 0.05f) / (playerDeath4Sprite.getLocalBounds().width), (window.getSize().y * 0.10f) / (playerDeath4Sprite.getLocalBounds().height)));
-	playerDeath5Sprite.setScale(sf::Vector2f((window.getSize().x * 0.05f) / (playerDeath5Sprite.getLocalBounds().width), (window.getSize().y * 0.10f) / (playerDeath5Sprite.getLocalBounds().height)));
-	playerDeath6Sprite.setScale(sf::Vector2f((window.getSize().x * 0.05f) / (playerDeath6Sprite.getLocalBounds().width), (window.getSize().y * 0.10f) / (playerDeath6Sprite.getLocalBounds().height)));
 	playerCurrentSprite.setTexture(playerMove1);
-	playerCurrentSprite.setScale(playerMove1Sprite.getScale());
+	playerCurrentSprite.setScale(sf::Vector2f((window.getSize().x * 0.05f) / (playerCurrentSprite.getLocalBounds().width), (window.getSize().y * 0.10f) / (playerCurrentSprite.getLocalBounds().height)));
 	playerCurrentSprite.setPosition(sf::Vector2f(window.getSize().x * 0.07f, (window.getSize().y / 2) - (playerCurrentSprite.getGlobalBounds().height / 2)));
-	playerMove1Sprite.setPosition(playerCurrentSprite.getPosition());
 	player.setPosition(playerCurrentSprite.getPosition());
+	gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar01Active);
+	gameplayUILifeBarCurrentSprite.setScale(sf::Vector2f((window.getSize().x * 0.20f) / (gameplayUILifeBarCurrentSprite.getLocalBounds().width), (window.getSize().x * 0.04356f) / (gameplayUILifeBarCurrentSprite.getLocalBounds().height)));
+	gameplayUILifeBarCurrentSprite.setPosition(sf::Vector2f(0, 0));
 	// TEXTS
-	// FPS
+	// Fps
 	FPSText.setFont(FPSFont);
 	FPSText.setCharacterSize(12);
 	FPSText.setFillColor(sf::Color::Black);
 	FPSText.setString("FPS : 60.00");
+	// Main menu
 	FPSText.setPosition(sf::Vector2f((window.getSize().x / 2) - (FPSText.getLocalBounds().width / 2), FPSText.getLocalBounds().height));
 	playText.setFont(puppy);
 	playText.setCharacterSize(40);
@@ -558,6 +612,13 @@ void Game::setupGraphicalElements() {
 	else if (language == "FR")
 		gameplayPauseExitText.setString("Quitter");
 	gameplayPauseExitText.setPosition(sf::Vector2f(gameplayPauseExitBtn.getPosition().x + gameplayPauseExitBtn.getLocalBounds().width / 2 - gameplayPauseExitText.getLocalBounds().width / 2, gameplayPauseExitBtn.getPosition().y + gameplayPauseExitBtn.getSize().y / 6));
+	// Gameplay UI
+	gameplayUIScoreText.setFont(score);
+	gameplayUIScoreText.setCharacterSize(50);
+	gameplayUIScoreText.setLetterSpacing(1.1f);
+	gameplayUIScoreText.setString("000000");
+	gameplayUIScoreText.setFillColor(sf::Color::Black);
+	gameplayUIScoreText.setPosition(sf::Vector2f(window.getSize().x - gameplayUIScoreText.getGlobalBounds().width - window.getSize().x * 0.01f, 0));
 	// CURSORS
 	pie.loadFromPixels(pieCursorImg.getPixelsPtr(), pieCursorImg.getSize(), {1, 32});
 }
@@ -580,6 +641,72 @@ void Game::setShooterPositions() {
 	shooterPositions.push_back({ (float)(window.getSize().x * 0.7), (float)(window.getSize().y * 0.9) });
 }
 
+void Game::setEnemySpawn() {                                    // TEMPORAIRE /////////////////////////////////////////
+	Shooter shooter1(window.getSize().x + 100.f, 800, 'm', window);
+	shooter1.setTexture(shooterM);
+	vectorShooter.push_back(shooter1);
+	Shooter shooter2(window.getSize().x + 100.f, 900, 'm', window);
+	shooter2.setTexture(shooterM);
+	vectorShooter.push_back(shooter2);
+	Shooter shooter3(window.getSize().x + 100.f, 1000, 'm', window);
+	shooter3.setTexture(shooterM);
+	vectorShooter.push_back(shooter3);
+	Shooter shooter4(window.getSize().x + 100.f, 100, 'm', window);
+	shooter4.setTexture(shooterM);
+	vectorShooter.push_back(shooter4);
+	Shooter shooter5(window.getSize().x + 100.f, 200, 'm', window);
+	shooter5.setTexture(shooterM);
+	vectorShooter.push_back(shooter5);
+	Shooter shooter6(window.getSize().x + 100.f, 300, 'm', window);
+	shooter6.setTexture(shooterM);
+	vectorShooter.push_back(shooter6);
+	Shooter shooter7(window.getSize().x + 100.f, 400, 'm', window);
+	shooter7.setTexture(shooterM);
+	vectorShooter.push_back(shooter7);
+	Shooter shooter8(window.getSize().x + 100.f, 500, 'm', window);
+	shooter8.setTexture(shooterM);
+	vectorShooter.push_back(shooter8);
+	Shooter shooter9(window.getSize().x + 100.f, 600, 'm', window);
+	shooter9.setTexture(shooterM);
+	vectorShooter.push_back(shooter9);
+	Shooter shooter10(window.getSize().x + 100.f, 700, 'm', window);
+	shooter10.setTexture(shooterM);
+	vectorShooter.push_back(shooter10);
+	Shooter shooter11(window.getSize().x + 100.f, 900, 'm', window);
+	shooter11.setTexture(shooterM);
+	vectorShooter.push_back(shooter11);
+	Shooter shooter12(window.getSize().x + 100.f, 900, 'm', window);
+	shooter12.setTexture(shooterM);
+	vectorShooter.push_back(shooter12);
+	Shooter shooter13(window.getSize().x + 100.f, 900, 'm', window);
+	shooter13.setTexture(shooterM);
+	vectorShooter.push_back(shooter13);
+	Shooter shooter14(window.getSize().x + 100.f, 900, 'm', window);
+	shooter14.setTexture(shooterM);
+	vectorShooter.push_back(shooter14);
+	Shooter shooter15(window.getSize().x + 100.f, 200, 'm', window);
+	shooter15.setTexture(shooterM);
+	vectorShooter.push_back(shooter15);
+	Shooter shooter16(window.getSize().x + 100.f, 300, 'm', window);
+	shooter16.setTexture(shooterM);
+	vectorShooter.push_back(shooter16);
+	Normal normal1(1900, 500, 's', window);
+	normal1.setTexture(shooterM);
+	vectorNormal.push_back(normal1);
+	Elite elite1(1200, 800, 's', window);
+	elite1.setTexture(shooterM);
+	vectorElite.push_back(elite1);
+}
+
+void Game::FPSCalculation() {
+	// FPS calculation
+	f_ElapsedTime = Clock.restart().asSeconds();
+	float f_FPS = (1.f / f_ElapsedTime);
+	std::ostringstream oss;
+	oss << std::fixed << std::setprecision(2) << f_FPS;
+	std::string FPSValue = oss.str();
+	FPSText.setString("FPS : " + FPSValue);
+}
 
 void Game::pollEvents() {
 	sf::Event event;
@@ -917,73 +1044,6 @@ void Game::playerInput() {
 	}
 }
 
-void Game::setEnemySpawn() {                                    // TEMPORAIRE /////////////////////////////////////////
-	Shooter shooter1(window.getSize().x + 100.f, 800, 'm', window);
-	shooter1.setTexture(tomato);
-	vectorShooter.push_back(shooter1);
-	Shooter shooter2(window.getSize().x + 100.f, 900, 'm', window);
-	shooter2.setTexture(tomato);
-	vectorShooter.push_back(shooter2);
-	Shooter shooter3(window.getSize().x + 100.f, 1000, 'm', window);
-	shooter3.setTexture(tomato);
-	vectorShooter.push_back(shooter3);
-	Shooter shooter4(window.getSize().x + 100.f, 100, 'm', window);
-	shooter4.setTexture(tomato);
-	vectorShooter.push_back(shooter4);
-	Shooter shooter5(window.getSize().x + 100.f, 200, 'm', window);
-	shooter5.setTexture(tomato);
-	vectorShooter.push_back(shooter5);
-	Shooter shooter6(window.getSize().x + 100.f, 300, 'm', window);
-	shooter6.setTexture(tomato);
-	vectorShooter.push_back(shooter6);
-	Shooter shooter7(window.getSize().x + 100.f, 400, 'm', window);
-	shooter7.setTexture(tomato);
-	vectorShooter.push_back(shooter7);
-	Shooter shooter8(window.getSize().x + 100.f, 500, 'm', window);
-	shooter8.setTexture(tomato);
-	vectorShooter.push_back(shooter8);
-	Shooter shooter9(window.getSize().x + 100.f, 600, 'm', window);
-	shooter9.setTexture(tomato);
-	vectorShooter.push_back(shooter9);
-	Shooter shooter10(window.getSize().x + 100.f, 700, 'm', window);
-	shooter10.setTexture(tomato);
-	vectorShooter.push_back(shooter10);
-	Shooter shooter11(window.getSize().x + 100.f, 900, 'm', window);
-	shooter11.setTexture(tomato);
-	vectorShooter.push_back(shooter11);
-	Shooter shooter12(window.getSize().x + 100.f, 900, 'm', window);
-	shooter12.setTexture(tomato);
-	vectorShooter.push_back(shooter12);
-	Shooter shooter13(window.getSize().x + 100.f, 900, 'm', window);
-	shooter13.setTexture(tomato);
-	vectorShooter.push_back(shooter13);
-	Shooter shooter14(window.getSize().x + 100.f, 900, 'm', window);
-	shooter14.setTexture(tomato);
-	vectorShooter.push_back(shooter14);
-	Shooter shooter15(window.getSize().x + 100.f, 200, 'm', window);
-	shooter15.setTexture(tomato);
-	vectorShooter.push_back(shooter15);
-	Shooter shooter16(window.getSize().x + 100.f, 300, 'm', window);
-	shooter16.setTexture(tomato);
-	vectorShooter.push_back(shooter16);
-	Normal normal1(1900, 500, 's', window);
-	normal1.setTexture(shooterM);
-	vectorNormal.push_back(normal1);
-	Elite elite1(1200, 800, 's', window);
-	elite1.setTexture(shooterM);
-	vectorElite.push_back(elite1);
-}
-
-void Game::FPSCalculation() {
-	// FPS calculation
-	f_ElapsedTime = Clock.restart().asSeconds();
-	float f_FPS = (1.f / f_ElapsedTime);
-	std::ostringstream oss;
-	oss << std::fixed << std::setprecision(2) << f_FPS;
-	std::string FPSValue = oss.str();
-	FPSText.setString("FPS : " + FPSValue);
-}
-
 void Game::run() {
 
 	setupGraphicalElements();
@@ -1028,10 +1088,23 @@ void Game::update() {
 	
 
 	if (levelOneOn) {
-		
 		if (backgroundActive) {
 			clownWalkAnimationTime += f_ElapsedTime;
-			playerInput();														 ///////////////////////////////////////////////
+			scoreCounter += (int)(100 * f_ElapsedTime);
+			if(scoreCounter < 10)
+				gameplayUIScoreText.setString("00000" + std::to_string(scoreCounter));
+			else if(scoreCounter < 100)
+				gameplayUIScoreText.setString("0000"  + std::to_string(scoreCounter));
+			else if(scoreCounter < 1000)
+				gameplayUIScoreText.setString("000"   + std::to_string(scoreCounter));
+			else if (scoreCounter < 10000)
+				gameplayUIScoreText.setString("00"    + std::to_string(scoreCounter));
+			else if (scoreCounter < 100000)
+				gameplayUIScoreText.setString("0"     + std::to_string(scoreCounter));
+			else
+				gameplayUIScoreText.setString(std::to_string(scoreCounter));
+
+			playerInput();
 
 			for (int i = 0; i < projectiles.size(); i++) {
 				projectiles[i]->move(-600 * f_ElapsedTime, 0);
@@ -1053,6 +1126,7 @@ void Game::update() {
 			if (clownWalkAnimationTime >= 0.1f) playerCurrentSprite.setTexture(playerMove2);
 			if (clownWalkAnimationTime >= 0.2f) {
 				playerCurrentSprite.setTexture(playerMove1);
+				
 				clownWalkAnimationTime = 0.f;
 			}
 			levelOneParralax01Sprite.move(sf::Vector2f(-100 * f_ElapsedTime, 0));
@@ -1067,90 +1141,90 @@ void Game::update() {
 			levelOneParralax04SpriteCopy.move(sf::Vector2f(-400 * f_ElapsedTime, 0));
 			levelOneParralax05SpriteCopy.move(sf::Vector2f(-500 * f_ElapsedTime, 0));
 			levelOneParralax06SpriteCopy.move(sf::Vector2f(-600 * f_ElapsedTime, 0));
-		}
-		// 1 Original
-		if (levelOneParralax01Sprite.getPosition().x <= 0) {
-			levelOneParralax01SpriteCopy.setPosition(sf::Vector2f(levelOneParralax01Sprite.getPosition().x + (levelOneParralax01Sprite.getLocalBounds().width * levelOneParralax01Sprite.getScale().x), 0));
-		}
-		if (levelOneParralax01Sprite.getPosition().x <= (-1 * (levelOneParralax01Sprite.getLocalBounds().width * levelOneParralax01Sprite.getScale().x))) {
-			levelOneParralax01Sprite.setPosition(sf::Vector2f(0, 0));
-		}
-		// 1 copy
-		if (levelOneParralax01SpriteCopy.getPosition().x <= 0) {
-			levelOneParralax01Sprite.setPosition(sf::Vector2f(levelOneParralax01SpriteCopy.getPosition().x + (levelOneParralax01SpriteCopy.getLocalBounds().width * levelOneParralax01SpriteCopy.getScale().x), 0));
-		}
-		if (levelOneParralax01SpriteCopy.getPosition().x <= (-1 * (levelOneParralax01SpriteCopy.getLocalBounds().width * levelOneParralax01SpriteCopy.getScale().x))) {
-			levelOneParralax01SpriteCopy.setPosition(sf::Vector2f(0, 0));
-		}
-		// 2 Original
-		if (levelOneParralax02Sprite.getPosition().x <= 0) {
-			levelOneParralax02SpriteCopy.setPosition(sf::Vector2f(levelOneParralax02Sprite.getPosition().x + (levelOneParralax02Sprite.getLocalBounds().width * levelOneParralax02Sprite.getScale().x), 0));
-		}
-		if (levelOneParralax02Sprite.getPosition().x <= (-1 * (levelOneParralax02Sprite.getLocalBounds().width * levelOneParralax02Sprite.getScale().x))) {
-			levelOneParralax02Sprite.setPosition(sf::Vector2f(0, 0));
-		}
-		// 2 copy
-		if (levelOneParralax02SpriteCopy.getPosition().x <= 0) {
-			levelOneParralax02Sprite.setPosition(sf::Vector2f(levelOneParralax02SpriteCopy.getPosition().x + (levelOneParralax02SpriteCopy.getLocalBounds().width * levelOneParralax02SpriteCopy.getScale().x), 0));
-		}
-		if (levelOneParralax02SpriteCopy.getPosition().x <= (-1 * (levelOneParralax02SpriteCopy.getLocalBounds().width * levelOneParralax02SpriteCopy.getScale().x))) {
-			levelOneParralax02SpriteCopy.setPosition(sf::Vector2f(0, 0));
-		}
-		// 3 Original
-		if (levelOneParralax03Sprite.getPosition().x <= 0) {
-			levelOneParralax03SpriteCopy.setPosition(sf::Vector2f(levelOneParralax03Sprite.getPosition().x + (levelOneParralax03Sprite.getLocalBounds().width * levelOneParralax03Sprite.getScale().x), 0));
-		}
-		if (levelOneParralax03Sprite.getPosition().x <= (-1 * (levelOneParralax03Sprite.getLocalBounds().width * levelOneParralax03Sprite.getScale().x))) {
-			levelOneParralax03Sprite.setPosition(sf::Vector2f(0, 0));
-		}
-		// 3 copy
-		if (levelOneParralax03SpriteCopy.getPosition().x <= 0) {
-			levelOneParralax03Sprite.setPosition(sf::Vector2f(levelOneParralax03SpriteCopy.getPosition().x + (levelOneParralax03SpriteCopy.getLocalBounds().width * levelOneParralax03SpriteCopy.getScale().x), 0));
-		}
-		if (levelOneParralax03SpriteCopy.getPosition().x <= (-1 * (levelOneParralax03SpriteCopy.getLocalBounds().width * levelOneParralax03SpriteCopy.getScale().x))) {
-			levelOneParralax03SpriteCopy.setPosition(sf::Vector2f(0, 0));
-		}
-		// 4 Original
-		if (levelOneParralax04Sprite.getPosition().x <= 0) {
-			levelOneParralax04SpriteCopy.setPosition(sf::Vector2f(levelOneParralax04Sprite.getPosition().x + (levelOneParralax04Sprite.getLocalBounds().width * levelOneParralax04Sprite.getScale().x), 0));
-		}
-		if (levelOneParralax04Sprite.getPosition().x <= (-1 * (levelOneParralax04Sprite.getLocalBounds().width * levelOneParralax04Sprite.getScale().x))) {
-			levelOneParralax04Sprite.setPosition(sf::Vector2f(0, 0));
-		}
-		// 4 copy
-		if (levelOneParralax04SpriteCopy.getPosition().x <= 0) {
-			levelOneParralax04Sprite.setPosition(sf::Vector2f(levelOneParralax04SpriteCopy.getPosition().x + (levelOneParralax04SpriteCopy.getLocalBounds().width * levelOneParralax04SpriteCopy.getScale().x), 0));
-		}
-		if (levelOneParralax04SpriteCopy.getPosition().x <= (-1 * (levelOneParralax04SpriteCopy.getLocalBounds().width * levelOneParralax04SpriteCopy.getScale().x))) {
-			levelOneParralax04SpriteCopy.setPosition(sf::Vector2f(0, 0));
-		}
-		// 5 Original
-		if (levelOneParralax05Sprite.getPosition().x <= 0) {
-			levelOneParralax05SpriteCopy.setPosition(sf::Vector2f(levelOneParralax05Sprite.getPosition().x + (levelOneParralax05Sprite.getLocalBounds().width * levelOneParralax05Sprite.getScale().x), 0));
-		}
-		if (levelOneParralax05Sprite.getPosition().x <= (-1 * (levelOneParralax05Sprite.getLocalBounds().width * levelOneParralax05Sprite.getScale().x))) {
-			levelOneParralax05Sprite.setPosition(sf::Vector2f(0, 0));
-		}
-		// 5 copy
-		if (levelOneParralax05SpriteCopy.getPosition().x <= 0) {
-			levelOneParralax05Sprite.setPosition(sf::Vector2f(levelOneParralax05SpriteCopy.getPosition().x + (levelOneParralax05SpriteCopy.getLocalBounds().width * levelOneParralax05SpriteCopy.getScale().x), 0));
-		}
-		if (levelOneParralax05SpriteCopy.getPosition().x <= (-1 * (levelOneParralax05SpriteCopy.getLocalBounds().width * levelOneParralax05SpriteCopy.getScale().x))) {
-			levelOneParralax05SpriteCopy.setPosition(sf::Vector2f(0, 0));
-		}
-		// 6 Original
-		if (levelOneParralax06Sprite.getPosition().x <= 0) {
-			levelOneParralax06SpriteCopy.setPosition(sf::Vector2f(levelOneParralax06Sprite.getPosition().x + (levelOneParralax06Sprite.getLocalBounds().width * levelOneParralax06Sprite.getScale().x), 0));
-		}
-		if (levelOneParralax06Sprite.getPosition().x <= (-1 * (levelOneParralax06Sprite.getLocalBounds().width * levelOneParralax06Sprite.getScale().x))) {
-			levelOneParralax06Sprite.setPosition(sf::Vector2f(0, 0));
-		}
-		// 6 copy
-		if (levelOneParralax06SpriteCopy.getPosition().x <= 0) {
-			levelOneParralax06Sprite.setPosition(sf::Vector2f(levelOneParralax06SpriteCopy.getPosition().x + (levelOneParralax06SpriteCopy.getLocalBounds().width * levelOneParralax06SpriteCopy.getScale().x), 0));
-		}
-		if (levelOneParralax06SpriteCopy.getPosition().x <= (-1 * (levelOneParralax06SpriteCopy.getLocalBounds().width * levelOneParralax06SpriteCopy.getScale().x))) {
-			levelOneParralax06SpriteCopy.setPosition(sf::Vector2f(0, 0));
+			// 1 Original
+			if (levelOneParralax01Sprite.getPosition().x <= 0) {
+				levelOneParralax01SpriteCopy.setPosition(sf::Vector2f(levelOneParralax01Sprite.getPosition().x + (levelOneParralax01Sprite.getLocalBounds().width * levelOneParralax01Sprite.getScale().x), 0));
+			}
+			if (levelOneParralax01Sprite.getPosition().x <= (-1 * (levelOneParralax01Sprite.getLocalBounds().width * levelOneParralax01Sprite.getScale().x))) {
+				levelOneParralax01Sprite.setPosition(sf::Vector2f(0, 0));
+			}
+			// 1 copy
+			if (levelOneParralax01SpriteCopy.getPosition().x <= 0) {
+				levelOneParralax01Sprite.setPosition(sf::Vector2f(levelOneParralax01SpriteCopy.getPosition().x + (levelOneParralax01SpriteCopy.getLocalBounds().width * levelOneParralax01SpriteCopy.getScale().x), 0));
+			}
+			if (levelOneParralax01SpriteCopy.getPosition().x <= (-1 * (levelOneParralax01SpriteCopy.getLocalBounds().width * levelOneParralax01SpriteCopy.getScale().x))) {
+				levelOneParralax01SpriteCopy.setPosition(sf::Vector2f(0, 0));
+			}
+			// 2 Original
+			if (levelOneParralax02Sprite.getPosition().x <= 0) {
+				levelOneParralax02SpriteCopy.setPosition(sf::Vector2f(levelOneParralax02Sprite.getPosition().x + (levelOneParralax02Sprite.getLocalBounds().width * levelOneParralax02Sprite.getScale().x), 0));
+			}
+			if (levelOneParralax02Sprite.getPosition().x <= (-1 * (levelOneParralax02Sprite.getLocalBounds().width * levelOneParralax02Sprite.getScale().x))) {
+				levelOneParralax02Sprite.setPosition(sf::Vector2f(0, 0));
+			}
+			// 2 copy
+			if (levelOneParralax02SpriteCopy.getPosition().x <= 0) {
+				levelOneParralax02Sprite.setPosition(sf::Vector2f(levelOneParralax02SpriteCopy.getPosition().x + (levelOneParralax02SpriteCopy.getLocalBounds().width * levelOneParralax02SpriteCopy.getScale().x), 0));
+			}
+			if (levelOneParralax02SpriteCopy.getPosition().x <= (-1 * (levelOneParralax02SpriteCopy.getLocalBounds().width * levelOneParralax02SpriteCopy.getScale().x))) {
+				levelOneParralax02SpriteCopy.setPosition(sf::Vector2f(0, 0));
+			}
+			// 3 Original
+			if (levelOneParralax03Sprite.getPosition().x <= 0) {
+				levelOneParralax03SpriteCopy.setPosition(sf::Vector2f(levelOneParralax03Sprite.getPosition().x + (levelOneParralax03Sprite.getLocalBounds().width * levelOneParralax03Sprite.getScale().x), 0));
+			}
+			if (levelOneParralax03Sprite.getPosition().x <= (-1 * (levelOneParralax03Sprite.getLocalBounds().width * levelOneParralax03Sprite.getScale().x))) {
+				levelOneParralax03Sprite.setPosition(sf::Vector2f(0, 0));
+			}
+			// 3 copy
+			if (levelOneParralax03SpriteCopy.getPosition().x <= 0) {
+				levelOneParralax03Sprite.setPosition(sf::Vector2f(levelOneParralax03SpriteCopy.getPosition().x + (levelOneParralax03SpriteCopy.getLocalBounds().width * levelOneParralax03SpriteCopy.getScale().x), 0));
+			}
+			if (levelOneParralax03SpriteCopy.getPosition().x <= (-1 * (levelOneParralax03SpriteCopy.getLocalBounds().width * levelOneParralax03SpriteCopy.getScale().x))) {
+				levelOneParralax03SpriteCopy.setPosition(sf::Vector2f(0, 0));
+			}
+			// 4 Original
+			if (levelOneParralax04Sprite.getPosition().x <= 0) {
+				levelOneParralax04SpriteCopy.setPosition(sf::Vector2f(levelOneParralax04Sprite.getPosition().x + (levelOneParralax04Sprite.getLocalBounds().width * levelOneParralax04Sprite.getScale().x), 0));
+			}
+			if (levelOneParralax04Sprite.getPosition().x <= (-1 * (levelOneParralax04Sprite.getLocalBounds().width * levelOneParralax04Sprite.getScale().x))) {
+				levelOneParralax04Sprite.setPosition(sf::Vector2f(0, 0));
+			}
+			// 4 copy
+			if (levelOneParralax04SpriteCopy.getPosition().x <= 0) {
+				levelOneParralax04Sprite.setPosition(sf::Vector2f(levelOneParralax04SpriteCopy.getPosition().x + (levelOneParralax04SpriteCopy.getLocalBounds().width * levelOneParralax04SpriteCopy.getScale().x), 0));
+			}
+			if (levelOneParralax04SpriteCopy.getPosition().x <= (-1 * (levelOneParralax04SpriteCopy.getLocalBounds().width * levelOneParralax04SpriteCopy.getScale().x))) {
+				levelOneParralax04SpriteCopy.setPosition(sf::Vector2f(0, 0));
+			}
+			// 5 Original
+			if (levelOneParralax05Sprite.getPosition().x <= 0) {
+				levelOneParralax05SpriteCopy.setPosition(sf::Vector2f(levelOneParralax05Sprite.getPosition().x + (levelOneParralax05Sprite.getLocalBounds().width * levelOneParralax05Sprite.getScale().x), 0));
+			}
+			if (levelOneParralax05Sprite.getPosition().x <= (-1 * (levelOneParralax05Sprite.getLocalBounds().width * levelOneParralax05Sprite.getScale().x))) {
+				levelOneParralax05Sprite.setPosition(sf::Vector2f(0, 0));
+			}
+			// 5 copy
+			if (levelOneParralax05SpriteCopy.getPosition().x <= 0) {
+				levelOneParralax05Sprite.setPosition(sf::Vector2f(levelOneParralax05SpriteCopy.getPosition().x + (levelOneParralax05SpriteCopy.getLocalBounds().width * levelOneParralax05SpriteCopy.getScale().x), 0));
+			}
+			if (levelOneParralax05SpriteCopy.getPosition().x <= (-1 * (levelOneParralax05SpriteCopy.getLocalBounds().width * levelOneParralax05SpriteCopy.getScale().x))) {
+				levelOneParralax05SpriteCopy.setPosition(sf::Vector2f(0, 0));
+			}
+			// 6 Original
+			if (levelOneParralax06Sprite.getPosition().x <= 0) {
+				levelOneParralax06SpriteCopy.setPosition(sf::Vector2f(levelOneParralax06Sprite.getPosition().x + (levelOneParralax06Sprite.getLocalBounds().width * levelOneParralax06Sprite.getScale().x), 0));
+			}
+			if (levelOneParralax06Sprite.getPosition().x <= (-1 * (levelOneParralax06Sprite.getLocalBounds().width * levelOneParralax06Sprite.getScale().x))) {
+				levelOneParralax06Sprite.setPosition(sf::Vector2f(0, 0));
+			}
+			// 6 copy
+			if (levelOneParralax06SpriteCopy.getPosition().x <= 0) {
+				levelOneParralax06Sprite.setPosition(sf::Vector2f(levelOneParralax06SpriteCopy.getPosition().x + (levelOneParralax06SpriteCopy.getLocalBounds().width * levelOneParralax06SpriteCopy.getScale().x), 0));
+			}
+			if (levelOneParralax06SpriteCopy.getPosition().x <= (-1 * (levelOneParralax06SpriteCopy.getLocalBounds().width * levelOneParralax06SpriteCopy.getScale().x))) {
+				levelOneParralax06SpriteCopy.setPosition(sf::Vector2f(0, 0));
+			}
 		}
 	}
 }
@@ -1238,7 +1312,8 @@ void Game::render() {
 				window.draw(elite);
 			}
 			window.draw(playerCurrentSprite);
-			// window.draw(player);
+			window.draw(gameplayUILifeBarCurrentSprite);
+			window.draw(gameplayUIScoreText);
 		}
 		if (showPauseMenu) {
 			window.draw(screenShadowWhenBlured);

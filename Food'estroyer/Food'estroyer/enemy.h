@@ -75,7 +75,6 @@ private:
 public:
 	float shootCooldown = 0;
 	float trackCooldown = 0;
-	sf::Vector2f playerPosition = { 0,0 };
 
 	Elite(float x, float y, char s, sf::RenderWindow& window);
 
