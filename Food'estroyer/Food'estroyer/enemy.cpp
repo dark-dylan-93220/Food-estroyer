@@ -131,6 +131,8 @@ void Elite::behavior(float timeElapsed, sf::CircleShape player, std::vector<Proj
 {
 	//pour tracker le personnage après un délai
 	//GAUCHE DROITE
+	playerPosition = { player.getPosition().x + (player.getLocalBounds().width * player.getScale().x) / 2 - (getLocalBounds().width * getScale().x) / 2,
+		player.getPosition().y + (player.getLocalBounds().height * player.getScale().y) / 2 - (getLocalBounds().height * getScale().y) / 2 };
 
 	if (hp <= 0) { alive = false; }
 
@@ -145,24 +147,24 @@ void Elite::behavior(float timeElapsed, sf::CircleShape player, std::vector<Proj
 	move(moveSpeed* timeElapsed, 0);
 	
 	//SUIVRE LE JOUEUR SUR L'AXE Y
-	if (getPosition().y > player.getPosition().y || getPosition().y < player.getPosition().y) {
-		trackCooldown += timeElapsed; //set un chrono
-	}
-	if (trackCooldown > 3.f) { //à varier selon l'agressivité voulue
-		if ((getPosition().y - player.getPosition().y < 0.5f && getPosition().y - player.getPosition().y > -0.5f))
+	if ((getPosition().y - playerPosition.y  > 2.f || getPosition().y - playerPosition.y < -2.f))
+		trackCooldown += timeElapsed;
+
+	if (trackCooldown > 1.f) { //à varier selon l'agressivité voulue
+		if ((getPosition().y - playerPosition.y <= 2.f && getPosition().y - playerPosition.y >= -2.f))
 			trackCooldown = 0;
-		else if (getPosition().y > player.getPosition().y) {
-			if (getPosition().y - player.getPosition().y > 3.f)
+		else if (getPosition().y > playerPosition.y) {
+			if (getPosition().y - playerPosition.y > 3.f)
 				move(0, -300 * timeElapsed);
 			else { move(0, -1 * timeElapsed); }
 		}
-		else if (getPosition().y < player.getPosition().y) {
-			if (player.getPosition().y - getPosition().y > 3.f)
+		else if (getPosition().y < playerPosition.y) {
+			if (playerPosition.y - getPosition().y > 3.f)
 				move(0, 300 * timeElapsed);
 			else { move(0, 1 * timeElapsed); }
 		}
-		
 	}
+
 	//TIRER
 	if (shootCooldown >= 0.3f) {
 		Projectile *projectile = new Projectile;

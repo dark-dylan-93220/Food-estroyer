@@ -1,8 +1,2 @@
-﻿  enemy.cpp
-C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\enemy.cpp(8,24): warning C4305: 'argument' : troncation de 'double' à 'float'
-C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\enemy.cpp(8,18): warning C4305: 'argument' : troncation de 'double' à 'float'
-C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\enemy.cpp(12,24): warning C4305: 'argument' : troncation de 'double' à 'float'
-C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\enemy.cpp(12,18): warning C4305: 'argument' : troncation de 'double' à 'float'
-C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\enemy.cpp(16,24): warning C4305: 'argument' : troncation de 'double' à 'float'
-C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\enemy.cpp(16,18): warning C4305: 'argument' : troncation de 'double' à 'float'
+﻿  game.cpp
   Food'estroyer.vcxproj -> C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\x64\Debug\Food'estroyer.exe
