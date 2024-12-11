@@ -636,7 +636,7 @@ void Game::setupGraphicalElements() {
 	gameplayUIScoreText.setFont(score);
 	gameplayUIScoreText.setCharacterSize(50);
 	gameplayUIScoreText.setLetterSpacing(1.1f);
-	gameplayUIScoreText.setString("000000");
+	gameplayUIScoreText.setString("Score : 000000");
 	gameplayUIScoreText.setFillColor(sf::Color::Black);
 	gameplayUIScoreText.setPosition(sf::Vector2f(window.getSize().x - gameplayUIScoreText.getGlobalBounds().width - window.getSize().x * 0.01f, 0));
 	// CURSORS
@@ -1118,17 +1118,17 @@ void Game::update() {
 			clownWalkAnimationTime += f_ElapsedTime;
 			scoreCounter += (int)(100 * f_ElapsedTime);
 			if(scoreCounter < 10)
-				gameplayUIScoreText.setString("00000" + std::to_string(scoreCounter));
+				gameplayUIScoreText.setString("Score : 00000" + std::to_string(scoreCounter));
 			else if(scoreCounter < 100)
-				gameplayUIScoreText.setString("0000"  + std::to_string(scoreCounter));
+				gameplayUIScoreText.setString("Score : 0000"  + std::to_string(scoreCounter));
 			else if(scoreCounter < 1000)
-				gameplayUIScoreText.setString("000"   + std::to_string(scoreCounter));
+				gameplayUIScoreText.setString("Score : 000"   + std::to_string(scoreCounter));
 			else if (scoreCounter < 10000)
-				gameplayUIScoreText.setString("00"    + std::to_string(scoreCounter));
+				gameplayUIScoreText.setString("Score : 00"    + std::to_string(scoreCounter));
 			else if (scoreCounter < 100000)
-				gameplayUIScoreText.setString("0"     + std::to_string(scoreCounter));
+				gameplayUIScoreText.setString("Score : 0"     + std::to_string(scoreCounter));
 			else
-				gameplayUIScoreText.setString(std::to_string(scoreCounter));
+				gameplayUIScoreText.setString("Score : " +      std::to_string(scoreCounter));
 
 			playerInput();
 
