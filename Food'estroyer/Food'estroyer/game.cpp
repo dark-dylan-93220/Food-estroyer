@@ -82,6 +82,7 @@ namespace { // GLOBAL VARIABLES OF THIS FILE HERE
 	sf::Texture levelOneParralax04;
 	sf::Texture levelOneParralax05;
 	sf::Texture levelOneParralax06;
+			//PLAYER
 	sf::Texture playerMove1;
 	sf::Texture playerMove2;
 	sf::Texture playerAttack1;
@@ -92,11 +93,17 @@ namespace { // GLOBAL VARIABLES OF THIS FILE HERE
 	sf::Texture playerDeath4;
 	sf::Texture playerDeath5;
 	sf::Texture playerDeath6;
-	sf::Texture painBizarre;
-	sf::Texture tomato;
+			//ENEMIES
 	sf::Texture sugarTexture;
 	sf::Texture shooterProjectile;
 	sf::Texture eliteProjectile;
+	sf::Texture painBizarre;
+	sf::Texture tomato;
+	sf::Texture banana;
+	sf::Texture apple;
+	sf::Texture burger;
+	sf::Texture carrot;
+			//UI
 	sf::Texture gameplayUILifeBar01Active;
 	sf::Texture gameplayUILifeBar02Active;
 	sf::Texture gameplayUILifeBar03Active;
@@ -248,6 +255,10 @@ void Game::setupGraphicalElements() {
 	playerDeath6.loadFromFile("Assets/Images/Clown/Death/frame_5_death_clown.png");
 	painBizarre.loadFromFile("Assets/Images/Enemy/Shooter/m.png");
 	tomato.loadFromFile("Assets/Images/Enemy/Shooter/tomato.png");
+	banana.loadFromFile("Assets/Images/Enemy/Shooter/banana.png");
+	apple.loadFromFile("Assets/Images/Enemy/Shooter/apple.png");
+	burger.loadFromFile("Assets/Images/Enemy/Shooter/burger.png");
+	carrot.loadFromFile("Assets/Images/Enemy/Shooter/carrot.png");
 	sugarTexture.loadFromFile("Assets/Images/Enemy/sugarSquare.png");
 	shooterProjectile.loadFromFile("Assets/Images/Enemy/Projectiles/shooterProjectile.png");
 	eliteProjectile.loadFromFile("Assets/Images/Enemy/Projectiles/eliteProjectile.png");
@@ -652,49 +663,49 @@ void Game::setShooterPositions() {
 
 void Game::setEnemySpawn() {                                    // TEMPORAIRE /////////////////////////////////////////
 	Shooter shooter1(window.getSize().x + 100.f, 800, 'm', window);
-	shooter1.setTexture(painBizarre);
+	shooter1.setTexture(apple);
 	vectorShooter.push_back(shooter1);
 	Shooter shooter2(window.getSize().x + 100.f, 900, 'm', window);
-	shooter2.setTexture(painBizarre);
+	shooter2.setTexture(burger);
 	vectorShooter.push_back(shooter2);
 	Shooter shooter3(window.getSize().x + 100.f, 1000, 'm', window);
-	shooter3.setTexture(painBizarre);
+	shooter3.setTexture(burger);
 	vectorShooter.push_back(shooter3);
 	Shooter shooter4(window.getSize().x + 100.f, 100, 'm', window);
-	shooter4.setTexture(painBizarre);
+	shooter4.setTexture(banana);
 	vectorShooter.push_back(shooter4);
 	Shooter shooter5(window.getSize().x + 100.f, 200, 'm', window);
-	shooter5.setTexture(painBizarre);
+	shooter5.setTexture(apple);
 	vectorShooter.push_back(shooter5);
 	Shooter shooter6(window.getSize().x + 100.f, 300, 'm', window);
-	shooter6.setTexture(painBizarre);
+	shooter6.setTexture(banana);
 	vectorShooter.push_back(shooter6);
 	Shooter shooter7(window.getSize().x + 100.f, 400, 'm', window);
 	shooter7.setTexture(painBizarre);
 	vectorShooter.push_back(shooter7);
 	Shooter shooter8(window.getSize().x + 100.f, 500, 'm', window);
-	shooter8.setTexture(painBizarre);
+	shooter8.setTexture(banana);
 	vectorShooter.push_back(shooter8);
 	Shooter shooter9(window.getSize().x + 100.f, 600, 'm', window);
-	shooter9.setTexture(painBizarre);
+	shooter9.setTexture(carrot);
 	vectorShooter.push_back(shooter9);
 	Shooter shooter10(window.getSize().x + 100.f, 700, 'm', window);
-	shooter10.setTexture(painBizarre);
+	shooter10.setTexture(banana);
 	vectorShooter.push_back(shooter10);
 	Shooter shooter11(window.getSize().x + 100.f, 900, 'm', window);
 	shooter11.setTexture(painBizarre);
 	vectorShooter.push_back(shooter11);
 	Shooter shooter12(window.getSize().x + 100.f, 900, 'm', window);
-	shooter12.setTexture(painBizarre);
+	shooter12.setTexture(burger);
 	vectorShooter.push_back(shooter12);
 	Shooter shooter13(window.getSize().x + 100.f, 900, 'm', window);
-	shooter13.setTexture(painBizarre);
+	shooter13.setTexture(burger);
 	vectorShooter.push_back(shooter13);
 	Shooter shooter14(window.getSize().x + 100.f, 900, 'm', window);
 	shooter14.setTexture(painBizarre);
 	vectorShooter.push_back(shooter14);
 	Shooter shooter15(window.getSize().x + 100.f, 200, 'm', window);
-	shooter15.setTexture(painBizarre);
+	shooter15.setTexture(apple);
 	vectorShooter.push_back(shooter15);
 	Shooter shooter16(window.getSize().x + 100.f, 300, 'm', window);
 	shooter16.setTexture(painBizarre);
@@ -703,13 +714,13 @@ void Game::setEnemySpawn() {                                    // TEMPORAIRE //
 	normal1.setTexture(painBizarre);
 	vectorNormal.push_back(normal1);
 	Elite elite1(1200, 800, 's', window);
-	elite1.setTexture(tomato);
+	elite1.setTexture(carrot);
 	vectorElite.push_back(elite1);
 	Elite elite2(1500, 700, 'm', window); //pour comparer les vitesses de déplacement
 	elite2.setTexture(tomato);
 	vectorElite.push_back(elite2);
 	Elite elite3(1300, 400, 'l', window);
-	elite3.setTexture(tomato);
+	elite3.setTexture(carrot);
 	vectorElite.push_back(elite3);
 }
 
