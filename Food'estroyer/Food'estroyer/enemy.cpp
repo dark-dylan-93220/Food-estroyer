@@ -6,17 +6,17 @@ Enemy::Enemy(float x, float y, char s, sf::RenderWindow &window) : size(s) {
 	// Valeurs à changer en pourcentage de taille de la fenêtre.
 	switch (s) {
 	case ('s') :
-			this->setScale(0.09, 0.09);
-			this->hpSize = 0.5;              // multiplier les hp de l'ennemi pas rapport à sa taille
+			this->setScale(0.09f, 0.09f);
+			this->hpSize = 0.5;
 			moveSpeedX = -400; moveSpeedY = -400;
 			break;
 	case('m') :
-			this->setScale(0.13, 0.13);
+			this->setScale(0.13f, 0.13f);
 			this->hpSize = 1;
 			moveSpeedX = -300; moveSpeedY = -300;
 			break;
 	case('l') :
-			this->setScale(0.19, 0.19);
+			this->setScale(0.19f, 0.19f);
 			this->hpSize = 1.5;
 			moveSpeedX = -200; moveSpeedY = -200;
 			break;
@@ -47,9 +47,9 @@ void Enemy::dropSugar(std::vector<Sugar*> &vectorSugar, Enemy &enemy) {
 		sugar->setPosition(enemy.getPosition().x - (enemy.getLocalBounds().width * enemy.getScale().x) / 2,
 			enemy.getPosition().y + (enemy.getLocalBounds().height * enemy.getScale().y) / 2 - (sugar->getLocalBounds().height * sugar->getScale().y) / 2);
 		switch (getSize()) {
-		case 's': sugar->setScale(0.05, 0.05); break;
-		case 'm': sugar->setScale(0.08, 0.08); break;
-		case 'l': sugar->setScale(0.11, 0.11); break;
+		case 's': sugar->setScale(0.05f, 0.05f); break;
+		case 'm': sugar->setScale(0.08f, 0.08f); break;
+		case 'l': sugar->setScale(0.11f, 0.11f); break;
 		}
 		vectorSugar.push_back(sugar);
 	}
@@ -63,7 +63,6 @@ void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, s
 	int counter(0);
 	possiblePositions = shooterPositions;
 	while (!positionFound || waitingForPosition) {
-		// Dylan : J'ai refait cette boucle, les ennemis apparaissaient des fois sur la même case, j'ai réglé ce problème.
 		for (int i = 0; i < 15; ++i) {
 			if (positionsOccupied[i] == true) {
 				counter++;
@@ -77,7 +76,7 @@ void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, s
 			waitingForPosition = false;
 			counter = 0;
 		}
-		randomPositionChoice = rand() % shooterPositions.size(); // Between 0 and 14
+		randomPositionChoice = rand() % shooterPositions.size();
 		if (positionsOccupied[randomPositionChoice] == false) {
 			positionFound = true;
 			waitingForPosition = false;
@@ -132,9 +131,9 @@ void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, s
 				Projectile *projectile = new Projectile;
 				projectile->setId(getId());
 				switch (getSize()) {
-				case 's': projectile->setScale(0.05, 0.05); break;
-				case 'm': projectile->setScale(0.10, 0.10); break;
-				case 'l': projectile->setScale(0.15, 0.15); break;
+				case 's': projectile->setScale(0.05f, 0.05f); break;
+				case 'm': projectile->setScale(0.10f, 0.10f); break;
+				case 'l': projectile->setScale(0.15f, 0.15f); break;
 				}
 				projectile->setPosition(getPosition().x - (getLocalBounds().width * getScale().x) / 2, 
 					getPosition().y + (getLocalBounds().height * getScale().y) / 2 - (projectile->getLocalBounds().height * projectile->getScale().y) / 2);
@@ -204,9 +203,9 @@ void Elite::behavior(float timeElapsed, sf::CircleShape player, std::vector<Proj
 		Projectile* projectile = new Projectile;
 		projectile->setId(getId());
 		switch (getSize()) {
-		case 's': projectile->setScale(0.05, 0.05); break;
-		case 'm': projectile->setScale(0.10, 0.10); break;
-		case 'l': projectile->setScale(0.15, 0.15); break;
+		case 's': projectile->setScale(0.05f, 0.05f); break;
+		case 'm': projectile->setScale(0.10f, 0.10f); break;
+		case 'l': projectile->setScale(0.15f, 0.15f); break;
 		}
 		projectile->setPosition(getPosition().x - (getLocalBounds().width * getScale().x) / 2,
 			getPosition().y + (getLocalBounds().height * getScale().y) / 2 - (projectile->getLocalBounds().height * projectile->getScale().y) / 2);
