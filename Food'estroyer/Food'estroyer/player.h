@@ -33,6 +33,7 @@ private:
 	float pieSpeed = 1000;																			 ////////////// PIE SPEED HERE
 	float pieSize = 0.01;
 	float shootCooldown = 0;
+	float specialCooldown = 0;
 
 public:
 	
@@ -40,7 +41,7 @@ public:
 
 	void throwPie(std::vector<Pie*> &vectorPies, sf::RenderWindow &window);
 
-	void specialAtk(std::vector<Pie*>& vectorPies, sf::RenderWindow window);
+	void specialAtk(std::vector<Pie*> &vectorPies, sf::RenderWindow &window);
 
 	// Allez un peu d'encapsulation :)
 	// Getters
@@ -51,6 +52,7 @@ public:
 	float getPieSpeed() const      { return pieSpeed; }
 	float getPieSize() const       { return pieSize; }
 	float getShootCooldown() const { return shootCooldown; }
+	float getSpecialCooldown() const { return specialCooldown; }
 	// Setters
 	void damagePlayer(float degats)						{ hp -= degats; }
 	void setPlayerSpeed(int bonusSpeed)					{ speed *= (0.01f * bonusSpeed); }// Bonus speed entre 0 et 100 comme un pourcentage
@@ -59,6 +61,7 @@ public:
 	void setPieSpeed(float newSpeed) { pieSpeed = newSpeed; }
 	void setPieSize(float newSize) { pieSize = newSize; }
 	void setShootCooldown(float timeElapsed) { shootCooldown += timeElapsed; }
+	void setSpecialCooldown(float timeElapsed) { specialCooldown += timeElapsed; }
 
 };
 #endif

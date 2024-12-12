@@ -1,12 +1,4 @@
-﻿  enemy.cpp
-  game.cpp
+﻿  game.cpp
 C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\player.h(34,18): warning C4305: 'initialisation' : troncation de 'double' à 'float'
-C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(1232,30): warning C4805: '==' : mélange risqué de type 'float' et de type 'bool' dans l'opération
-  main.cpp
-C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\main.cpp(5,12): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
-  player.cpp
-C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\player.h(34,18): warning C4305: 'initialisation' : troncation de 'double' à 'float'
-C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\player.cpp(22,35): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
-  Génération de code en cours...
-  LINK : C:\Users\jrodrigues\Source\Repos\dark-dylan-93220\Food-estroyer\Food'estroyer\x64\Debug\Food'estroyer.exe introuvable ou non généré par la dernière édition de liens incrémentielle ; édition de liens complète en cours
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(1242,30): warning C4805: '==' : mélange risqué de type 'float' et de type 'bool' dans l'opération
   Food'estroyer.vcxproj -> C:\Users\jrodrigues\Source\Repos\dark-dylan-93220\Food-estroyer\Food'estroyer\x64\Debug\Food'estroyer.exe
