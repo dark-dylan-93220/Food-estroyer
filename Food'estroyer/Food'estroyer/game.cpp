@@ -1006,6 +1006,22 @@ void Game::pollEvents() {
 					gameplayPauseGoBackText.setFillColor(LIGHT_GREEN);
 				else
 					gameplayPauseGoBackText.setFillColor(sf::Color::White);
+				if (gameplayPausePlusSoundTextSFX.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					gameplayPausePlusSoundTextSFX.setFillColor(sf::Color::White);
+				else
+					gameplayPausePlusSoundTextSFX.setFillColor(sf::Color(DARK_THEME));
+				if (gameplayPauseMinusSoundTextSFX.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					gameplayPauseMinusSoundTextSFX.setFillColor(sf::Color::White);
+				else
+					gameplayPauseMinusSoundTextSFX.setFillColor(sf::Color(DARK_THEME));
+				if (gameplayPausePlusSoundTextMusic.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					gameplayPausePlusSoundTextMusic.setFillColor(sf::Color::White);
+				else
+					gameplayPausePlusSoundTextMusic.setFillColor(sf::Color(DARK_THEME));
+				if (gameplayPauseMinusSoundTextMusic.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					gameplayPauseMinusSoundTextMusic.setFillColor(sf::Color::White);
+				else
+					gameplayPauseMinusSoundTextMusic.setFillColor(sf::Color(DARK_THEME));
 			}
 		}
 		break;
@@ -1150,6 +1166,34 @@ void Game::pollEvents() {
 						bgShopMusic.pause();
 						bgLvl1Music.play();
 					}
+					if (gameplayPausePlusSoundTextSFX.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
+					{
+						if(gameplayPauseSFXControlInnerZone.getScale().x < 1.f)
+							gameplayPauseSFXControlInnerZone.setScale(sf::Vector2f(gameplayPauseSFXControlInnerZone.getScale().x + 0.05f, 1.f));
+					}
+					if (gameplayPauseMinusSoundTextSFX.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
+					{
+						if (gameplayPauseSFXControlInnerZone.getScale().x > 0.f)
+							gameplayPauseSFXControlInnerZone.setScale(sf::Vector2f(gameplayPauseSFXControlInnerZone.getScale().x - 0.05f, 1.f));
+					}
+					if (gameplayPausePlusSoundTextMusic.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
+					{
+						if (gameplayPauseMusicControlInnerZone.getScale().x < 1.f) {
+							gameplayPauseMusicControlInnerZone.setScale(sf::Vector2f(gameplayPauseMusicControlInnerZone.getScale().x + 0.05f, 1.f));
+							if (levelOneOn) {
+								bgLvl1Music.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
+							}
+						}
+					}
+					if (gameplayPauseMinusSoundTextMusic.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
+					{
+						if (gameplayPauseMusicControlInnerZone.getScale().x < 1.f) {
+							gameplayPauseMusicControlInnerZone.setScale(sf::Vector2f(gameplayPauseMusicControlInnerZone.getScale().x - 0.05f, 1.f));
+							if (levelOneOn) {
+								bgLvl1Music.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
+							}
+						}
+					}
 				}
 			}
 		}
@@ -1219,6 +1263,16 @@ void Game::playerInput() {
 			if (player.getShootCooldown() >= 0.2f) {
 				player.throwPie(vectorPies, window);
 				player.setShootCooldown(0);
+			}
+			playerCurrentSprite.setTexture(playerAttack1);
+		}
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
+		if (levelOneOn && backgroundActive) {
+			// SPECIAL ATTACK
+			if (player.getSpecialCooldown() >= 5.f) {
+				player.specialAtk(vectorPies, window);
+				player.setSpecialCooldown(0);
 			}
 			playerCurrentSprite.setTexture(playerAttack1);
 		}
@@ -1357,6 +1411,7 @@ void Game::update() {
 				gameplayUIScoreText.setString("Score : " +      std::to_string((int)scoreCounter));
 
 			player.setShootCooldown(f_ElapsedTime);
+			player.setSpecialCooldown(f_ElapsedTime);
 			playerInput();
 
 			nonPlayerMoovement();
