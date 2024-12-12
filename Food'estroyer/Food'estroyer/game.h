@@ -54,6 +54,9 @@ private:
 	void playerInput();
 	void nonPlayerMoovement();
 	void nonPlayerDraw();
+	void clownWalkAnimation();
+	void backgroundMovementLevel1();
+	void scoreCalculation();
 	void FPSCalculation();
 	void pollEvents();
 	void update();

@@ -1,4 +1,4 @@
 ﻿  game.cpp
 C:\Users\dhollemaert\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\player.h(34,18): warning C4305: 'initialisation' : troncation de 'double' à 'float'
-C:\Users\dhollemaert\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(1286,30): warning C4805: '==' : mélange risqué de type 'float' et de type 'bool' dans l'opération
+C:\Users\dhollemaert\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(1410,30): warning C4805: '==' : mélange risqué de type 'float' et de type 'bool' dans l'opération
   Food'estroyer.vcxproj -> C:\Users\dhollemaert\Source\Repos\dark-dylan-93220\Food-estroyer\Food'estroyer\x64\Debug\Food'estroyer.exe
