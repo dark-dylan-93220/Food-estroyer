@@ -71,6 +71,7 @@ namespace {
 	sf::Text gameplayUIPlayerCombo;
 	sf::Text gameplayUISugarForUpgrades;
 	sf::Text gameplayUIBossLife;
+	sf::Text gameplayUISugarText;
 	// MUSICS
 	sf::Music bgStartUpScreenMusic;
 	sf::Music bgStartUpScreenMusic2;
@@ -220,6 +221,7 @@ namespace {
 	// DESSINER POINTEURS
 	Projectile projectileDraw;
 	Sugar sugarDraw;
+	Sugar sugarIcone;
 	Pie pieDraw;
 }
 
@@ -743,6 +745,15 @@ void Game::setupGraphicalElements() {
 	gameplayUIScoreText.setString("Score : 000000");
 	gameplayUIScoreText.setFillColor(sf::Color::Black);
 	gameplayUIScoreText.setPosition(sf::Vector2f(window.getSize().x - gameplayUIScoreText.getGlobalBounds().width - window.getSize().x * 0.01f, 0));
+	sugarIcone.setScale(0.05f, 0.05f);
+	sugarIcone.setTexture(sugarTexture);
+	sugarIcone.setPosition(window.getSize().x /** 0.99*/ - (sugarIcone.getLocalBounds().width * sugarIcone.getScale().x) * 1.8, window.getSize().y /** 0.97*/ - (sugarIcone.getLocalBounds().height * sugarIcone.getScale().y) * 1.8);
+	gameplayUISugarText.setFont(score);
+	gameplayUISugarText.setCharacterSize((int)sugarIcone.getLocalBounds().height * sugarIcone.getScale().y);
+	gameplayUISugarText.setLetterSpacing(1.1f); 
+	gameplayUISugarText.setFillColor(sf::Color::White);
+	gameplayUISugarText.setString("00000000");
+	gameplayUISugarText.setPosition(sugarIcone.getPosition().x - gameplayUISugarText.getGlobalBounds().width - window.getSize().x * 0.005f, sugarIcone.getPosition().y - gameplayUISugarText.getGlobalBounds().height * 0.2);
 	// CURSORS
 	pie.loadFromPixels(pieCursorImg.getPixelsPtr(), pieCursorImg.getSize(), {1, 32});
 }
@@ -1351,6 +1362,25 @@ void Game::scoreCalculation() {
 		gameplayUIScoreText.setString("Score : " + std::to_string((int)scoreCounter));
 }
 
+void Game::sugarCalculation() {
+	if (player.getSugarCount() < 10)
+		gameplayUISugarText.setString("0000000" + std::to_string((int)player.getSugarCount()));
+	else if (player.getSugarCount() < 100)
+		gameplayUISugarText.setString("000000" + std::to_string((int)player.getSugarCount()));
+	else if (player.getSugarCount() < 1000)
+		gameplayUISugarText.setString("00000" + std::to_string((int)player.getSugarCount()));
+	else if (player.getSugarCount() < 10000)
+		gameplayUISugarText.setString("0000" + std::to_string((int)player.getSugarCount()));
+	else if (player.getSugarCount() < 100000)
+		gameplayUISugarText.setString("000" + std::to_string((int)player.getSugarCount()));
+	else if (player.getSugarCount() < 1000000)
+		gameplayUISugarText.setString("00" + std::to_string((int)player.getSugarCount()));
+	else if (player.getSugarCount() < 10000000)
+		gameplayUISugarText.setString("0" + std::to_string((int)player.getSugarCount()));
+	else
+		gameplayUISugarText.setString("Score : " + std::to_string((int)player.getSugarCount()));
+}
+
 void Game::playerInput() {
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
@@ -1403,6 +1433,26 @@ void Game::playerInput() {
 				player.setSpecialCooldown(0);
 			}
 			playerCurrentSprite.setTexture(playerAttack1);
+		}
+	}
+}
+
+void Game::playerCollisions() {
+	if (player.getPlayerHP() <= 0)
+		player.setPlayerLife(false);
+	if (!player.getPlayerLife()){ 
+		std::cout << "ded" << std::endl;            //////////////////////////////////////// TEMPORAIRE
+	}
+	for (int i = 0; i < projectiles.size(); i++) {
+		if (player.getGlobalBounds().contains(projectiles[i]->getPosition())) {     //intersects ne fonctionne pas
+			player.damagePlayer(projectiles[i]->getAtkPower());
+			projectiles[i]->setState(false);
+		}
+	}
+	for (int i = 0; i < vectorSugar.size(); i++) {
+		if (player.getGlobalBounds().contains(vectorSugar[i]->getPosition())) {
+			player.setSugarCount(vectorSugar[i]->getValue());
+			vectorSugar[i]->setState(false);
 		}
 	}
 }
@@ -1583,11 +1633,11 @@ void Game::update() {
 			clownWalkAnimationTime += f_ElapsedTime;
 			
 			scoreCalculation();
-
+			sugarCalculation();
 			player.setShootCooldown(f_ElapsedTime);
 			player.setSpecialCooldown(f_ElapsedTime);
 			playerInput();
-
+			playerCollisions();
 			nonPlayerBehavior();
 			clownWalkAnimation();
 
@@ -1666,6 +1716,8 @@ void Game::render() {
 			window.draw(playerCurrentSprite);
 			window.draw(gameplayUILifeBarCurrentSprite);
 			window.draw(gameplayUIScoreText);
+			window.draw(sugarIcone);
+			window.draw(gameplayUISugarText);
 		}
 		if (showPauseMenu) {
 			window.draw(screenShadowWhenBlured);

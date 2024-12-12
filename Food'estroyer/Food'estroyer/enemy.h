@@ -8,34 +8,44 @@ class Sugar : public sf::Sprite {
 private :
 	char size = 'z';
 	bool state = true;
+	int quantity = 0;
 public:
-	char getSize() const { return size; }
-	bool getState() const { return state; }
+	char getSize() const    { return size; }
+	bool getState() const   { return state; }
+	int getValue() const { return quantity; }
 
-	void setState(bool newState) { state = newState; }
+	void setState(bool newState)  { state = newState; }
+	void setValue(float newValue) { quantity = newValue; }
 };
 
 //CLASSE DE BASE : ENEMY
 class Enemy : public sf::Sprite {
 protected:
 	bool alive = true;
+	bool dropedSugar = false;
 	char size;
 	float moveSpeedX = -300;
 	float moveSpeedY = -300;
 	float hp = 1;
-	float hpSize = 3;
-	bool dropedSugar = false;
+	float hpPerSize = 0;
+	float atkPower = 1;
+	float sugarValue = 0;
+	float sugarValuePerSize = 0;
 
 	Enemy(float x, float y, char s, sf::RenderWindow &window);
 public:
 	float deathAnimationTimer = 0;
 
-	bool getAlive() const { return alive; }
-	char getSize() const { return size; }
-	float getHp() const { return hp; }
+	bool getAlive() const       { return alive; }
+	char getSize() const        { return size; }
+	float getHp() const         { return hp; }
+	float getAtkPower() const   { return atkPower; }
+	float getSugarValue() const { return sugarValue; }
 
-	void setAlive(bool newState) { alive = newState; }
-	void setHp(float degats) { hp += degats; }
+	void setAlive(bool newState)        { alive = newState; }
+	void setHp(float degats)            { hp += degats; }
+	void setAtkPower(float newAtkPower) { atkPower = newAtkPower; }
+	void setSugarValue(float newValue)  { sugarValue = newValue; }
 
 	void dropSugar(std::vector<Sugar*>& vectorSugar, Enemy& enemy);
 };
@@ -44,13 +54,16 @@ public:
 class Projectile : public sf::Sprite {
 private:
 	std::string id;
+	float atkPower = 1;
 	bool state = true;
 public:
 	std::string getId() const { return id; }
-	bool getState() const { return state; }
+	float getAtkPower() const { return atkPower; }
+	bool getState() const     { return state; }
 
-	void setId(std::string newId) { id = newId; }
-	void setState(bool newState) { state = newState; }
+	void setId(std::string newId)    { id = newId; }
+	void setAtkPower(float newPower) { atkPower = newPower; }
+	void setState(bool newState)     { state = newState; }
 };
 
 //NORMAL ENEMIES (ONLY MOVING LEFT)

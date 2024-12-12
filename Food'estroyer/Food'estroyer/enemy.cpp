@@ -7,17 +7,20 @@ Enemy::Enemy(float x, float y, char s, sf::RenderWindow &window) : size(s) {
 	switch (s) {
 	case ('s') :
 			this->setScale(0.09f, 0.09f);
-			this->hpSize = 0.5;
+			this->hpPerSize = 0.5;
+			this->sugarValuePerSize = 0.5;
 			moveSpeedX = -400; moveSpeedY = -400;
 			break;
 	case('m') :
 			this->setScale(0.13f, 0.13f);
-			this->hpSize = 1;
+			this->hpPerSize = 1;
+			this->sugarValuePerSize = 1;
 			moveSpeedX = -300; moveSpeedY = -300;
 			break;
 	case('l') :
 			this->setScale(0.19f, 0.19f);
-			this->hpSize = 1.5;
+			this->hpPerSize = 1.5;
+			this->sugarValuePerSize = 1.5;
 			moveSpeedX = -200; moveSpeedY = -200;
 			break;
 	default: std::cout << "taille d'un ennemi mal initialisée (choisir 's', 'm' ou 'l')" << std::endl; break;
@@ -25,14 +28,19 @@ Enemy::Enemy(float x, float y, char s, sf::RenderWindow &window) : size(s) {
 }
 
 Normal::Normal(float x, float y, char s, sf::RenderWindow& window) : Enemy(x, y, s, window) {
-	hp = 100 * hpSize;
+	hp = 100 * hpPerSize;
+	sugarValue = 50 * sugarValuePerSize;                                                        //ICI : VALEUR EN SUCRES DES MONSTRES
 }
 Shooter::Shooter(float x, float y, char s, sf::RenderWindow &window) : Enemy(x, y, s, window) {
 	this->setPosition(sf::Vector2f(window.getSize().x + 100.f, -100.f));
-	hp = 150 * hpSize;
+	hp = 150 * hpPerSize;
+	sugarValue = 100 * sugarValuePerSize;
+	atkPower = 10;
 }
 Elite::Elite(float x, float y, char s, sf::RenderWindow& window) : Enemy(x, y, s, window) {
-	hp = 200 * hpSize;
+	hp = 200 * hpPerSize;
+	sugarValue = 150 * sugarValuePerSize;
+	atkPower = 20;
 }
 
 void Normal::behavior(float timeElapsed) {
@@ -44,6 +52,7 @@ void Enemy::dropSugar(std::vector<Sugar*> &vectorSugar, Enemy &enemy) {
 	if (!alive && !dropedSugar) {
 		dropedSugar = true;
 		Sugar* sugar = new Sugar;
+		sugar->setValue(sugarValue);
 		sugar->setPosition(enemy.getPosition().x - (enemy.getLocalBounds().width * enemy.getScale().x) / 2,
 			enemy.getPosition().y + (enemy.getLocalBounds().height * enemy.getScale().y) / 2 - (sugar->getLocalBounds().height * sugar->getScale().y) / 2);
 		switch (getSize()) {
@@ -130,6 +139,7 @@ void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, s
 			if (shootCooldown >= 1.5f) { // ici : varier le nombre de boucle pour que les ennemis shoot +ou- vite - A remplacer par une durée de temps variable
 				Projectile *projectile = new Projectile;
 				projectile->setId(getId());
+				projectile->setAtkPower(atkPower);
 				switch (getSize()) {
 				case 's': projectile->setScale(0.05f, 0.05f); break;
 				case 'm': projectile->setScale(0.10f, 0.10f); break;
@@ -202,6 +212,7 @@ void Elite::behavior(float timeElapsed, sf::CircleShape player, std::vector<Proj
 	if (shootCooldown >= 1.f) {
 		Projectile* projectile = new Projectile;
 		projectile->setId(getId());
+		projectile->setAtkPower(atkPower);
 		switch (getSize()) {
 		case 's': projectile->setScale(0.05f, 0.05f); break;
 		case 'm': projectile->setScale(0.10f, 0.10f); break;

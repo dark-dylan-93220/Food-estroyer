@@ -52,11 +52,13 @@ private:
 	void setShooterPositions();
 	void setEnemySpawn();
 	void playerInput();
+	void playerCollisions();
 	void nonPlayerBehavior();
 	void nonPlayerDraw();
 	void clownWalkAnimation();
 	void backgroundMovementLevel1();
 	void scoreCalculation();
+	void sugarCalculation();
 	void FPSCalculation();
 	void pollEvents();
 	void update();

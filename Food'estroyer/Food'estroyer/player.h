@@ -38,6 +38,7 @@ private:
 	float shootCooldown = 0;
 	float specialCooldown = 0;
 	char specialAtkType = 'b';
+	int sugarCount = 0;
 
 public:
 	
@@ -58,7 +59,9 @@ public:
 	float getShootCooldown() const         { return shootCooldown; }
 	float getSpecialCooldown() const       { return specialCooldown; }
 	char getSpectialAtkType() const        { return specialAtkType; }
+	int getSugarCount() const              { return sugarCount; }
 	// Setters
+	void setPlayerLife(bool newState)                   { alive = false; }
 	void damagePlayer(float degats)						{ hp -= degats; }
 	void setPlayerSpeed(int bonusSpeed)					{ speed *= (0.01f * bonusSpeed); }// Bonus speed entre 0 et 100 comme un pourcentage
 	void setPlayerSpeedBackToNormal(int bonusSpeed)		{ speed /= (0.01f * bonusSpeed); }// Opération inverse
@@ -68,6 +71,7 @@ public:
 	void setShootCooldown(float timeElapsed)            { shootCooldown += timeElapsed; }
 	void setSpecialCooldown(float timeElapsed)          { specialCooldown += timeElapsed; }
 	void setSpecialAtkType(char newType)                { specialAtkType = newType; }
+	void setSugarCount(float sugarNumber)               { sugarCount += sugarNumber; }
 
 };
 #endif
