@@ -4,6 +4,7 @@
 // --- STL --- //
 #include <iostream>
 #include <vector>
+#include <tuple>
 #include <string>
 #include <sstream>
 #include <iomanip>
@@ -21,12 +22,6 @@ public:
 	Game();
 	void run();
 
-public:
-	// Time gestion
-	sf::Clock Clock;
-	float f_ElapsedTime;
-	std::chrono::steady_clock::time_point startingTimePoint, currentTimePoint;
-	
 private:
 	bool m_isRunning;
 	// Window
@@ -38,14 +33,19 @@ private:
 	bool playScreenOn = false;
 	// Time gestion
 	int currentFramerateLimit = 60;
+	sf::Clock Clock;
+	float f_ElapsedTime;
+	std::chrono::steady_clock::time_point startingTimePoint, currentTimePoint;
 	// Language
 	std::string language = "EN";
-	// Testing
+	// Layers
 	bool levelOneOn = false;
 	bool backgroundActive = true;
 	bool showPauseMenu = false;
 	// Ennemies
 	std::vector<bool> positionsOccupied;
+	// Testing
+	int numberOfStartingEnnemies = 5;
 
 private:
 	void setupGraphicalElements();

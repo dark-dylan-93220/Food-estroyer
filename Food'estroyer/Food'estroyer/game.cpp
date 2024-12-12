@@ -2,9 +2,7 @@
 #include "enemy.h"
 #include "player.h"
 
-/// THIS FILE CONTAINS THE GLOBAL FUNCTIONS USED EVERYWHERE IN THE GAME
-
-namespace { // GLOBAL VARIABLES OF THIS FILE HERE
+namespace {
 	// DATA STL (STandard Library)
 	int mouseLastDownX, mouseLastDownY;
 	int scoreCounter;
@@ -28,14 +26,14 @@ namespace { // GLOBAL VARIABLES OF THIS FILE HERE
 	sf::Font score;
 	sf::Font scoreBold;
 	// TEXTS
-	// FPS
+		// FPS
 	sf::Text FPSText;
-	// Start-up screen
+		// Start-up screen
 	sf::Text playText;
 	sf::Text shopText;
 	sf::Text quitText;
 	sf::Text copyright;
-	// Options screen
+		// Options screen
 	sf::Text pauseTopBarResolutionText;
 	sf::Text pauseTopBarFPSText;
 	sf::Text pauseTopBarColorThemeText;
@@ -70,10 +68,18 @@ namespace { // GLOBAL VARIABLES OF THIS FILE HERE
 	sf::Text gameplayUISugarForUpgrades;
 	sf::Text gameplayUIBossLife;
 	// MUSICS
+	sf::Music bgStartUpScreenMusic;
+	sf::Music bgStartUpScreenMusic2;
+	sf::Music bgShopMusic;
+	sf::Music bgShopMusic2;
+	sf::Music bgLvl1Music;
+	sf::Music bgLvl2Music;
+	sf::Music bgLvl3Music;
 	// SOUNDS
 	// IMAGES
 	sf::Image pieCursorImg;
 	// TEXTURES
+		// BACKGROUNDS & ICONS
 	sf::Texture settingsIcon;
 	sf::Texture bgStartUpScreen;
 	sf::Texture levelOneParralax01;
@@ -82,7 +88,7 @@ namespace { // GLOBAL VARIABLES OF THIS FILE HERE
 	sf::Texture levelOneParralax04;
 	sf::Texture levelOneParralax05;
 	sf::Texture levelOneParralax06;
-			//PLAYER
+		// PLAYER
 	sf::Texture playerMove1;
 	sf::Texture playerMove2;
 	sf::Texture playerAttack1;
@@ -93,7 +99,7 @@ namespace { // GLOBAL VARIABLES OF THIS FILE HERE
 	sf::Texture playerDeath4;
 	sf::Texture playerDeath5;
 	sf::Texture playerDeath6;
-			//ENEMIES
+		// ENEMMIES
 	sf::Texture sugarTexture;
 	sf::Texture shooterProjectile;
 	sf::Texture eliteProjectile;
@@ -103,7 +109,7 @@ namespace { // GLOBAL VARIABLES OF THIS FILE HERE
 	sf::Texture apple;
 	sf::Texture burger;
 	sf::Texture carrot;
-			//UI
+		// UI
 	sf::Texture gameplayUILifeBar01Active;
 	sf::Texture gameplayUILifeBar02Active;
 	sf::Texture gameplayUILifeBar03Active;
@@ -230,57 +236,73 @@ void Game::setupGraphicalElements() {
 	score.loadFromFile            ("Assets/Fonts/score.TTF");
 	scoreBold.loadFromFile        ("Assets/Fonts/scoreBold.TTF");
 	// MUSICS
+	bgStartUpScreenMusic.openFromFile ("Assets/Songs/Music/startMenuLoop.mp3");
+	bgStartUpScreenMusic2.openFromFile("Assets/Songs/Music/startMenuLoop2.mp3");
+	bgShopMusic.openFromFile          ("Assets/Songs/Music/shopLoop.mp3");
+	bgShopMusic2.openFromFile         ("Assets/Songs/Music/shopLoop2.mp3");
+	bgLvl1Music.openFromFile          ("Assets/Songs/Music/bgMusicLevel1.mp3");
+	bgLvl2Music.openFromFile          ("Assets/Songs/Music/bgMusicLevel2.mp3");
+	bgLvl3Music.openFromFile          ("Assets/Songs/Music/bgMusicLevel3.mp3");
+	bgStartUpScreenMusic.setVolume(50);
+	bgStartUpScreenMusic2.setVolume(50);
+	bgShopMusic.setVolume(50);
+	bgShopMusic2.setVolume(50);
+	bgLvl1Music.setVolume(50);
+	bgLvl2Music.setVolume(50);
+	bgLvl3Music.setVolume(50);
+	bgStartUpScreenMusic.setLoop(true);
+	bgStartUpScreenMusic.play();
 	// SOUNDS
 	// IMAGES
 	pieCursorImg.loadFromFile("Assets/Images/pieCursor.png");
 	window.setIcon(pieCursorImg.getSize().x, pieCursorImg.getSize().y, pieCursorImg.getPixelsPtr());
 	// TEXTURES
-	bgStartUpScreen.loadFromFile("Assets/Images/bgStartUpScreen.jpg");
-	settingsIcon.loadFromFile("Assets/Images/settingsIcon.png");
-	levelOneParralax01.loadFromFile("Assets/Images/Level1/level1Background01.png");
-	levelOneParralax02.loadFromFile("Assets/Images/Level1/level1Background02.png");
-	levelOneParralax03.loadFromFile("Assets/Images/Level1/level1Background03.png");
-	levelOneParralax04.loadFromFile("Assets/Images/Level1/level1Background04.png");
-	levelOneParralax05.loadFromFile("Assets/Images/Level1/level1Background05.png");
-	levelOneParralax06.loadFromFile("Assets/Images/Level1/level1Background06.png");
-	playerMove1.loadFromFile("Assets/Images/Clown/Walk/frame_0_walk_clown.png");
-	playerMove2.loadFromFile("Assets/Images/Clown/Walk/frame_1_walk_clown.png");
-	playerAttack1.loadFromFile("Assets/Images/Clown/Attack/frame_0_attack_clown.png");
-	playerAttack2.loadFromFile("Assets/Images/Clown/Attack/frame_1_attack_clown.png");
-	playerDeath1.loadFromFile("Assets/Images/Clown/Death/frame_0_death_clown.png");
-	playerDeath2.loadFromFile("Assets/Images/Clown/Death/frame_1_death_clown.png");
-	playerDeath3.loadFromFile("Assets/Images/Clown/Death/frame_2_death_clown.png");
-	playerDeath4.loadFromFile("Assets/Images/Clown/Death/frame_3_death_clown.png");
-	playerDeath5.loadFromFile("Assets/Images/Clown/Death/frame_4_death_clown.png");
-	playerDeath6.loadFromFile("Assets/Images/Clown/Death/frame_5_death_clown.png");
-	painBizarre.loadFromFile("Assets/Images/Enemy/Shooter/m.png");
-	tomato.loadFromFile("Assets/Images/Enemy/Shooter/tomato.png");
-	banana.loadFromFile("Assets/Images/Enemy/Shooter/banana.png");
-	apple.loadFromFile("Assets/Images/Enemy/Shooter/apple.png");
-	burger.loadFromFile("Assets/Images/Enemy/Shooter/burger.png");
-	carrot.loadFromFile("Assets/Images/Enemy/Shooter/carrot.png");
-	sugarTexture.loadFromFile("Assets/Images/Enemy/sugarSquare.png");
-	shooterProjectile.loadFromFile("Assets/Images/Enemy/Projectiles/shooterProjectile.png");
-	eliteProjectile.loadFromFile("Assets/Images/Enemy/Projectiles/eliteProjectile.png");
-	gameplayUILifeBar01Active.loadFromFile("Assets/Images/GameplayUI/01-active.png");
-	gameplayUILifeBar02Active.loadFromFile("Assets/Images/GameplayUI/02-active.png");
-	gameplayUILifeBar03Active.loadFromFile("Assets/Images/GameplayUI/03-active.png");
-	gameplayUILifeBar04Active.loadFromFile("Assets/Images/GameplayUI/04-active.png");
-	gameplayUILifeBar05Active.loadFromFile("Assets/Images/GameplayUI/05-active.png");
-	gameplayUILifeBar06Active.loadFromFile("Assets/Images/GameplayUI/06-active.png");
-	gameplayUILifeBar07Active.loadFromFile("Assets/Images/GameplayUI/07-active.png");
-	gameplayUILifeBar08Active.loadFromFile("Assets/Images/GameplayUI/08-active.png");
-	gameplayUILifeBar09Active.loadFromFile("Assets/Images/GameplayUI/09-active.png");
-	gameplayUILifeBar10Active.loadFromFile("Assets/Images/GameplayUI/10-active.png");
-	gameplayUILifeBar11Active.loadFromFile("Assets/Images/GameplayUI/11-active.png");
-	gameplayUILifeBar12Active.loadFromFile("Assets/Images/GameplayUI/12-active.png");
-	gameplayUILifeBar13Active.loadFromFile("Assets/Images/GameplayUI/13-active.png");
-	gameplayUILifeBar14Active.loadFromFile("Assets/Images/GameplayUI/14-active.png");
-	gameplayUILifeBar15Active.loadFromFile("Assets/Images/GameplayUI/15-active.png");
-	gameplayUILifeBar16Active.loadFromFile("Assets/Images/GameplayUI/16-active.png");
-	gameplayUILifeBar17Active.loadFromFile("Assets/Images/GameplayUI/17-active.png");
-	gameplayUILifeBar18Active.loadFromFile("Assets/Images/GameplayUI/18-active.png");
-	gameplayUILifeBar19Active.loadFromFile("Assets/Images/GameplayUI/19-active.png");
+	bgStartUpScreen.loadFromFile            ("Assets/Images/bgStartUpScreen.jpg");
+	settingsIcon.loadFromFile               ("Assets/Images/settingsIcon.png");
+	levelOneParralax01.loadFromFile         ("Assets/Images/Level1/level1Background01.png");
+	levelOneParralax02.loadFromFile         ("Assets/Images/Level1/level1Background02.png");
+	levelOneParralax03.loadFromFile         ("Assets/Images/Level1/level1Background03.png");
+	levelOneParralax04.loadFromFile         ("Assets/Images/Level1/level1Background04.png");
+	levelOneParralax05.loadFromFile         ("Assets/Images/Level1/level1Background05.png");
+	levelOneParralax06.loadFromFile         ("Assets/Images/Level1/level1Background06.png");
+	playerMove1.loadFromFile                ("Assets/Images/Clown/Walk/frame_0_walk_clown.png");
+	playerMove2.loadFromFile                ("Assets/Images/Clown/Walk/frame_1_walk_clown.png");
+	playerAttack1.loadFromFile              ("Assets/Images/Clown/Attack/frame_0_attack_clown.png");
+	playerAttack2.loadFromFile              ("Assets/Images/Clown/Attack/frame_1_attack_clown.png");
+	playerDeath1.loadFromFile               ("Assets/Images/Clown/Death/frame_0_death_clown.png");
+	playerDeath2.loadFromFile               ("Assets/Images/Clown/Death/frame_1_death_clown.png");
+	playerDeath3.loadFromFile               ("Assets/Images/Clown/Death/frame_2_death_clown.png");
+	playerDeath4.loadFromFile               ("Assets/Images/Clown/Death/frame_3_death_clown.png");
+	playerDeath5.loadFromFile               ("Assets/Images/Clown/Death/frame_4_death_clown.png");
+	playerDeath6.loadFromFile               ("Assets/Images/Clown/Death/frame_5_death_clown.png");
+	painBizarre.loadFromFile                ("Assets/Images/Enemy/Shooter/m.png");
+	tomato.loadFromFile                     ("Assets/Images/Enemy/Shooter/tomato.png");
+	banana.loadFromFile                     ("Assets/Images/Enemy/Shooter/banana.png");
+	apple.loadFromFile                      ("Assets/Images/Enemy/Shooter/apple.png");
+	burger.loadFromFile                     ("Assets/Images/Enemy/Shooter/burger.png");
+	carrot.loadFromFile                     ("Assets/Images/Enemy/Shooter/carrot.png");
+	sugarTexture.loadFromFile               ("Assets/Images/Enemy/sugarSquare.png");
+	shooterProjectile.loadFromFile          ("Assets/Images/Enemy/Projectiles/shooterProjectile.png");
+	eliteProjectile.loadFromFile            ("Assets/Images/Enemy/Projectiles/eliteProjectile.png");
+	gameplayUILifeBar01Active.loadFromFile  ("Assets/Images/GameplayUI/01-active.png");
+	gameplayUILifeBar02Active.loadFromFile  ("Assets/Images/GameplayUI/02-active.png");
+	gameplayUILifeBar03Active.loadFromFile  ("Assets/Images/GameplayUI/03-active.png");
+	gameplayUILifeBar04Active.loadFromFile  ("Assets/Images/GameplayUI/04-active.png");
+	gameplayUILifeBar05Active.loadFromFile  ("Assets/Images/GameplayUI/05-active.png");
+	gameplayUILifeBar06Active.loadFromFile  ("Assets/Images/GameplayUI/06-active.png");
+	gameplayUILifeBar07Active.loadFromFile  ("Assets/Images/GameplayUI/07-active.png");
+	gameplayUILifeBar08Active.loadFromFile  ("Assets/Images/GameplayUI/08-active.png");
+	gameplayUILifeBar09Active.loadFromFile  ("Assets/Images/GameplayUI/09-active.png");
+	gameplayUILifeBar10Active.loadFromFile  ("Assets/Images/GameplayUI/10-active.png");
+	gameplayUILifeBar11Active.loadFromFile  ("Assets/Images/GameplayUI/11-active.png");
+	gameplayUILifeBar12Active.loadFromFile  ("Assets/Images/GameplayUI/12-active.png");
+	gameplayUILifeBar13Active.loadFromFile  ("Assets/Images/GameplayUI/13-active.png");
+	gameplayUILifeBar14Active.loadFromFile  ("Assets/Images/GameplayUI/14-active.png");
+	gameplayUILifeBar15Active.loadFromFile  ("Assets/Images/GameplayUI/15-active.png");
+	gameplayUILifeBar16Active.loadFromFile  ("Assets/Images/GameplayUI/16-active.png");
+	gameplayUILifeBar17Active.loadFromFile  ("Assets/Images/GameplayUI/17-active.png");
+	gameplayUILifeBar18Active.loadFromFile  ("Assets/Images/GameplayUI/18-active.png");
+	gameplayUILifeBar19Active.loadFromFile  ("Assets/Images/GameplayUI/19-active.png");
 	gameplayUILifeBar01Inactive.loadFromFile("Assets/Images/GameplayUI/01-inactive.png");
 	gameplayUILifeBar02Inactive.loadFromFile("Assets/Images/GameplayUI/02-inactive.png");
 	gameplayUILifeBar03Inactive.loadFromFile("Assets/Images/GameplayUI/03-inactive.png");
@@ -661,7 +683,45 @@ void Game::setShooterPositions() {
 	shooterPositions.push_back({ (float)(window.getSize().x * 0.7), (float)(window.getSize().y * 0.9) });
 }
 
-void Game::setEnemySpawn() {                                    // TEMPORAIRE /////////////////////////////////////////
+void Game::setEnemySpawn() {
+	// Test pour randomiser la génération des ennemis au départ d'un niveau
+	// Il marche mais les textures sont toutes blanches
+	/*int randomYPosition, randomSize, randomClass, randomSkins;
+	float xSpawnPosition = window.getSize().x + 100.f;
+	const int randomHeights[10]           = { 0, 100, 200, 300, 400, 500, 600, 700, 800, 900 };
+	const char randomSizes[3]             = { 's', 'm', 'l' };
+	sf::Texture randomEnemySkins[6] = { apple, burger, banana, painBizarre, carrot, tomato };
+
+	for (int i = 0; i < numberOfStartingEnnemies; ++i) {
+		randomClass = rand() % 3 + 1;
+		randomSize = rand() % 3;
+		randomYPosition = rand() % 10;
+		randomSkins = rand() % 6;
+
+		Normal normal(xSpawnPosition, randomHeights[randomYPosition], randomSizes[randomSize], window);
+		normal.setTexture(randomEnemySkins[randomSkins]);
+
+		Shooter shooter(xSpawnPosition, randomHeights[randomYPosition], randomSizes[randomSize], window);
+		shooter.setTexture(randomEnemySkins[randomSkins]);
+
+		Elite elite(xSpawnPosition, randomHeights[randomYPosition], randomSizes[randomSize], window);
+		elite.setTexture(randomEnemySkins[randomSkins]);
+
+		switch (randomClass) {
+		case 1:
+			vectorNormal.push_back(normal);
+			break;
+		case 2:
+			vectorShooter.push_back(shooter);
+			break;
+		case 3:
+			vectorElite.push_back(elite);
+			break;
+		default:
+			break;
+		}
+
+	}*/
 	Shooter shooter1(window.getSize().x + 100.f, 800, 'm', window);
 	shooter1.setTexture(apple);
 	vectorShooter.push_back(shooter1);
@@ -716,7 +776,7 @@ void Game::setEnemySpawn() {                                    // TEMPORAIRE //
 	Elite elite1(1200, 800, 's', window);
 	elite1.setTexture(carrot);
 	vectorElite.push_back(elite1);
-	Elite elite2(1500, 700, 'm', window); //pour comparer les vitesses de déplacement
+	Elite elite2(1500, 700, 'm', window);
 	elite2.setTexture(tomato);
 	vectorElite.push_back(elite2);
 	Elite elite3(1300, 400, 'l', window);
@@ -859,7 +919,6 @@ void Game::pollEvents() {
 				pauseLanguageFRText.setFillColor(sf::Color::White);
 		}
 		if (playScreenOn) {
-			// To be defined
 			if (showPauseMenu) {
 				if (gameplayPauseExitBtn.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
 					gameplayPauseExitText.setFillColor(LIGHT_RED);
@@ -977,6 +1036,9 @@ void Game::pollEvents() {
 				if (settingsIconSprite.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 					settingsScreenOn = true;
 					startUpScreenOn = false;
+					bgStartUpScreenMusic.pause();
+					bgShopMusic.setLoop(true);
+					bgShopMusic.play();
 				}
 				// Jouer
 				if (playText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
@@ -984,6 +1046,9 @@ void Game::pollEvents() {
 					startUpScreenOn = false;
 					levelOneOn = true;
 					backgroundActive = true;
+					bgStartUpScreenMusic.stop();
+					bgLvl1Music.setLoop(false);
+					bgLvl1Music.play();
 				}
 				// Quitter
 				if (quitText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
@@ -998,10 +1063,14 @@ void Game::pollEvents() {
 						backgroundActive = false;
 						showPauseMenu = false;
 						startUpScreenOn = true;
+						bgShopMusic.stop();
+						bgStartUpScreenMusic.play();
 					}
 					if (gameplayPauseGoBackBtn.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 						backgroundActive = true;
 						showPauseMenu = false;
+						bgShopMusic.pause();
+						bgLvl1Music.play();
 					}
 				}
 			}
@@ -1020,6 +1089,8 @@ void Game::pollEvents() {
 				settingsScreenOn = false;
 				startUpScreenOn = true;
 				settingsIconSprite.setColor(sf::Color::White);
+				bgShopMusic.stop();
+				bgStartUpScreenMusic.play();
 			}
 			else if(startUpScreenOn) {
 				m_isRunning = false;
@@ -1060,6 +1131,8 @@ void Game::playerInput() {
 		if (levelOneOn && backgroundActive) {
 			backgroundActive = false;
 			showPauseMenu = true;
+			bgLvl1Music.pause();
+			bgShopMusic.play();
 		}
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
@@ -1089,7 +1162,6 @@ void Game::run() {
 	windowBase.close();
 
 }
-
 
 void Game::update() {
 	// MECHANICS
