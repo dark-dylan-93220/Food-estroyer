@@ -62,6 +62,10 @@ namespace {
 	sf::Text gameplayPauseTitleText;
 	sf::Text gameplayPauseSFXText;
 	sf::Text gameplayPauseMusicText;
+	sf::Text gameplayPausePlusSoundTextSFX;
+	sf::Text gameplayPauseMinusSoundTextSFX;
+	sf::Text gameplayPausePlusSoundTextMusic;
+	sf::Text gameplayPauseMinusSoundTextMusic;
 	sf::Text gameplayUIScoreText;
 	sf::Text gameplayUIPlayerLife;
 	sf::Text gameplayUIPlayerCombo;
@@ -148,6 +152,8 @@ namespace {
 	sf::Texture gameplayUILifeBar17Inactive;
 	sf::Texture gameplayUILifeBar18Inactive;
 	sf::Texture gameplayUILifeBar19Inactive;
+	sf::Texture gameplayUIPauseSoundPlus;
+	sf::Texture gameplayUIPauseSoundMinus;
 	// SHAPES
 	sf::RectangleShape screenShadowWhenBlured;
 	sf::RectangleShape menuPauseTopBar; 
@@ -170,7 +176,11 @@ namespace {
 	sf::RectangleShape gameplayPauseGoBackBtn;
 	sf::RectangleShape gameplayPauseExitBtn;
 	sf::RectangleShape gameplayPauseMusicControlZone;
+	sf::RectangleShape gameplayPauseMusicControlZoneBG;
 	sf::RectangleShape gameplayPauseSFXControlZone;
+	sf::RectangleShape gameplayPauseSFXControlZoneBG;
+	sf::RectangleShape gameplayPauseMusicControlInnerZone;
+	sf::RectangleShape gameplayPauseSFXControlInnerZone;
 	sf::RectangleShape gameplayPauseMusicControlPlusBtn;
 	sf::RectangleShape gameplayPauseMusicControlMinusBtn;
 	sf::RectangleShape gameplayPauseSFXControlPlusBtn;
@@ -253,8 +263,8 @@ void Game::setupGraphicalElements() {
 	bgLvl1Music.setVolume(50);
 	bgLvl2Music.setVolume(50);
 	bgLvl3Music.setVolume(50);
-	bgStartUpScreenMusic.setLoop(true);
-	bgStartUpScreenMusic.play();
+	bgStartUpScreenMusic2.setLoop(true);
+	bgStartUpScreenMusic2.play();
 	// SOUNDS
 	// IMAGES
 	pieCursorImg.loadFromFile("Assets/Images/pieCursor.png");
@@ -366,6 +376,30 @@ void Game::setupGraphicalElements() {
 	gameplayPauseExitBtn.setOutlineThickness(1.f);
 	gameplayPauseGoBackBtn.setOutlineColor(sf::Color::Black);
 	gameplayPauseExitBtn.setOutlineColor(sf::Color::Black);
+	gameplayPauseMusicControlZone.setSize(sf::Vector2f(gameplayPauseContent.getGlobalBounds().width - window.getSize().x * 0.30f, gameplayPauseContent.getGlobalBounds().height * 0.09f));
+	gameplayPauseMusicControlZone.setPosition(sf::Vector2f(window.getSize().x / 2 - gameplayPauseMusicControlZone.getSize().x / 2, window.getSize().y / 2 - gameplayPauseMusicControlZone.getSize().y / 2 - gameplayPauseMusicControlZone.getSize().y));
+	gameplayPauseMusicControlZone.setFillColor(sf::Color::Transparent);
+	gameplayPauseMusicControlZone.setOutlineThickness(1.f);
+	gameplayPauseMusicControlZone.setOutlineColor(sf::Color::Black);
+	gameplayPauseSFXControlZone.setSize(sf::Vector2f(gameplayPauseContent.getGlobalBounds().width - window.getSize().x * 0.30f, gameplayPauseContent.getGlobalBounds().height * 0.09f));
+	gameplayPauseSFXControlZone.setPosition(sf::Vector2f(window.getSize().x / 2 - gameplayPauseSFXControlZone.getSize().x / 2, window.getSize().y / 2 - gameplayPauseSFXControlZone.getSize().y / 2 + gameplayPauseSFXControlZone.getSize().y));
+	gameplayPauseSFXControlZone.setFillColor(sf::Color::Transparent);
+	gameplayPauseSFXControlZone.setOutlineThickness(1.f);
+	gameplayPauseSFXControlZone.setOutlineColor(sf::Color::Black);
+	gameplayPauseMusicControlInnerZone = gameplayPauseMusicControlZone;
+	gameplayPauseMusicControlInnerZone.setOutlineThickness(0);
+	gameplayPauseMusicControlInnerZone.setFillColor(sf::Color::White);
+	gameplayPauseMusicControlInnerZone.setScale(0.5f, 1.f);
+	gameplayPauseSFXControlInnerZone = gameplayPauseSFXControlZone;
+	gameplayPauseSFXControlInnerZone.setOutlineThickness(0);
+	gameplayPauseSFXControlInnerZone.setFillColor(sf::Color::White);
+	gameplayPauseSFXControlInnerZone.scale(0.5f, 1.f);
+	gameplayPauseMusicControlZoneBG = gameplayPauseMusicControlZone;
+	gameplayPauseMusicControlZoneBG.setOutlineThickness(0);
+	gameplayPauseMusicControlZoneBG.setFillColor(sf::Color(30, 30, 30, 100));
+	gameplayPauseSFXControlZoneBG = gameplayPauseSFXControlZone;
+	gameplayPauseSFXControlZoneBG.setOutlineThickness(0);
+	gameplayPauseSFXControlZoneBG.setFillColor(sf::Color(30, 30, 30, 100));
 	// SPRITES
 	bgStartUpScreenSprite.setTexture(bgStartUpScreen);
 	bgStartUpScreenSprite.setScale(sf::Vector2f((window.getSize().x / bgStartUpScreenSprite.getLocalBounds().width), (window.getSize().y / bgStartUpScreenSprite.getLocalBounds().height)));
@@ -657,6 +691,43 @@ void Game::setupGraphicalElements() {
 	else if (language == "FR")
 		gameplayPauseExitText.setString("Quitter");
 	gameplayPauseExitText.setPosition(sf::Vector2f(gameplayPauseExitBtn.getPosition().x + gameplayPauseExitBtn.getLocalBounds().width / 2 - gameplayPauseExitText.getLocalBounds().width / 2, gameplayPauseExitBtn.getPosition().y + gameplayPauseExitBtn.getSize().y / 6));
+	gameplayPauseSFXText.setFont(puppy);
+	gameplayPauseSFXText.setCharacterSize(30);
+	gameplayPauseSFXText.setString("SFX");
+	gameplayPauseSFXText.setLetterSpacing(2.f);
+	gameplayPauseMusicText.setLetterSpacing(2.f);
+	gameplayPauseMusicText.setFont(puppy);
+	gameplayPauseMusicText.setCharacterSize(30);
+	gameplayPauseMusicText.setFillColor(sf::Color::White);
+	gameplayPauseMusicText.setOutlineThickness(1.f);
+	gameplayPauseMusicText.setOutlineColor(sf::Color(DARK_THEME));
+	gameplayPauseSFXText.setFillColor(sf::Color::White);
+	gameplayPauseSFXText.setOutlineThickness(1.f);
+	gameplayPauseSFXText.setOutlineColor(sf::Color(DARK_THEME));
+	if (language == "EN")
+		gameplayPauseMusicText.setString("Music");
+	else if (language == "FR")
+		gameplayPauseMusicText.setString("Musique");
+	gameplayPauseMusicText.setPosition(sf::Vector2f(window.getSize().x / 2 - gameplayPauseMusicText.getLocalBounds().width / 2, window.getSize().y / 2 - gameplayPauseMusicText.getLocalBounds().height / 2 - 2 * gameplayPauseMusicControlZone.getGlobalBounds().height));
+	gameplayPauseSFXText.setPosition(sf::Vector2f(window.getSize().x / 2 - gameplayPauseSFXText.getLocalBounds().width / 2, window.getSize().y / 2 - gameplayPauseSFXText.getLocalBounds().height / 2));
+	gameplayPausePlusSoundTextSFX.setFont(puppy);
+	gameplayPausePlusSoundTextSFX.setCharacterSize(35);
+	gameplayPausePlusSoundTextSFX.setString("+");
+	gameplayPausePlusSoundTextSFX.setFillColor(sf::Color(DARK_THEME));
+	gameplayPausePlusSoundTextSFX.setOutlineThickness(1.f);
+	gameplayPausePlusSoundTextSFX.setOutlineColor(sf::Color::Black);
+	gameplayPausePlusSoundTextSFX.setPosition(sf::Vector2f(gameplayPauseSFXText.getPosition().x + gameplayPauseSFXText.getGlobalBounds().width + gameplayPausePlusSoundTextSFX.getLocalBounds().width, gameplayPauseSFXText.getPosition().y));
+	gameplayPausePlusSoundTextMusic = gameplayPausePlusSoundTextSFX;
+	gameplayPausePlusSoundTextMusic.setPosition(sf::Vector2f(gameplayPauseMusicText.getPosition().x + gameplayPauseMusicText.getGlobalBounds().width + gameplayPausePlusSoundTextMusic.getLocalBounds().width, gameplayPauseMusicText.getPosition().y));
+	gameplayPauseMinusSoundTextSFX.setFont(puppy);
+	gameplayPauseMinusSoundTextSFX.setCharacterSize(35);
+	gameplayPauseMinusSoundTextSFX.setString("-");
+	gameplayPauseMinusSoundTextSFX.setFillColor(sf::Color(DARK_THEME));
+	gameplayPauseMinusSoundTextSFX.setOutlineThickness(1.f);
+	gameplayPauseMinusSoundTextSFX.setOutlineColor(sf::Color::Black);
+	gameplayPauseMinusSoundTextSFX.setPosition(sf::Vector2f(gameplayPauseSFXText.getPosition().x - gameplayPauseSFXText.getGlobalBounds().width / 1.4f, gameplayPauseSFXText.getPosition().y));
+	gameplayPauseMinusSoundTextMusic = gameplayPauseMinusSoundTextSFX;
+	gameplayPauseMinusSoundTextMusic.setPosition(sf::Vector2f(gameplayPauseMusicText.getPosition().x - gameplayPauseMusicText.getGlobalBounds().width / 1.8f, gameplayPauseMusicText.getPosition().y));
 	// Gameplay UI
 	gameplayUIScoreText.setFont(score);
 	gameplayUIScoreText.setCharacterSize(50);
@@ -1039,7 +1110,7 @@ void Game::pollEvents() {
 				if (settingsIconSprite.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 					settingsScreenOn = true;
 					startUpScreenOn = false;
-					bgStartUpScreenMusic.pause();
+					bgStartUpScreenMusic2.pause();
 					bgShopMusic.setLoop(true);
 					bgShopMusic.play();
 				}
@@ -1049,7 +1120,7 @@ void Game::pollEvents() {
 					startUpScreenOn = false;
 					levelOneOn = true;
 					backgroundActive = true;
-					bgStartUpScreenMusic.stop();
+					bgStartUpScreenMusic2.stop();
 					bgLvl1Music.setLoop(false);
 					bgLvl1Music.play();
 				}
@@ -1067,7 +1138,7 @@ void Game::pollEvents() {
 						showPauseMenu = false;
 						startUpScreenOn = true;
 						bgShopMusic.stop();
-						bgStartUpScreenMusic.play();
+						bgStartUpScreenMusic2.play();
 					}
 					if (gameplayPauseGoBackBtn.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 						backgroundActive = true;
@@ -1093,7 +1164,7 @@ void Game::pollEvents() {
 				startUpScreenOn = true;
 				settingsIconSprite.setColor(sf::Color::White);
 				bgShopMusic.stop();
-				bgStartUpScreenMusic.play();
+				bgStartUpScreenMusic2.play();
 			}
 			else if(startUpScreenOn) {
 				m_isRunning = false;
@@ -1186,7 +1257,6 @@ void Game::update() {
 		shooterPositions[13] = { (float)(window.getSize().x * 0.7), (float)(window.getSize().y * 0.7) };
 		shooterPositions[14] = { (float)(window.getSize().x * 0.7), (float)(window.getSize().y * 0.9) };
 	}
-	
 
 	if (levelOneOn) {
 		if (backgroundActive) {
@@ -1444,6 +1514,18 @@ void Game::render() {
 			window.draw(gameplayPauseTitleText);
 			window.draw(gameplayPauseGoBackText);
 			window.draw(gameplayPauseExitText);
+			window.draw(gameplayPauseMusicControlZoneBG);
+			window.draw(gameplayPauseMusicControlZone);
+			window.draw(gameplayPauseSFXControlZoneBG);
+			window.draw(gameplayPauseSFXControlZone);
+			window.draw(gameplayPauseMusicControlInnerZone);
+			window.draw(gameplayPauseSFXControlInnerZone);
+			window.draw(gameplayPauseMusicText);
+			window.draw(gameplayPauseSFXText);
+			window.draw(gameplayPausePlusSoundTextSFX);
+			window.draw(gameplayPauseMinusSoundTextSFX);
+			window.draw(gameplayPausePlusSoundTextMusic);
+			window.draw(gameplayPauseMinusSoundTextMusic);
 		}
 	}
 
