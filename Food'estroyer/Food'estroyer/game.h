@@ -52,7 +52,7 @@ private:
 	void setShooterPositions();
 	void setEnemySpawn();
 	void playerInput();
-	void nonPlayerMoovement();
+	void nonPlayerBehavior();
 	void nonPlayerDraw();
 	void clownWalkAnimation();
 	void backgroundMovementLevel1();

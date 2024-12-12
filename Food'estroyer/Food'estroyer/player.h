@@ -4,14 +4,17 @@
 #include "game.h"
 
 class Pie : public sf::CircleShape {
-private:
+protected:
 
 	bool state = true;
 	float atkPower = 1;
 	float speed;
 	float size;
-
+	
 public:
+
+	char specialType = 'X';
+	int hitCounter = 0;
 
 	float getState() const              { return state; }
 	float getAtkPower() const           { return atkPower; }
@@ -27,9 +30,9 @@ public:
 class Player : public sf::CircleShape {
 private:
 	bool alive = true;
-	float hp;
-	float speed;
-	float atkPower;
+	float hp = 100;
+	float speed = 800;
+	float atkPower = 50;
 	float pieSpeed = 1000;																			 ////////////// PIE SPEED HERE
 	float pieSize = 0.01;
 	float shootCooldown = 0;

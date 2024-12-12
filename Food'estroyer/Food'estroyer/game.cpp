@@ -105,6 +105,8 @@ namespace {
 	sf::Texture playerDeath6;
 	sf::Texture pieTexture;
 		// ENEMMIES
+	sf::Texture deathTexture1;
+	sf::Texture deathTexture2;
 	sf::Texture sugarTexture;
 	sf::Texture shooterProjectile;
 	sf::Texture eliteProjectile;
@@ -215,7 +217,7 @@ namespace {
 	std::vector<Elite> vectorElite;
 	// PLAYER 
 	Player player;
-	//DESSINER POINTEURS
+	// DESSINER POINTEURS
 	Projectile projectileDraw;
 	Sugar sugarDraw;
 	Pie pieDraw;
@@ -292,6 +294,8 @@ void Game::setupGraphicalElements() {
 	playerDeath5.loadFromFile               ("Assets/Images/Clown/Death/frame_4_death_clown.png");
 	playerDeath6.loadFromFile               ("Assets/Images/Clown/Death/frame_5_death_clown.png");
 	pieTexture.loadFromFile                 ("Assets/Images/Clown/Pies/butterscotchPie.png");
+	deathTexture1.loadFromFile                ("Assets/Images/Enemy/Death/death1.png");
+	deathTexture2.loadFromFile                ("Assets/Images/Enemy/Death/death2.png");
 	painBizarre.loadFromFile                ("Assets/Images/Enemy/Shooter/m.png");
 	tomato.loadFromFile                     ("Assets/Images/Enemy/Shooter/tomato.png");
 	banana.loadFromFile                     ("Assets/Images/Enemy/Shooter/banana.png");
@@ -1403,7 +1407,7 @@ void Game::playerInput() {
 	}
 }
 
-void Game::nonPlayerMoovement() {
+void Game::nonPlayerBehavior() {
 	for (int i = 0; i < vectorPies.size(); i++) {
 		vectorPies[i]->move(vectorPies[i]->getSpeed() * f_ElapsedTime, 0);
 		if (vectorPies[i]->getPosition().x > window.getSize().x + vectorPies[i]->getRadius() * 2
@@ -1428,17 +1432,75 @@ void Game::nonPlayerMoovement() {
 			projectiles.erase(projectiles.begin() + i);
 		}
 	}
-	for (Normal& normal : vectorNormal) {
-		normal.behavior(f_ElapsedTime);
-		normal.dropSugar(vectorSugar, normal);
+	for (int i = 0; i < vectorNormal.size(); i++) {
+		if (vectorNormal[i].getAlive()) {
+			vectorNormal[i].behavior(f_ElapsedTime);
+			vectorNormal[i].dropSugar(vectorSugar, vectorNormal[i]);
+			for (Pie*& pie : vectorPies) {
+				if (vectorNormal[i].getGlobalBounds().intersects(pie->getGlobalBounds())) {
+					vectorNormal[i].setHp(-pie->getAtkPower()); 
+					if (pie->specialType == 'b') {
+						pie->hitCounter++;
+						if (pie->hitCounter >= 3)//HIT DETECTION INCONSISTENT : specialAtk ne touche que 2 shooter (dans une meme ligne) alors  qu'il les one shot
+							pie->setState(false);
+					}
+					else { pie->setState(false); }
+					
+				}
+			}
+		}
+		else {
+			vectorNormal[i].deathAnimationTimer += f_ElapsedTime;
+			vectorNormal[i].setTexture(deathTexture1);
+			if (vectorNormal[i].deathAnimationTimer >= 0.3f) { vectorNormal[i].setTexture(deathTexture2); }
+			if (vectorNormal[i].deathAnimationTimer >= 0.5f) { vectorNormal.erase(vectorNormal.begin() + i); }
+		}
 	}
-	for (Shooter& shooter : vectorShooter) {
-		shooter.behavior(f_ElapsedTime, vectorShooter, shooterPositions, projectiles, positionsOccupied);
-		shooter.dropSugar(vectorSugar, shooter);
+	for (int i = 0; i < vectorShooter.size(); i++) {
+		if (vectorShooter[i].getAlive()) {
+			vectorShooter[i].behavior(f_ElapsedTime, vectorShooter, shooterPositions, projectiles, positionsOccupied);
+			vectorShooter[i].dropSugar(vectorSugar, vectorShooter[i]);
+			for (Pie*& pie : vectorPies) {
+				if (vectorShooter[i].getGlobalBounds().intersects(pie->getGlobalBounds())) {
+					vectorShooter[i].setHp(-pie->getAtkPower());
+					if (pie->specialType == 'b') {
+						pie->hitCounter++;
+						if (pie->hitCounter >= 3)
+							pie->setState(false);
+					}
+					else { pie->setState(false); }
+				}
+			}
+		}
+		else {
+			vectorShooter[i].deathAnimationTimer += f_ElapsedTime;
+			vectorShooter[i].setTexture(deathTexture1);
+			if (vectorShooter[i].deathAnimationTimer >= 0.3f) { vectorShooter[i].setTexture(deathTexture2); }
+			if (vectorShooter[i].deathAnimationTimer >= 0.5f) { vectorShooter.erase(vectorShooter.begin() + i); }
+		}
 	}
-	for (Elite& elite : vectorElite) {
-		elite.behavior(f_ElapsedTime, player, projectiles, window);
-		elite.dropSugar(vectorSugar, elite);
+	for (int i = 0; i < vectorElite.size(); i++) {
+		if (vectorElite[i].getAlive()) {
+			vectorElite[i].behavior(f_ElapsedTime, player, projectiles, window);
+			vectorElite[i].dropSugar(vectorSugar, vectorElite[i]);
+			for (Pie*& pie : vectorPies) {
+				if (vectorElite[i].getGlobalBounds().intersects(pie->getGlobalBounds())) {
+					vectorElite[i].setHp(-pie->getAtkPower());
+					if (pie->specialType == 'b') {
+						pie->hitCounter++;
+						if (pie->hitCounter >= 3)
+							pie->setState(false);
+					}
+					else { pie->setState(false); }
+				}
+			}
+		}
+		else {
+			vectorElite[i].deathAnimationTimer += f_ElapsedTime;
+			vectorElite[i].setTexture(deathTexture1);
+			if (vectorElite[i].deathAnimationTimer >= 0.3f) { vectorElite[i].setTexture(deathTexture2); }
+			if (vectorElite[i].deathAnimationTimer >= 0.5f) { vectorElite.erase(vectorElite.begin() + i); }
+		}
 	}
 }
 
@@ -1526,7 +1588,7 @@ void Game::update() {
 			player.setSpecialCooldown(f_ElapsedTime);
 			playerInput();
 
-			nonPlayerMoovement();
+			nonPlayerBehavior();
 			clownWalkAnimation();
 
 			backgroundMovementLevel1();

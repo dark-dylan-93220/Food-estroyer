@@ -147,12 +147,12 @@ void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, s
 
 void Elite::behavior(float timeElapsed, sf::CircleShape player, std::vector<Projectile*> &projectiles, sf::RenderWindow &window) 
 {
+	if (hp <= 0) { alive = false; }
+	
 	//pour tracker le personnage après un délai
 	//GAUCHE DROITE
 	playerPosition = { player.getPosition().x + (player.getLocalBounds().width * player.getScale().x) / 2 - (getLocalBounds().width * getScale().x) / 2,
 		player.getPosition().y + (player.getLocalBounds().height * player.getScale().y) / 2 - (getLocalBounds().height * getScale().y) / 2 };
-
-	if (hp <= 0) { alive = false; }
 
 	if (getPosition().x <= window.getSize().x && getPosition().x >= 0) {
 		if (getPosition().x < window.getSize().x / 2 + getLocalBounds().width * getScale().x) {

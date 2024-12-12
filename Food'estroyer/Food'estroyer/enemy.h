@@ -25,14 +25,17 @@ protected:
 	float hp = 1;
 	float hpSize = 3;
 	bool dropedSugar = false;
+
 	Enemy(float x, float y, char s, sf::RenderWindow &window);
 public:
+	float deathAnimationTimer = 0;
+
 	bool getAlive() const { return alive; }
 	char getSize() const { return size; }
 	float getHp() const { return hp; }
 
 	void setAlive(bool newState) { alive = newState; }
-	void setHp(float degats) { hp -= degats; }
+	void setHp(float degats) { hp += degats; }
 
 	void dropSugar(std::vector<Sugar*>& vectorSugar, Enemy& enemy);
 };
