@@ -5,7 +5,7 @@
 namespace {
 	// DATA STL (STandard Library)
 	int mouseLastDownX, mouseLastDownY;
-	int scoreCounter;
+	float scoreCounter;
 	bool isMouseDragging;
 	std::vector<sf::VideoMode> modes = sf::VideoMode::getFullscreenModes(); // Gets the native resolutions of the machine this program is running on
 	float clownWalkAnimationTime = 0.f;
@@ -1191,19 +1191,19 @@ void Game::update() {
 	if (levelOneOn) {
 		if (backgroundActive) {
 			clownWalkAnimationTime += f_ElapsedTime;
-			scoreCounter += (int)(100 * f_ElapsedTime);
+			scoreCounter += (100.f * f_ElapsedTime);
 			if(scoreCounter < 10)
-				gameplayUIScoreText.setString("Score : 00000" + std::to_string(scoreCounter));
+				gameplayUIScoreText.setString("Score : 00000" + std::to_string((int)scoreCounter));
 			else if(scoreCounter < 100)
-				gameplayUIScoreText.setString("Score : 0000"  + std::to_string(scoreCounter));
+				gameplayUIScoreText.setString("Score : 0000"  + std::to_string((int)scoreCounter));
 			else if(scoreCounter < 1000)
-				gameplayUIScoreText.setString("Score : 000"   + std::to_string(scoreCounter));
+				gameplayUIScoreText.setString("Score : 000"   + std::to_string((int)scoreCounter));
 			else if (scoreCounter < 10000)
-				gameplayUIScoreText.setString("Score : 00"    + std::to_string(scoreCounter));
+				gameplayUIScoreText.setString("Score : 00"    + std::to_string((int)scoreCounter));
 			else if (scoreCounter < 100000)
-				gameplayUIScoreText.setString("Score : 0"     + std::to_string(scoreCounter));
+				gameplayUIScoreText.setString("Score : 0"     + std::to_string((int)scoreCounter));
 			else
-				gameplayUIScoreText.setString("Score : " +      std::to_string(scoreCounter));
+				gameplayUIScoreText.setString("Score : " +      std::to_string((int)scoreCounter));
 
 			playerInput();
 
