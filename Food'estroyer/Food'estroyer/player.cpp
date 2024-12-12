@@ -7,7 +7,7 @@ Player::Player() : hp(100), speed(20), atkPower(10) {
 	this->setFillColor(sf::Color::Green);
 }
 
-void Player::throwPie(std::vector<Pie*> &vectorPies, sf::RenderWindow &window, float timeElapsed) {
+void Player::throwPie(std::vector<Pie*> &vectorPies, sf::RenderWindow &window) {
 	Pie* pie = new Pie;
 	pie->setAtkPower(atkPower);
 	pie->setRadius(getPieSize() * window.getSize().x);
@@ -17,6 +17,15 @@ void Player::throwPie(std::vector<Pie*> &vectorPies, sf::RenderWindow &window, f
 	shootCooldown = 0;
 }
 
+void Player::specialAtk(std::vector<Pie*>& vectorPies, sf::RenderWindow window) {
+	Pie* specialPie = new Pie;
+	specialPie->setAtkPower(atkPower * 1.5);
+	specialPie->setRadius(getPieSize() * 5 * window.getSize().x);
+	specialPie->setSpeed(getPieSpeed());
+	specialPie->setPosition(getPosition().x + getRadius() + specialPie->getRadius(), getPosition().y + getRadius() - specialPie->getRadius());
+	vectorPies.push_back(specialPie);
+	shootCooldown = 0;
+}
 // Ajouter le cooldown dans les KeyPressed ?
 // Pourquoi pas, dans tout les cas il s'agira d'une durée de temps donc n'importe où ça peut contôler une durée de temps.
 

@@ -38,7 +38,9 @@ public:
 	
 	Player();
 
-	void throwPie(std::vector<Pie*> &vectorPies, sf::RenderWindow &window, float timeElapsed);
+	void throwPie(std::vector<Pie*> &vectorPies, sf::RenderWindow &window);
+
+	void specialAtk(std::vector<Pie*>& vectorPies, sf::RenderWindow window);
 
 	// Allez un peu d'encapsulation :)
 	// Getters

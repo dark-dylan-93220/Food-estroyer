@@ -99,6 +99,7 @@ namespace {
 	sf::Texture playerDeath4;
 	sf::Texture playerDeath5;
 	sf::Texture playerDeath6;
+	sf::Texture pieTexture;
 		// ENEMMIES
 	sf::Texture sugarTexture;
 	sf::Texture shooterProjectile;
@@ -198,6 +199,7 @@ namespace {
 	std::vector<sf::Vector2f> shooterPositions; ////////////////////////////////
 	std::vector<Projectile*> projectiles;
 	std::vector<Sugar*> vectorSugar;
+	std::vector<Pie*> vectorPies;
 	std::vector<Normal> vectorNormal;
 	std::vector<Shooter> vectorShooter;
 	std::vector<Elite> vectorElite;
@@ -206,6 +208,7 @@ namespace {
 	//DESSINER POINTEURS
 	Projectile projectileDraw;
 	Sugar sugarDraw;
+	Pie pieDraw;
 }
 
 Game::Game() :
@@ -278,6 +281,7 @@ void Game::setupGraphicalElements() {
 	playerDeath4.loadFromFile               ("Assets/Images/Clown/Death/frame_3_death_clown.png");
 	playerDeath5.loadFromFile               ("Assets/Images/Clown/Death/frame_4_death_clown.png");
 	playerDeath6.loadFromFile               ("Assets/Images/Clown/Death/frame_5_death_clown.png");
+	pieTexture.loadFromFile                 ("Assets/Images/Clown/Pies/butterscotchPie.png");
 	painBizarre.loadFromFile                ("Assets/Images/Enemy/Shooter/m.png");
 	tomato.loadFromFile                     ("Assets/Images/Enemy/Shooter/tomato.png");
 	banana.loadFromFile                     ("Assets/Images/Enemy/Shooter/banana.png");
@@ -1141,10 +1145,87 @@ void Game::playerInput() {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
 		if (levelOneOn && backgroundActive) {
 			// Ici y'aura le shoot
+			if (player.getShootCooldown() >= 0.2f) {
+				player.throwPie(vectorPies, window);
+				player.setShootCooldown(0);
+			}
 			playerCurrentSprite.setTexture(playerAttack1);
 		}
 	}
 }
+
+void Game::nonPlayerMoovement() {
+	for (int i = 0; i < vectorPies.size(); i++) {
+		vectorPies[i]->move(vectorPies[i]->getSpeed() * f_ElapsedTime, 0);
+		if (vectorPies[i]->getPosition().x > window.getSize().x + vectorPies[i]->getRadius() * 2
+			|| vectorPies[i]->getState() == false) {
+			delete vectorPies[i];
+			vectorPies.erase(vectorPies.begin() + i);
+		}
+	}
+	for (int i = 0; i < vectorSugar.size(); i++) {
+		vectorSugar[i]->move(-300 * f_ElapsedTime, 0);
+		if (vectorSugar[i]->getPosition().x < 0 - /*(vectorSugar[i]->getLocalBounds().width * vectorSugar[i]->getScale().x)*/ 100.f
+			|| vectorSugar[i]->getState() == false) {
+			delete vectorSugar[i];
+			vectorSugar.erase(vectorSugar.begin() + i);
+		}
+	}
+	for (int i = 0; i < projectiles.size(); i++) {
+		projectiles[i]->move(-600 * f_ElapsedTime, 0);
+		if (projectiles[i]->getPosition().x < 0 - /*(projectiles[i]->getLocalBounds().width * projectiles[i]->getScale().x)*/ 100.f
+			|| projectiles[i]->getState() == false) {
+			delete projectiles[i];
+			projectiles.erase(projectiles.begin() + i);
+		}
+	}
+	for (Normal& normal : vectorNormal) {
+		normal.behavior(f_ElapsedTime);
+		normal.dropSugar(vectorSugar, normal);
+	}
+	for (Shooter& shooter : vectorShooter) {
+		shooter.behavior(f_ElapsedTime, vectorShooter, shooterPositions, projectiles, positionsOccupied);
+		shooter.dropSugar(vectorSugar, shooter);
+	}
+	for (Elite& elite : vectorElite) {
+		elite.behavior(f_ElapsedTime, player, projectiles, window);
+		elite.dropSugar(vectorSugar, elite);
+	}
+}
+
+void Game::nonPlayerDraw() {
+	for (Pie*& pie : vectorPies) {
+		pieDraw.setRadius(pie->getRadius());
+		pieDraw.setTexture(&pieTexture);
+		pieDraw.setPosition(pie->getPosition());
+		window.draw(pieDraw);
+	}
+	for (Projectile*& projectile : projectiles) {
+		projectileDraw.setScale(projectile->getScale());
+		if (projectile->getId() == "shooter")
+			projectileDraw.setTexture(shooterProjectile);
+		if (projectile->getId() == "elite")
+			projectileDraw.setTexture(eliteProjectile);
+		projectileDraw.setPosition(projectile->getPosition());
+		window.draw(projectileDraw);
+	}
+	for (Sugar*& sugar : vectorSugar) {
+		sugarDraw.setScale(sugar->getScale());
+		sugarDraw.setTexture(sugarTexture);
+		sugarDraw.setPosition(sugar->getPosition());
+		window.draw(sugarDraw);
+	}
+	for (Normal& normal : vectorNormal) {
+		window.draw(normal);
+	}
+	for (Shooter& shooter : vectorShooter) {
+		window.draw(shooter);
+	}
+	for (Elite& elite : vectorElite) {
+		window.draw(elite);
+	}
+}
+
 
 void Game::run() {
 
@@ -1205,36 +1286,10 @@ void Game::update() {
 			else
 				gameplayUIScoreText.setString("Score : " +      std::to_string((int)scoreCounter));
 
+			player.setShootCooldown(f_ElapsedTime);
 			playerInput();
 
-			for (int i = 0; i < vectorSugar.size(); i++) {
-				vectorSugar[i]->move(-300 * f_ElapsedTime, 0);
-				if (vectorSugar[i]->getPosition().x < 0 - /*(vectorSugar[i]->getLocalBounds().width * vectorSugar[i]->getScale().x)*/ 100.f
-					|| vectorSugar[i]->getState() == false) {
-					delete vectorSugar[i];
-					vectorSugar.erase(vectorSugar.begin() + i);
-				}
-			}
-			for (int i = 0; i < projectiles.size(); i++) {
-				projectiles[i]->move(-600 * f_ElapsedTime, 0);
-				if (projectiles[i]->getPosition().x < 0 - /*(projectiles[i]->getLocalBounds().width * projectiles[i]->getScale().x)*/ 100.f 
-					|| projectiles[i]->getState() == false) {
-					delete projectiles[i];
-					projectiles.erase(projectiles.begin() + i);
-				}
-			}
-			for (Normal& normal : vectorNormal) {
-				normal.behavior(f_ElapsedTime);
-				normal.dropSugar(vectorSugar, normal);
-			}
-			for (Shooter& shooter : vectorShooter) {
-				shooter.behavior(f_ElapsedTime, vectorShooter, shooterPositions, projectiles, positionsOccupied);
-				shooter.dropSugar(vectorSugar, shooter);
-			}
-			for (Elite& elite : vectorElite) {
-				elite.behavior(f_ElapsedTime, player, projectiles, window);
-				elite.dropSugar(vectorSugar, elite);
-			}
+			nonPlayerMoovement();
 			
 			if (clownWalkAnimationTime >= 0.1f) playerCurrentSprite.setTexture(playerMove2);
 			if (clownWalkAnimationTime >= 0.2f) {
@@ -1408,30 +1463,7 @@ void Game::render() {
 			window.draw(levelOneParralax06Sprite);
 			window.draw(levelOneParralax06SpriteCopy);
 			// --- ENNEMIS & JOUEUR --- //
-			for (Projectile* &projectile : projectiles) {
-				projectileDraw.setScale(projectile->getScale());
-				if(projectile->getId() == "shooter") 
-					projectileDraw.setTexture(shooterProjectile);
-				if (projectile->getId() == "elite")
-					projectileDraw.setTexture(eliteProjectile);
-				projectileDraw.setPosition(projectile->getPosition());
-				window.draw(projectileDraw);
-			}
-			for (Sugar*& sugar : vectorSugar) {
-				sugarDraw.setScale(sugar->getScale());
-				sugarDraw.setTexture(sugarTexture);
-				sugarDraw.setPosition(sugar->getPosition());
-				window.draw(sugarDraw);
-			}
-			for (Normal& normal : vectorNormal) {
-				window.draw(normal);
-			}
-			for (Shooter& shooter : vectorShooter) {
-				window.draw(shooter);
-			}
-			for (Elite& elite : vectorElite) {
-				window.draw(elite);
-			}
+			nonPlayerDraw();
 			window.draw(playerCurrentSprite);
 			window.draw(gameplayUILifeBarCurrentSprite);
 			window.draw(gameplayUIScoreText);
