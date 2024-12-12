@@ -12,9 +12,7 @@ public:
 	char getSize() const { return size; }
 	bool getState() const { return state; }
 
-	void setState(bool newState) {
-		state = newState;
-	}
+	void setState(bool newState) { state = newState; }
 };
 
 //CLASSE DE BASE : ENEMY

@@ -203,6 +203,9 @@ namespace {
 	std::vector<Elite> vectorElite;
 	// PLAYER 
 	Player player;
+	//DESSINER POINTEURS
+	Projectile projectileDraw;
+	Sugar sugarDraw;
 }
 
 Game::Game() :
@@ -1406,7 +1409,6 @@ void Game::render() {
 			window.draw(levelOneParralax06SpriteCopy);
 			// --- ENNEMIS & JOUEUR --- //
 			for (Projectile* &projectile : projectiles) {
-				Projectile projectileDraw;
 				projectileDraw.setScale(projectile->getScale());
 				if(projectile->getId() == "shooter") 
 					projectileDraw.setTexture(shooterProjectile);
@@ -1416,7 +1418,6 @@ void Game::render() {
 				window.draw(projectileDraw);
 			}
 			for (Sugar*& sugar : vectorSugar) {
-				Sugar sugarDraw;
 				sugarDraw.setScale(sugar->getScale());
 				sugarDraw.setTexture(sugarTexture);
 				sugarDraw.setPosition(sugar->getPosition());
