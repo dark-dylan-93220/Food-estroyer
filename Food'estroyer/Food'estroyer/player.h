@@ -13,12 +13,12 @@ private:
 
 public:
 
-	float getState() const    { return state; }
-	float getAtkPower() const { return atkPower; }
-	float getSpeed() const    { return speed; }
-	float getSize() const     { return size; }
+	float getState() const              { return state; }
+	float getAtkPower() const           { return atkPower; }
+	float getSpeed() const              { return speed; }
+	float getSize() const               { return size; }
 
-	void setState(float newState) { state = newState; }
+	void setState(float newState)       { state = newState; }
 	void setAtkPower(float newAtkPower) { atkPower = newAtkPower; }
 	void setSpeed(float newSpeed)       { speed = newSpeed; }
 	void setSize(float newSize)         { size = newSize; }
@@ -34,6 +34,7 @@ private:
 	float pieSize = 0.01;
 	float shootCooldown = 0;
 	float specialCooldown = 0;
+	char specialAtkType = 'b';
 
 public:
 	
@@ -45,23 +46,25 @@ public:
 
 	// Allez un peu d'encapsulation :)
 	// Getters
-	bool getPlayerLife() const     { return alive; }
-	float getPlayerHP() const      { return hp; }
-	float getSpeed() const         { return speed; }
-	float getAtkPower() const      { return atkPower; }
-	float getPieSpeed() const      { return pieSpeed; }
-	float getPieSize() const       { return pieSize; }
-	float getShootCooldown() const { return shootCooldown; }
-	float getSpecialCooldown() const { return specialCooldown; }
+	bool getPlayerLife() const             { return alive; }
+	float getPlayerHP() const              { return hp; }
+	float getSpeed() const                 { return speed; }
+	float getAtkPower() const              { return atkPower; }
+	float getPieSpeed() const              { return pieSpeed; }
+	float getPieSize() const               { return pieSize; }
+	float getShootCooldown() const         { return shootCooldown; }
+	float getSpecialCooldown() const       { return specialCooldown; }
+	char getSpectialAtkType() const        { return specialAtkType; }
 	// Setters
 	void damagePlayer(float degats)						{ hp -= degats; }
 	void setPlayerSpeed(int bonusSpeed)					{ speed *= (0.01f * bonusSpeed); }// Bonus speed entre 0 et 100 comme un pourcentage
 	void setPlayerSpeedBackToNormal(int bonusSpeed)		{ speed /= (0.01f * bonusSpeed); }// Opération inverse
 	void setAtkPower(float atkMultiplier)				{ atkPower *= atkMultiplier; } // Genre 1.2x, 1.55x etc...
-	void setPieSpeed(float newSpeed) { pieSpeed = newSpeed; }
-	void setPieSize(float newSize) { pieSize = newSize; }
-	void setShootCooldown(float timeElapsed) { shootCooldown += timeElapsed; }
-	void setSpecialCooldown(float timeElapsed) { specialCooldown += timeElapsed; }
+	void setPieSpeed(float newSpeed)                    { pieSpeed = newSpeed; }
+	void setPieSize(float newSize)                      { pieSize = newSize; }
+	void setShootCooldown(float timeElapsed)            { shootCooldown += timeElapsed; }
+	void setSpecialCooldown(float timeElapsed)          { specialCooldown += timeElapsed; }
+	void setSpecialAtkType(char newType)                { specialAtkType = newType; }
 
 };
 #endif
