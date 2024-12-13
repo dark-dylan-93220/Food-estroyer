@@ -97,6 +97,23 @@ namespace {
 	sf::Texture levelOneParralax04;
 	sf::Texture levelOneParralax05;
 	sf::Texture levelOneParralax06;
+	sf::Texture levelTwoParralax01;
+	sf::Texture levelTwoParralax02;
+	sf::Texture levelTwoParralax03;
+	sf::Texture levelTwoParralax04;
+	sf::Texture levelTwoParralax05;
+	sf::Texture levelTwoParralax06;
+	sf::Texture levelTwoParralax07;
+	sf::Texture levelTwoParralax08;
+	sf::Texture levelTwoParralaxBG;
+	sf::Texture levelThreeParralax01;
+	sf::Texture levelThreeParralax02;
+	sf::Texture levelThreeParralax03;
+	sf::Texture levelThreeParralax04;
+	sf::Texture levelThreeParralax05;
+	sf::Texture levelThreeParralax06;
+	sf::Texture levelThreeParralax07;
+	sf::Texture levelThreeParralax08;
 		// PLAYER
 	sf::Texture playerMove1;
 	sf::Texture playerMove2;
@@ -166,8 +183,8 @@ namespace {
 	sf::Texture gameplayUILifeBar21Inactive;
 	sf::Texture gameplayUIPauseSoundPlus;
 	sf::Texture gameplayUIPauseSoundMinus;
-	sf::Texture gameplayPauseCheckboxTexture;
-	sf::Texture nothing;
+	sf::Texture gameplayPauseCheckboxOkTexture;
+	sf::Texture gameplayPauseCheckboxNoTexture;
 	// SHAPES
 	sf::RectangleShape screenShadowWhenBlured;
 	sf::RectangleShape menuPauseTopBar; 
@@ -204,6 +221,7 @@ namespace {
 	// SPRITES
 	sf::Sprite bgStartUpScreenSprite;
 	sf::Sprite settingsIconSprite;
+		// Level 1
 	sf::Sprite levelOneBackgroundStartSprite;
 	sf::Sprite levelOneParralax01Sprite;
 	sf::Sprite levelOneParralax02Sprite;
@@ -217,6 +235,43 @@ namespace {
 	sf::Sprite levelOneParralax04SpriteCopy;
 	sf::Sprite levelOneParralax05SpriteCopy;
 	sf::Sprite levelOneParralax06SpriteCopy;
+		 // Level 2
+	sf::Sprite levelTwoParralax01Sprite;
+	sf::Sprite levelTwoParralax02Sprite;
+	sf::Sprite levelTwoParralax03Sprite;
+	sf::Sprite levelTwoParralax04Sprite;
+	sf::Sprite levelTwoParralax05Sprite;
+	sf::Sprite levelTwoParralax06Sprite;
+	sf::Sprite levelTwoParralax07Sprite;
+	sf::Sprite levelTwoParralax08Sprite;
+	sf::Sprite levelTwoParralaxBGSprite;
+	sf::Sprite levelTwoParralax01SpriteCopy;
+	sf::Sprite levelTwoParralax02SpriteCopy;
+	sf::Sprite levelTwoParralax03SpriteCopy;
+	sf::Sprite levelTwoParralax04SpriteCopy;
+	sf::Sprite levelTwoParralax05SpriteCopy;
+	sf::Sprite levelTwoParralax06SpriteCopy;
+	sf::Sprite levelTwoParralax07SpriteCopy;
+	sf::Sprite levelTwoParralax08SpriteCopy;
+	sf::Sprite levelTwoParralaxBGSpriteCopy;
+		 // Level 3
+	sf::Sprite levelThreeParralax01Sprite;
+	sf::Sprite levelThreeParralax02Sprite;
+	sf::Sprite levelThreeParralax03Sprite;
+	sf::Sprite levelThreeParralax04Sprite;
+	sf::Sprite levelThreeParralax05Sprite;
+	sf::Sprite levelThreeParralax06Sprite;
+	sf::Sprite levelThreeParralax07Sprite;
+	sf::Sprite levelThreeParralaxBGSprite;
+	sf::Sprite levelThreeParralax01SpriteCopy;
+	sf::Sprite levelThreeParralax02SpriteCopy;
+	sf::Sprite levelThreeParralax03SpriteCopy;
+	sf::Sprite levelThreeParralax04SpriteCopy;
+	sf::Sprite levelThreeParralax05SpriteCopy;
+	sf::Sprite levelThreeParralax06SpriteCopy;
+	sf::Sprite levelThreeParralax07SpriteCopy;
+	sf::Sprite levelThreeParralaxBGSpriteCopy;
+		// Others
 	sf::Sprite playerCurrentSprite;
 	sf::Sprite gameplayUILifeBarCurrentSprite;
 	// VECTORS
@@ -227,6 +282,7 @@ namespace {
 	std::vector<Normal> vectorNormal;
 	std::vector<Shooter> vectorShooter;
 	std::vector<Elite> vectorElite;
+	std::vector<Bonus*> vectorBonus;
 	// PLAYER 
 	Player player;
 	// DESSINER POINTEURS
@@ -234,6 +290,7 @@ namespace {
 	Sugar sugarDraw;
 	Sugar sugarIcone;
 	Pie pieDraw;
+	Bonus bonusDraw(1.f, 1.f, "yo");
 }
 
 Game::Game() :
@@ -298,6 +355,23 @@ void Game::setupGraphicalElements() {
 	levelOneParralax04.loadFromFile         ("Assets/Images/Level1/level1Background04.png");
 	levelOneParralax05.loadFromFile         ("Assets/Images/Level1/level1Background05.png");
 	levelOneParralax06.loadFromFile         ("Assets/Images/Level1/level1Background06.png");
+	levelTwoParralax01.loadFromFile			("Assets/Images/Level2/1.PNG");
+	levelTwoParralax02.loadFromFile			("Assets/Images/Level2/2.PNG");
+	levelTwoParralax03.loadFromFile			("Assets/Images/Level2/3.PNG");
+	levelTwoParralax04.loadFromFile			("Assets/Images/Level2/4.PNG");
+	levelTwoParralax05.loadFromFile			("Assets/Images/Level2/5.PNG");
+	levelTwoParralax06.loadFromFile			("Assets/Images/Level2/6.PNG");
+	levelTwoParralax07.loadFromFile			("Assets/Images/Level2/7.PNG");
+	levelTwoParralax08.loadFromFile			("Assets/Images/Level2/8.PNG");
+	levelTwoParralaxBG.loadFromFile			("Assets/Images/Level2/BG.PNG");
+	levelThreeParralax01.loadFromFile		("Assets/Images/Level3/1.png");
+	levelThreeParralax02.loadFromFile		("Assets/Images/Level3/2.png");
+	levelThreeParralax03.loadFromFile		("Assets/Images/Level3/3.png");
+	levelThreeParralax04.loadFromFile		("Assets/Images/Level3/4.png");
+	levelThreeParralax05.loadFromFile		("Assets/Images/Level3/5.png");
+	levelThreeParralax06.loadFromFile		("Assets/Images/Level3/6.png");
+	levelThreeParralax07.loadFromFile		("Assets/Images/Level3/7.png");
+	levelThreeParralax08.loadFromFile		("Assets/Images/Level3/BG.png");
 	playerMove1.loadFromFile                ("Assets/Images/Clown/Walk/frame_0_walk_clown.png");
 	playerMove2.loadFromFile                ("Assets/Images/Clown/Walk/frame_1_walk_clown.png");
 	playerAttack1.loadFromFile              ("Assets/Images/Clown/Attack/frame_0_attack_clown.png");
@@ -309,8 +383,8 @@ void Game::setupGraphicalElements() {
 	playerDeath5.loadFromFile               ("Assets/Images/Clown/Death/frame_4_death_clown.png");
 	playerDeath6.loadFromFile               ("Assets/Images/Clown/Death/frame_5_death_clown.png");
 	pieTexture.loadFromFile                 ("Assets/Images/Clown/Pies/butterscotchPie.png");
-	deathTexture1.loadFromFile                ("Assets/Images/Enemy/Death/death1.png");
-	deathTexture2.loadFromFile                ("Assets/Images/Enemy/Death/death2.png");
+	deathTexture1.loadFromFile              ("Assets/Images/Enemy/Death/death1.png");
+	deathTexture2.loadFromFile              ("Assets/Images/Enemy/Death/death2.png");
 	painBizarre.loadFromFile                ("Assets/Images/Enemy/Shooter/m.png");
 	tomato.loadFromFile                     ("Assets/Images/Enemy/Shooter/tomato.png");
 	banana.loadFromFile                     ("Assets/Images/Enemy/Shooter/banana.png");
@@ -362,8 +436,8 @@ void Game::setupGraphicalElements() {
 	gameplayUILifeBar19Inactive.loadFromFile("Assets/Images/GameplayUI/19-inactive.png");
 	gameplayUILifeBar20Inactive.loadFromFile("Assets/Images/GameplayUI/20-inactive.png");
 	gameplayUILifeBar21Inactive.loadFromFile("Assets/Images/GameplayUI/21-inactive.png");
-	gameplayPauseCheckboxTexture.loadFromFile("Assets/Images/GameplayUI/PauseMenu/checkbox-ok.png");
-	nothing.loadFromFile("Assets/images/GameplayUI/PauseMenu/checkbox-no.png");
+	gameplayPauseCheckboxOkTexture.loadFromFile("Assets/Images/GameplayUI/PauseMenu/checkbox-ok.png");
+	gameplayPauseCheckboxNoTexture.loadFromFile("Assets/images/GameplayUI/PauseMenu/checkbox-no.png");
 	// SHAPES
 	screenShadowWhenBlured.setSize(sf::Vector2f(window.getSize()));
 	screenShadowWhenBlured.setPosition(0.f, 0.f);
@@ -434,9 +508,9 @@ void Game::setupGraphicalElements() {
 	gameplayPauseFullscreenCheckbox.setOutlineColor(sf::Color::Black);
 	gameplayPauseFullscreenCheckbox.setPosition(sf::Vector2f(window.getSize().x / 2 + window.getSize().x * 0.02f, gameplayPauseGoBackBtn.getPosition().y));
 	if (window.getSize() == sf::Vector2u(modes[0].width, modes[0].height))
-		gameplayPauseFullscreenCheckbox.setTexture(&gameplayPauseCheckboxTexture);
+		gameplayPauseFullscreenCheckbox.setTexture(&gameplayPauseCheckboxOkTexture);
 	else
-		gameplayPauseFullscreenCheckbox.setTexture(&nothing);
+		gameplayPauseFullscreenCheckbox.setTexture(&gameplayPauseCheckboxNoTexture);
 	// SPRITES
 	bgStartUpScreenSprite.setTexture(bgStartUpScreen);
 	bgStartUpScreenSprite.setScale(sf::Vector2f((window.getSize().x / bgStartUpScreenSprite.getLocalBounds().width), (window.getSize().y / bgStartUpScreenSprite.getLocalBounds().height)));
@@ -449,36 +523,138 @@ void Game::setupGraphicalElements() {
 	levelOneParralax04Sprite.setTexture(levelOneParralax04);
 	levelOneParralax05Sprite.setTexture(levelOneParralax05);
 	levelOneParralax06Sprite.setTexture(levelOneParralax06);
+	levelTwoParralax01Sprite.setTexture(levelTwoParralax01);
+	levelTwoParralax02Sprite.setTexture(levelTwoParralax02);
+	levelTwoParralax03Sprite.setTexture(levelTwoParralax03);
+	levelTwoParralax04Sprite.setTexture(levelTwoParralax04);
+	levelTwoParralax05Sprite.setTexture(levelTwoParralax05);
+	levelTwoParralax06Sprite.setTexture(levelTwoParralax06);
+	levelTwoParralax07Sprite.setTexture(levelTwoParralax07);
+	levelTwoParralax08Sprite.setTexture(levelTwoParralax08);
+	levelTwoParralaxBGSprite.setTexture(levelTwoParralaxBG);
+	levelThreeParralax01Sprite.setTexture(levelThreeParralax01);
+	levelThreeParralax02Sprite.setTexture(levelThreeParralax02);
+	levelThreeParralax03Sprite.setTexture(levelThreeParralax03);
+	levelThreeParralax04Sprite.setTexture(levelThreeParralax04);
+	levelThreeParralax05Sprite.setTexture(levelThreeParralax05);
+	levelThreeParralax06Sprite.setTexture(levelThreeParralax06);
+	levelThreeParralax07Sprite.setTexture(levelThreeParralax07);
+	levelThreeParralaxBGSprite.setTexture(levelThreeParralax08);
 	levelOneParralax01SpriteCopy.setTexture(levelOneParralax01);
 	levelOneParralax02SpriteCopy.setTexture(levelOneParralax02);
 	levelOneParralax03SpriteCopy.setTexture(levelOneParralax03);
 	levelOneParralax04SpriteCopy.setTexture(levelOneParralax04);
 	levelOneParralax05SpriteCopy.setTexture(levelOneParralax05);
 	levelOneParralax06SpriteCopy.setTexture(levelOneParralax06);
+	levelTwoParralax01SpriteCopy.setTexture(levelTwoParralax01);
+	levelTwoParralax02SpriteCopy.setTexture(levelTwoParralax02);
+	levelTwoParralax03SpriteCopy.setTexture(levelTwoParralax03);
+	levelTwoParralax04SpriteCopy.setTexture(levelTwoParralax04);
+	levelTwoParralax05SpriteCopy.setTexture(levelTwoParralax05);
+	levelTwoParralax06SpriteCopy.setTexture(levelTwoParralax06);
+	levelTwoParralax07SpriteCopy.setTexture(levelTwoParralax07);
+	levelTwoParralax08SpriteCopy.setTexture(levelTwoParralax08);
+	levelTwoParralaxBGSpriteCopy.setTexture(levelTwoParralaxBG);
+	levelThreeParralax01SpriteCopy.setTexture(levelThreeParralax01);
+	levelThreeParralax02SpriteCopy.setTexture(levelThreeParralax02);
+	levelThreeParralax03SpriteCopy.setTexture(levelThreeParralax03);
+	levelThreeParralax04SpriteCopy.setTexture(levelThreeParralax04);
+	levelThreeParralax05SpriteCopy.setTexture(levelThreeParralax05);
+	levelThreeParralax06SpriteCopy.setTexture(levelThreeParralax06);
+	levelThreeParralax07SpriteCopy.setTexture(levelThreeParralax07);
+	levelThreeParralaxBGSpriteCopy.setTexture(levelThreeParralax08);
 	levelOneParralax01Sprite.setScale(sf::Vector2f((window.getSize().x / levelOneParralax01Sprite.getLocalBounds().width), (window.getSize().y / levelOneParralax01Sprite.getLocalBounds().height)));
 	levelOneParralax02Sprite.setScale(sf::Vector2f((window.getSize().x / levelOneParralax02Sprite.getLocalBounds().width), (window.getSize().y / levelOneParralax02Sprite.getLocalBounds().height)));
 	levelOneParralax03Sprite.setScale(sf::Vector2f((window.getSize().x / levelOneParralax03Sprite.getLocalBounds().width), (window.getSize().y / levelOneParralax03Sprite.getLocalBounds().height)));
 	levelOneParralax04Sprite.setScale(sf::Vector2f((window.getSize().x / levelOneParralax04Sprite.getLocalBounds().width), (window.getSize().y / levelOneParralax04Sprite.getLocalBounds().height)));
 	levelOneParralax05Sprite.setScale(sf::Vector2f((window.getSize().x / levelOneParralax05Sprite.getLocalBounds().width), (window.getSize().y / levelOneParralax05Sprite.getLocalBounds().height)));
 	levelOneParralax06Sprite.setScale(sf::Vector2f((window.getSize().x / levelOneParralax06Sprite.getLocalBounds().width), (window.getSize().y / levelOneParralax06Sprite.getLocalBounds().height)));
+	levelTwoParralax01Sprite.setScale(levelOneParralax01Sprite.getScale());
+	levelTwoParralax02Sprite.setScale(levelOneParralax01Sprite.getScale());
+	levelTwoParralax03Sprite.setScale(levelOneParralax01Sprite.getScale());
+	levelTwoParralax04Sprite.setScale(levelOneParralax01Sprite.getScale());
+	levelTwoParralax05Sprite.setScale(levelOneParralax01Sprite.getScale());
+	levelTwoParralax06Sprite.setScale(levelOneParralax01Sprite.getScale());
+	levelTwoParralax07Sprite.setScale(levelOneParralax01Sprite.getScale());
+	levelTwoParralax08Sprite.setScale(levelOneParralax01Sprite.getScale());
+	levelTwoParralaxBGSprite.setScale(levelOneParralax01Sprite.getScale());
+	levelThreeParralax01Sprite.setScale(sf::Vector2f((window.getSize().x / levelThreeParralax01Sprite.getLocalBounds().width), (window.getSize().y / levelThreeParralax01Sprite.getLocalBounds().height)));
+	levelThreeParralax02Sprite.setScale(sf::Vector2f((window.getSize().x / levelThreeParralax01Sprite.getLocalBounds().width), (window.getSize().y / levelThreeParralax01Sprite.getLocalBounds().height)));
+	levelThreeParralax03Sprite.setScale(sf::Vector2f((window.getSize().x / levelThreeParralax01Sprite.getLocalBounds().width), (window.getSize().y / levelThreeParralax01Sprite.getLocalBounds().height)));
+	levelThreeParralax04Sprite.setScale(sf::Vector2f((window.getSize().x / levelThreeParralax01Sprite.getLocalBounds().width), (window.getSize().y / levelThreeParralax01Sprite.getLocalBounds().height)));
+	levelThreeParralax05Sprite.setScale(sf::Vector2f((window.getSize().x / levelThreeParralax01Sprite.getLocalBounds().width), (window.getSize().y / levelThreeParralax01Sprite.getLocalBounds().height)));
+	levelThreeParralax06Sprite.setScale(sf::Vector2f((window.getSize().x / levelThreeParralax01Sprite.getLocalBounds().width), (window.getSize().y / levelThreeParralax01Sprite.getLocalBounds().height)));
+	levelThreeParralax07Sprite.setScale(sf::Vector2f((window.getSize().x / levelThreeParralax01Sprite.getLocalBounds().width), (window.getSize().y / levelThreeParralax01Sprite.getLocalBounds().height)));
+	levelThreeParralaxBGSprite.setScale(sf::Vector2f((window.getSize().x / levelThreeParralax01Sprite.getLocalBounds().width), (window.getSize().y / levelThreeParralax01Sprite.getLocalBounds().height)));
 	levelOneParralax01SpriteCopy.setScale(sf::Vector2f((window.getSize().x / levelOneParralax01SpriteCopy.getLocalBounds().width), (window.getSize().y / levelOneParralax01SpriteCopy.getLocalBounds().height)));
 	levelOneParralax02SpriteCopy.setScale(sf::Vector2f((window.getSize().x / levelOneParralax02SpriteCopy.getLocalBounds().width), (window.getSize().y / levelOneParralax02SpriteCopy.getLocalBounds().height)));
 	levelOneParralax03SpriteCopy.setScale(sf::Vector2f((window.getSize().x / levelOneParralax03SpriteCopy.getLocalBounds().width), (window.getSize().y / levelOneParralax03SpriteCopy.getLocalBounds().height)));
 	levelOneParralax04SpriteCopy.setScale(sf::Vector2f((window.getSize().x / levelOneParralax04SpriteCopy.getLocalBounds().width), (window.getSize().y / levelOneParralax04SpriteCopy.getLocalBounds().height)));
 	levelOneParralax05SpriteCopy.setScale(sf::Vector2f((window.getSize().x / levelOneParralax05SpriteCopy.getLocalBounds().width), (window.getSize().y / levelOneParralax05SpriteCopy.getLocalBounds().height)));
 	levelOneParralax06SpriteCopy.setScale(sf::Vector2f((window.getSize().x / levelOneParralax06SpriteCopy.getLocalBounds().width), (window.getSize().y / levelOneParralax06SpriteCopy.getLocalBounds().height)));
+	levelTwoParralax01SpriteCopy.setScale(levelOneParralax01Sprite.getScale());
+	levelTwoParralax02SpriteCopy.setScale(levelOneParralax01Sprite.getScale());
+	levelTwoParralax03SpriteCopy.setScale(levelOneParralax01Sprite.getScale());
+	levelTwoParralax04SpriteCopy.setScale(levelOneParralax01Sprite.getScale());
+	levelTwoParralax05SpriteCopy.setScale(levelOneParralax01Sprite.getScale());
+	levelTwoParralax06SpriteCopy.setScale(levelOneParralax01Sprite.getScale());
+	levelTwoParralax07SpriteCopy.setScale(levelOneParralax01Sprite.getScale());
+	levelTwoParralax08SpriteCopy.setScale(levelOneParralax01Sprite.getScale());
+	levelTwoParralaxBGSpriteCopy.setScale(levelOneParralax01Sprite.getScale());
+	levelThreeParralax01SpriteCopy.setScale(sf::Vector2f((window.getSize().x / levelThreeParralax01Sprite.getLocalBounds().width), (window.getSize().y / levelThreeParralax01Sprite.getLocalBounds().height)));
+	levelThreeParralax02SpriteCopy.setScale(sf::Vector2f((window.getSize().x / levelThreeParralax01Sprite.getLocalBounds().width), (window.getSize().y / levelThreeParralax01Sprite.getLocalBounds().height)));
+	levelThreeParralax03SpriteCopy.setScale(sf::Vector2f((window.getSize().x / levelThreeParralax01Sprite.getLocalBounds().width), (window.getSize().y / levelThreeParralax01Sprite.getLocalBounds().height)));
+	levelThreeParralax04SpriteCopy.setScale(sf::Vector2f((window.getSize().x / levelThreeParralax01Sprite.getLocalBounds().width), (window.getSize().y / levelThreeParralax01Sprite.getLocalBounds().height)));
+	levelThreeParralax05SpriteCopy.setScale(sf::Vector2f((window.getSize().x / levelThreeParralax01Sprite.getLocalBounds().width), (window.getSize().y / levelThreeParralax01Sprite.getLocalBounds().height)));
+	levelThreeParralax06SpriteCopy.setScale(sf::Vector2f((window.getSize().x / levelThreeParralax01Sprite.getLocalBounds().width), (window.getSize().y / levelThreeParralax01Sprite.getLocalBounds().height)));
+	levelThreeParralax07SpriteCopy.setScale(sf::Vector2f((window.getSize().x / levelThreeParralax01Sprite.getLocalBounds().width), (window.getSize().y / levelThreeParralax01Sprite.getLocalBounds().height)));
+	levelThreeParralaxBGSpriteCopy.setScale(sf::Vector2f((window.getSize().x / levelThreeParralax01Sprite.getLocalBounds().width), (window.getSize().y / levelThreeParralax01Sprite.getLocalBounds().height)));
 	levelOneParralax01Sprite.setPosition(sf::Vector2f(0,0));
 	levelOneParralax02Sprite.setPosition(sf::Vector2f(0,0));
 	levelOneParralax03Sprite.setPosition(sf::Vector2f(0,0));
 	levelOneParralax04Sprite.setPosition(sf::Vector2f(0,0));
 	levelOneParralax05Sprite.setPosition(sf::Vector2f(0,0));
 	levelOneParralax06Sprite.setPosition(sf::Vector2f(0,0));
+	levelTwoParralax01Sprite.setPosition(sf::Vector2f(0,0));
+	levelTwoParralax02Sprite.setPosition(sf::Vector2f(0, 0));
+	levelTwoParralax03Sprite.setPosition(sf::Vector2f(0, 0));
+	levelTwoParralax04Sprite.setPosition(sf::Vector2f(0, 0));
+	levelTwoParralax05Sprite.setPosition(sf::Vector2f(0, 0));
+	levelTwoParralax06Sprite.setPosition(sf::Vector2f(0, 0));
+	levelTwoParralax07Sprite.setPosition(sf::Vector2f(0, 0));
+	levelTwoParralax08Sprite.setPosition(sf::Vector2f(0, 0));
+	levelTwoParralaxBGSprite.setPosition(sf::Vector2f(0, 0));
+	levelThreeParralax01Sprite.setPosition(sf::Vector2f(0, 0));
+	levelThreeParralax02Sprite.setPosition(sf::Vector2f(0, 0));
+	levelThreeParralax03Sprite.setPosition(sf::Vector2f(0, 0));
+	levelThreeParralax04Sprite.setPosition(sf::Vector2f(0, 0));
+	levelThreeParralax05Sprite.setPosition(sf::Vector2f(0, 0));
+	levelThreeParralax06Sprite.setPosition(sf::Vector2f(0, 0));
+	levelThreeParralax07Sprite.setPosition(sf::Vector2f(0, 0));
+	levelThreeParralaxBGSprite.setPosition(sf::Vector2f(0, 0));
 	levelOneParralax01SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x,0));
 	levelOneParralax02SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x,0));
 	levelOneParralax03SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x,0));
 	levelOneParralax04SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x,0));
 	levelOneParralax05SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x,0));
 	levelOneParralax06SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x,0));
+	levelTwoParralax01SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x, 0));
+	levelTwoParralax02SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x, 0));
+	levelTwoParralax03SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x, 0));
+	levelTwoParralax04SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x, 0));
+	levelTwoParralax05SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x, 0));
+	levelTwoParralax06SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x, 0));
+	levelTwoParralax07SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x, 0));
+	levelTwoParralax08SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x, 0));
+	levelTwoParralaxBGSpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x, 0));
+	levelThreeParralax01SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x, 0));
+	levelThreeParralax02SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x, 0));
+	levelThreeParralax03SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x, 0));
+	levelThreeParralax04SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x, 0));
+	levelThreeParralax05SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x, 0));
+	levelThreeParralax06SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x, 0));
+	levelThreeParralax07SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x, 0));
+	levelThreeParralaxBGSpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x, 0));
 	playerCurrentSprite.setTexture(playerMove1);
 	playerCurrentSprite.setScale(sf::Vector2f((window.getSize().x * 0.05f) / (playerCurrentSprite.getLocalBounds().width), (window.getSize().y * 0.10f) / (playerCurrentSprite.getLocalBounds().height)));
 	playerCurrentSprite.setPosition(sf::Vector2f(window.getSize().x * 0.07f, (window.getSize().y / 2) - (playerCurrentSprite.getGlobalBounds().height / 2)));
@@ -792,7 +968,7 @@ void Game::setupGraphicalElements() {
 	gameplayUISugarText.setString("00000000");
 	gameplayUISugarText.setPosition(sugarIcone.getPosition().x - gameplayUISugarText.getGlobalBounds().width - window.getSize().x * 0.005f, sugarIcone.getPosition().y - gameplayUISugarText.getGlobalBounds().height * 0.2f);
 	// CURSORS
-	pie.loadFromPixels(pieCursorImg.getPixelsPtr(), pieCursorImg.getSize(), {1, 32});
+	pie.loadFromPixels(pieCursorImg.getPixelsPtr(), pieCursorImg.getSize(), {1, 1});
 }
 
 void Game::setShooterPositions() {
@@ -912,6 +1088,8 @@ void Game::setEnemySpawn() {
 	Elite elite3(1300, 400, 'l', window);
 	elite3.setTexture(carrot);
 	vectorElite.push_back(elite3);
+	Bonus* bonus1 = new Bonus((float)window.getSize().x * 0.1f, -50.f, "yo");
+	vectorBonus.push_back(bonus1);
 }
 
 void Game::FPSCalculation() {
@@ -1241,6 +1419,8 @@ void Game::pollEvents() {
 				if (showPauseMenu) {
 					if (gameplayPauseExitBtn.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 						levelOneOn = false;
+						levelTwoOn = false;
+						levelThreeOn = false;
 						backgroundActive = false;
 						showPauseMenu = false;
 						startUpScreenOn = true;
@@ -1319,6 +1499,17 @@ void Game::pollEvents() {
 				m_isRunning = false;
 			}
 		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::K)) {
+			if (levelOneOn) {
+				levelOneOn = false;
+				levelTwoOn = true;
+			}
+			else if (levelTwoOn) {
+				levelOneOn = true;
+				levelTwoOn = false;
+			}
+		}
+		break;
 	default:
 		break;
 	}
@@ -1334,6 +1525,253 @@ void Game::clownWalkAnimation() {
 }
 
 void Game::backgroundMovementLevel1() {
+	levelOneParralax01Sprite.move(sf::Vector2f(-100 * f_ElapsedTime, 0));
+	levelOneParralax02Sprite.move(sf::Vector2f(-200 * f_ElapsedTime, 0));
+	levelOneParralax03Sprite.move(sf::Vector2f(-300 * f_ElapsedTime, 0));
+	levelOneParralax04Sprite.move(sf::Vector2f(-400 * f_ElapsedTime, 0));
+	levelOneParralax05Sprite.move(sf::Vector2f(-500 * f_ElapsedTime, 0));
+	levelOneParralax06Sprite.move(sf::Vector2f(-600 * f_ElapsedTime, 0));
+	levelOneParralax01SpriteCopy.move(sf::Vector2f(-100 * f_ElapsedTime, 0));
+	levelOneParralax02SpriteCopy.move(sf::Vector2f(-200 * f_ElapsedTime, 0));
+	levelOneParralax03SpriteCopy.move(sf::Vector2f(-300 * f_ElapsedTime, 0));
+	levelOneParralax04SpriteCopy.move(sf::Vector2f(-400 * f_ElapsedTime, 0));
+	levelOneParralax05SpriteCopy.move(sf::Vector2f(-500 * f_ElapsedTime, 0));
+	levelOneParralax06SpriteCopy.move(sf::Vector2f(-600 * f_ElapsedTime, 0));
+	// 1 Original
+	if (levelOneParralax01Sprite.getPosition().x <= 0) {
+		levelOneParralax01SpriteCopy.setPosition(sf::Vector2f(levelOneParralax01Sprite.getPosition().x + (levelOneParralax01Sprite.getLocalBounds().width * levelOneParralax01Sprite.getScale().x), 0));
+	}
+	if (levelOneParralax01Sprite.getPosition().x <= (-1 * (levelOneParralax01Sprite.getLocalBounds().width * levelOneParralax01Sprite.getScale().x))) {
+		levelOneParralax01Sprite.setPosition(sf::Vector2f(0, 0));
+	}
+	// 1 copy
+	if (levelOneParralax01SpriteCopy.getPosition().x <= 0) {
+		levelOneParralax01Sprite.setPosition(sf::Vector2f(levelOneParralax01SpriteCopy.getPosition().x + (levelOneParralax01SpriteCopy.getLocalBounds().width * levelOneParralax01SpriteCopy.getScale().x), 0));
+	}
+	if (levelOneParralax01SpriteCopy.getPosition().x <= (-1 * (levelOneParralax01SpriteCopy.getLocalBounds().width * levelOneParralax01SpriteCopy.getScale().x))) {
+		levelOneParralax01SpriteCopy.setPosition(sf::Vector2f(0, 0));
+	}
+	// 2 Original
+	if (levelOneParralax02Sprite.getPosition().x <= 0) {
+		levelOneParralax02SpriteCopy.setPosition(sf::Vector2f(levelOneParralax02Sprite.getPosition().x + (levelOneParralax02Sprite.getLocalBounds().width * levelOneParralax02Sprite.getScale().x), 0));
+	}
+	if (levelOneParralax02Sprite.getPosition().x <= (-1 * (levelOneParralax02Sprite.getLocalBounds().width * levelOneParralax02Sprite.getScale().x))) {
+		levelOneParralax02Sprite.setPosition(sf::Vector2f(0, 0));
+	}
+	// 2 copy
+	if (levelOneParralax02SpriteCopy.getPosition().x <= 0) {
+		levelOneParralax02Sprite.setPosition(sf::Vector2f(levelOneParralax02SpriteCopy.getPosition().x + (levelOneParralax02SpriteCopy.getLocalBounds().width * levelOneParralax02SpriteCopy.getScale().x), 0));
+	}
+	if (levelOneParralax02SpriteCopy.getPosition().x <= (-1 * (levelOneParralax02SpriteCopy.getLocalBounds().width * levelOneParralax02SpriteCopy.getScale().x))) {
+		levelOneParralax02SpriteCopy.setPosition(sf::Vector2f(0, 0));
+	}
+	// 3 Original
+	if (levelOneParralax03Sprite.getPosition().x <= 0) {
+		levelOneParralax03SpriteCopy.setPosition(sf::Vector2f(levelOneParralax03Sprite.getPosition().x + (levelOneParralax03Sprite.getLocalBounds().width * levelOneParralax03Sprite.getScale().x), 0));
+	}
+	if (levelOneParralax03Sprite.getPosition().x <= (-1 * (levelOneParralax03Sprite.getLocalBounds().width * levelOneParralax03Sprite.getScale().x))) {
+		levelOneParralax03Sprite.setPosition(sf::Vector2f(0, 0));
+	}
+	// 3 copy
+	if (levelOneParralax03SpriteCopy.getPosition().x <= 0) {
+		levelOneParralax03Sprite.setPosition(sf::Vector2f(levelOneParralax03SpriteCopy.getPosition().x + (levelOneParralax03SpriteCopy.getLocalBounds().width * levelOneParralax03SpriteCopy.getScale().x), 0));
+	}
+	if (levelOneParralax03SpriteCopy.getPosition().x <= (-1 * (levelOneParralax03SpriteCopy.getLocalBounds().width * levelOneParralax03SpriteCopy.getScale().x))) {
+		levelOneParralax03SpriteCopy.setPosition(sf::Vector2f(0, 0));
+	}
+	// 4 Original
+	if (levelOneParralax04Sprite.getPosition().x <= 0) {
+		levelOneParralax04SpriteCopy.setPosition(sf::Vector2f(levelOneParralax04Sprite.getPosition().x + (levelOneParralax04Sprite.getLocalBounds().width * levelOneParralax04Sprite.getScale().x), 0));
+	}
+	if (levelOneParralax04Sprite.getPosition().x <= (-1 * (levelOneParralax04Sprite.getLocalBounds().width * levelOneParralax04Sprite.getScale().x))) {
+		levelOneParralax04Sprite.setPosition(sf::Vector2f(0, 0));
+	}
+	// 4 copy
+	if (levelOneParralax04SpriteCopy.getPosition().x <= 0) {
+		levelOneParralax04Sprite.setPosition(sf::Vector2f(levelOneParralax04SpriteCopy.getPosition().x + (levelOneParralax04SpriteCopy.getLocalBounds().width * levelOneParralax04SpriteCopy.getScale().x), 0));
+	}
+	if (levelOneParralax04SpriteCopy.getPosition().x <= (-1 * (levelOneParralax04SpriteCopy.getLocalBounds().width * levelOneParralax04SpriteCopy.getScale().x))) {
+		levelOneParralax04SpriteCopy.setPosition(sf::Vector2f(0, 0));
+	}
+	// 5 Original
+	if (levelOneParralax05Sprite.getPosition().x <= 0) {
+		levelOneParralax05SpriteCopy.setPosition(sf::Vector2f(levelOneParralax05Sprite.getPosition().x + (levelOneParralax05Sprite.getLocalBounds().width * levelOneParralax05Sprite.getScale().x), 0));
+	}
+	if (levelOneParralax05Sprite.getPosition().x <= (-1 * (levelOneParralax05Sprite.getLocalBounds().width * levelOneParralax05Sprite.getScale().x))) {
+		levelOneParralax05Sprite.setPosition(sf::Vector2f(0, 0));
+	}
+	// 5 copy
+	if (levelOneParralax05SpriteCopy.getPosition().x <= 0) {
+		levelOneParralax05Sprite.setPosition(sf::Vector2f(levelOneParralax05SpriteCopy.getPosition().x + (levelOneParralax05SpriteCopy.getLocalBounds().width * levelOneParralax05SpriteCopy.getScale().x), 0));
+	}
+	if (levelOneParralax05SpriteCopy.getPosition().x <= (-1 * (levelOneParralax05SpriteCopy.getLocalBounds().width * levelOneParralax05SpriteCopy.getScale().x))) {
+		levelOneParralax05SpriteCopy.setPosition(sf::Vector2f(0, 0));
+	}
+	// 6 Original
+	if (levelOneParralax06Sprite.getPosition().x <= 0) {
+		levelOneParralax06SpriteCopy.setPosition(sf::Vector2f(levelOneParralax06Sprite.getPosition().x + (levelOneParralax06Sprite.getLocalBounds().width * levelOneParralax06Sprite.getScale().x), 0));
+	}
+	if (levelOneParralax06Sprite.getPosition().x <= (-1 * (levelOneParralax06Sprite.getLocalBounds().width * levelOneParralax06Sprite.getScale().x))) {
+		levelOneParralax06Sprite.setPosition(sf::Vector2f(0, 0));
+	}
+	// 6 copy
+	if (levelOneParralax06SpriteCopy.getPosition().x <= 0) {
+		levelOneParralax06Sprite.setPosition(sf::Vector2f(levelOneParralax06SpriteCopy.getPosition().x + (levelOneParralax06SpriteCopy.getLocalBounds().width * levelOneParralax06SpriteCopy.getScale().x), 0));
+	}
+	if (levelOneParralax06SpriteCopy.getPosition().x <= (-1 * (levelOneParralax06SpriteCopy.getLocalBounds().width * levelOneParralax06SpriteCopy.getScale().x))) {
+		levelOneParralax06SpriteCopy.setPosition(sf::Vector2f(0, 0));
+	}
+}
+
+void Game::backgroundMovementLevel2() {
+	levelTwoParralaxBGSprite.move(sf::Vector2f(-100 * f_ElapsedTime, 0));
+	levelTwoParralax01Sprite.move(sf::Vector2f(-800 * f_ElapsedTime, 0));
+	levelTwoParralax02Sprite.move(sf::Vector2f(-700 * f_ElapsedTime, 0));
+	levelTwoParralax03Sprite.move(sf::Vector2f(-600 * f_ElapsedTime, 0));
+	levelTwoParralax04Sprite.move(sf::Vector2f(-500 * f_ElapsedTime, 0));
+	levelTwoParralax05Sprite.move(sf::Vector2f(-400 * f_ElapsedTime, 0));
+	levelTwoParralax06Sprite.move(sf::Vector2f(-600 * f_ElapsedTime, 0));
+	levelTwoParralax07Sprite.move(sf::Vector2f(-300 * f_ElapsedTime, 0));
+	levelTwoParralax08Sprite.move(sf::Vector2f(-200 * f_ElapsedTime, 0));
+	levelTwoParralaxBGSpriteCopy.move(sf::Vector2f(-100 * f_ElapsedTime, 0));
+	levelTwoParralax01SpriteCopy.move(sf::Vector2f(-800 * f_ElapsedTime, 0));
+	levelTwoParralax02SpriteCopy.move(sf::Vector2f(-700 * f_ElapsedTime, 0));
+	levelTwoParralax03SpriteCopy.move(sf::Vector2f(-600 * f_ElapsedTime, 0));
+	levelTwoParralax04SpriteCopy.move(sf::Vector2f(-500 * f_ElapsedTime, 0));
+	levelTwoParralax05SpriteCopy.move(sf::Vector2f(-400 * f_ElapsedTime, 0));
+	levelTwoParralax06SpriteCopy.move(sf::Vector2f(-600 * f_ElapsedTime, 0));
+	levelTwoParralax07SpriteCopy.move(sf::Vector2f(-300 * f_ElapsedTime, 0));
+	levelTwoParralax08SpriteCopy.move(sf::Vector2f(-200 * f_ElapsedTime, 0));
+	
+	// 1 Original
+	if (levelTwoParralax01Sprite.getPosition().x <= 0) {
+		levelTwoParralax01SpriteCopy.setPosition(sf::Vector2f(levelTwoParralax01Sprite.getPosition().x + (levelTwoParralax01Sprite.getLocalBounds().width * levelTwoParralax01Sprite.getScale().x), 0));
+	}
+	if (levelTwoParralax01Sprite.getPosition().x <= (-1 * (levelTwoParralax01Sprite.getLocalBounds().width * levelTwoParralax01Sprite.getScale().x))) {
+		levelTwoParralax01Sprite.setPosition(sf::Vector2f(0, 0));
+	}
+	// 1 copy
+	if (levelTwoParralax01SpriteCopy.getPosition().x <= 0) {
+		levelTwoParralax01Sprite.setPosition(sf::Vector2f(levelTwoParralax01SpriteCopy.getPosition().x + (levelTwoParralax01SpriteCopy.getLocalBounds().width * levelTwoParralax01SpriteCopy.getScale().x), 0));
+	}
+	if (levelTwoParralax01SpriteCopy.getPosition().x <= (-1 * (levelTwoParralax01SpriteCopy.getLocalBounds().width * levelTwoParralax01SpriteCopy.getScale().x))) {
+		levelTwoParralax01SpriteCopy.setPosition(sf::Vector2f(0, 0));
+	}
+	// 2 Original
+	if (levelTwoParralax02Sprite.getPosition().x <= 0) {
+		levelTwoParralax02SpriteCopy.setPosition(sf::Vector2f(levelTwoParralax02Sprite.getPosition().x + (levelTwoParralax02Sprite.getLocalBounds().width * levelTwoParralax02Sprite.getScale().x), 0));
+	}
+	if (levelTwoParralax02Sprite.getPosition().x <= (-1 * (levelTwoParralax02Sprite.getLocalBounds().width * levelTwoParralax02Sprite.getScale().x))) {
+		levelTwoParralax02Sprite.setPosition(sf::Vector2f(0, 0));
+	}
+	// 2 copy
+	if (levelTwoParralax02SpriteCopy.getPosition().x <= 0) {
+		levelTwoParralax02Sprite.setPosition(sf::Vector2f(levelTwoParralax02SpriteCopy.getPosition().x + (levelTwoParralax02SpriteCopy.getLocalBounds().width * levelTwoParralax02SpriteCopy.getScale().x), 0));
+	}
+	if (levelTwoParralax02SpriteCopy.getPosition().x <= (-1 * (levelTwoParralax02SpriteCopy.getLocalBounds().width * levelTwoParralax02SpriteCopy.getScale().x))) {
+		levelTwoParralax02SpriteCopy.setPosition(sf::Vector2f(0, 0));
+	}
+	// 3 Original
+	if (levelTwoParralax03Sprite.getPosition().x <= 0) {
+		levelTwoParralax03SpriteCopy.setPosition(sf::Vector2f(levelTwoParralax03Sprite.getPosition().x + (levelTwoParralax03Sprite.getLocalBounds().width * levelTwoParralax03Sprite.getScale().x), 0));
+	}
+	if (levelTwoParralax03Sprite.getPosition().x <= (-1 * (levelTwoParralax03Sprite.getLocalBounds().width * levelTwoParralax03Sprite.getScale().x))) {
+		levelTwoParralax03Sprite.setPosition(sf::Vector2f(0, 0));
+	}
+	// 3 copy
+	if (levelTwoParralax03SpriteCopy.getPosition().x <= 0) {
+		levelTwoParralax03Sprite.setPosition(sf::Vector2f(levelTwoParralax03SpriteCopy.getPosition().x + (levelTwoParralax03SpriteCopy.getLocalBounds().width * levelTwoParralax03SpriteCopy.getScale().x), 0));
+	}
+	if (levelTwoParralax03SpriteCopy.getPosition().x <= (-1 * (levelTwoParralax03SpriteCopy.getLocalBounds().width * levelTwoParralax03SpriteCopy.getScale().x))) {
+		levelTwoParralax03SpriteCopy.setPosition(sf::Vector2f(0, 0));
+	}
+	// 4 Original
+	if (levelTwoParralax04Sprite.getPosition().x <= 0) {
+		levelTwoParralax04SpriteCopy.setPosition(sf::Vector2f(levelTwoParralax04Sprite.getPosition().x + (levelTwoParralax04Sprite.getLocalBounds().width * levelTwoParralax04Sprite.getScale().x), 0));
+	}
+	if (levelTwoParralax04Sprite.getPosition().x <= (-1 * (levelTwoParralax04Sprite.getLocalBounds().width * levelTwoParralax04Sprite.getScale().x))) {
+		levelTwoParralax04Sprite.setPosition(sf::Vector2f(0, 0));
+	}
+	// 4 copy
+	if (levelTwoParralax04SpriteCopy.getPosition().x <= 0) {
+		levelTwoParralax04Sprite.setPosition(sf::Vector2f(levelTwoParralax04SpriteCopy.getPosition().x + (levelTwoParralax04SpriteCopy.getLocalBounds().width * levelTwoParralax04SpriteCopy.getScale().x), 0));
+	}
+	if (levelTwoParralax04SpriteCopy.getPosition().x <= (-1 * (levelTwoParralax04SpriteCopy.getLocalBounds().width * levelTwoParralax04SpriteCopy.getScale().x))) {
+		levelTwoParralax04SpriteCopy.setPosition(sf::Vector2f(0, 0));
+	}
+	// 5 Original
+	if (levelTwoParralax05Sprite.getPosition().x <= 0) {
+		levelTwoParralax05SpriteCopy.setPosition(sf::Vector2f(levelTwoParralax05Sprite.getPosition().x + (levelTwoParralax05Sprite.getLocalBounds().width * levelTwoParralax05Sprite.getScale().x), 0));
+	}
+	if (levelTwoParralax05Sprite.getPosition().x <= (-1 * (levelTwoParralax05Sprite.getLocalBounds().width * levelTwoParralax05Sprite.getScale().x))) {
+		levelTwoParralax05Sprite.setPosition(sf::Vector2f(0, 0));
+	}
+	// 5 copy
+	if (levelTwoParralax05SpriteCopy.getPosition().x <= 0) {
+		levelTwoParralax05Sprite.setPosition(sf::Vector2f(levelTwoParralax05SpriteCopy.getPosition().x + (levelTwoParralax05SpriteCopy.getLocalBounds().width * levelTwoParralax05SpriteCopy.getScale().x), 0));
+	}
+	if (levelTwoParralax05SpriteCopy.getPosition().x <= (-1 * (levelTwoParralax05SpriteCopy.getLocalBounds().width * levelOneParralax05SpriteCopy.getScale().x))) {
+		levelTwoParralax05SpriteCopy.setPosition(sf::Vector2f(0, 0));
+	}
+	// 6 Original
+	if (levelTwoParralax06Sprite.getPosition().x <= 0) {
+		levelTwoParralax06SpriteCopy.setPosition(sf::Vector2f(levelTwoParralax06Sprite.getPosition().x + (levelTwoParralax06Sprite.getLocalBounds().width * levelTwoParralax06Sprite.getScale().x), 0));
+	}
+	if (levelTwoParralax06Sprite.getPosition().x <= (-1 * (levelTwoParralax06Sprite.getLocalBounds().width * levelTwoParralax06Sprite.getScale().x))) {
+		levelTwoParralax06Sprite.setPosition(sf::Vector2f(0, 0));
+	}
+	// 6 copy
+	if (levelTwoParralax06SpriteCopy.getPosition().x <= 0) {
+		levelTwoParralax06Sprite.setPosition(sf::Vector2f(levelTwoParralax06SpriteCopy.getPosition().x + (levelTwoParralax06SpriteCopy.getLocalBounds().width * levelTwoParralax06SpriteCopy.getScale().x), 0));
+	}
+	if (levelTwoParralax06SpriteCopy.getPosition().x <= (-1 * (levelTwoParralax06SpriteCopy.getLocalBounds().width * levelTwoParralax06SpriteCopy.getScale().x))) {
+		levelTwoParralax06SpriteCopy.setPosition(sf::Vector2f(0, 0));
+	}
+	// 7 Original
+	if (levelTwoParralax07Sprite.getPosition().x <= 0) {
+		levelTwoParralax07SpriteCopy.setPosition(sf::Vector2f(levelTwoParralax07Sprite.getPosition().x + (levelTwoParralax07Sprite.getLocalBounds().width * levelTwoParralax07Sprite.getScale().x), 0));
+	}
+	if (levelTwoParralax07Sprite.getPosition().x <= (-1 * (levelTwoParralax07Sprite.getLocalBounds().width * levelTwoParralax07Sprite.getScale().x))) {
+		levelTwoParralax07Sprite.setPosition(sf::Vector2f(0, 0));
+	}
+	// 7 copy
+	if (levelTwoParralax07SpriteCopy.getPosition().x <= 0) {
+		levelTwoParralax07Sprite.setPosition(sf::Vector2f(levelTwoParralax07SpriteCopy.getPosition().x + (levelTwoParralax07SpriteCopy.getLocalBounds().width * levelTwoParralax07SpriteCopy.getScale().x), 0));
+	}
+	if (levelTwoParralax07SpriteCopy.getPosition().x <= (-1 * (levelTwoParralax07SpriteCopy.getLocalBounds().width * levelTwoParralax07SpriteCopy.getScale().x))) {
+		levelTwoParralax07SpriteCopy.setPosition(sf::Vector2f(0, 0));
+	}
+	// 8 Original
+	if (levelTwoParralax08Sprite.getPosition().x <= 0) {
+		levelTwoParralax08SpriteCopy.setPosition(sf::Vector2f(levelTwoParralax08Sprite.getPosition().x + (levelTwoParralax08Sprite.getLocalBounds().width * levelTwoParralax08Sprite.getScale().x), 0));
+	}
+	if (levelTwoParralax08Sprite.getPosition().x <= (-1 * (levelTwoParralax08Sprite.getLocalBounds().width * levelTwoParralax08Sprite.getScale().x))) {
+		levelTwoParralax08Sprite.setPosition(sf::Vector2f(0, 0));
+	}
+	// 8 copy
+	if (levelTwoParralax08SpriteCopy.getPosition().x <= 0) {
+		levelTwoParralax08Sprite.setPosition(sf::Vector2f(levelTwoParralax08SpriteCopy.getPosition().x + (levelTwoParralax08SpriteCopy.getLocalBounds().width * levelTwoParralax08SpriteCopy.getScale().x), 0));
+	}
+	if (levelTwoParralax08SpriteCopy.getPosition().x <= (-1 * (levelTwoParralax08SpriteCopy.getLocalBounds().width * levelTwoParralax08SpriteCopy.getScale().x))) {
+		levelTwoParralax08SpriteCopy.setPosition(sf::Vector2f(0, 0));
+	}
+	// BG Original
+	if (levelTwoParralaxBGSprite.getPosition().x <= 0) {
+		levelTwoParralaxBGSpriteCopy.setPosition(sf::Vector2f(levelTwoParralaxBGSprite.getPosition().x + (levelTwoParralaxBGSprite.getLocalBounds().width * levelTwoParralaxBGSprite.getScale().x), 0));
+	}
+	if (levelTwoParralaxBGSprite.getPosition().x <= (-1 * (levelTwoParralaxBGSprite.getLocalBounds().width * levelTwoParralaxBGSprite.getScale().x))) {
+		levelTwoParralaxBGSprite.setPosition(sf::Vector2f(0, 0));
+	}
+	// BG copy
+	if (levelTwoParralaxBGSpriteCopy.getPosition().x <= 0) {
+		levelTwoParralaxBGSprite.setPosition(sf::Vector2f(levelTwoParralaxBGSpriteCopy.getPosition().x + (levelTwoParralaxBGSpriteCopy.getLocalBounds().width * levelTwoParralaxBGSpriteCopy.getScale().x), 0));
+	}
+	if (levelTwoParralaxBGSpriteCopy.getPosition().x <= (-1 * (levelTwoParralaxBGSpriteCopy.getLocalBounds().width * levelTwoParralaxBGSpriteCopy.getScale().x))) {
+		levelTwoParralaxBGSpriteCopy.setPosition(sf::Vector2f(0, 0));
+	}
+}
+
+void Game::backgroundMovementLevel3() {
 	levelOneParralax01Sprite.move(sf::Vector2f(-100 * f_ElapsedTime, 0));
 	levelOneParralax02Sprite.move(sf::Vector2f(-200 * f_ElapsedTime, 0));
 	levelOneParralax03Sprite.move(sf::Vector2f(-300 * f_ElapsedTime, 0));
@@ -1523,8 +1961,6 @@ void Game::playerInput() {
 }
 
 void Game::playerCollisions() {
-	std::cout << player.getPlayerHP() << std::endl;
-
 	for (int i = 0; i < projectiles.size(); i++) {
 		if (player.getGlobalBounds().contains(projectiles[i]->getPosition())) {     ///// hurt box plus petite (cercle) pour les projectiles
 			player.damagePlayer(projectiles[i]->getAtkPower());
@@ -1650,6 +2086,9 @@ void Game::playerHPSetter() {
 }
 
 void Game::nonPlayerBehavior() {
+	for (Bonus*& bonus : vectorBonus) {
+		bonus->behavior(f_ElapsedTime, window, vectorBonus);
+	}
 	for (int i = 0; i < vectorPies.size(); i++) {
 		vectorPies[i]->move(vectorPies[i]->getSpeed() * f_ElapsedTime, 0);
 		if (vectorPies[i]->getPosition().x > window.getSize().x + vectorPies[i]->getRadius() * 2
@@ -1747,6 +2186,12 @@ void Game::nonPlayerBehavior() {
 }
 
 void Game::nonPlayerDraw() {
+	for (Bonus*& bonus : vectorBonus) {
+		bonusDraw.setSize(sf::Vector2f(30.f, 30.f));
+		bonusDraw.setFillColor(bonus->getFillColor());
+		bonusDraw.setPosition(bonus->getPosition());
+		window.draw(bonusDraw);
+	}
 	for (Pie*& pie : vectorPies) {
 		pieDraw.setRadius(pie->getRadius());
 		pieDraw.setTexture(&pieTexture);
@@ -1837,6 +2282,11 @@ void Game::update() {
 			backgroundMovementLevel1();
 		}
 	}
+	if (levelTwoOn) {
+		backgroundMovementLevel2();
+		playerInput();
+	}
+
 }
 
 void Game::render() {
@@ -1891,7 +2341,7 @@ void Game::render() {
 	}
 
 	if (playScreenOn) {
-		if (levelOneOn) {
+		if (levelOneOn && !levelTwoOn) {
 			// --- FOND PARRALAXE --- //
 			window.draw(levelOneParralax01Sprite);
 			window.draw(levelOneParralax01SpriteCopy);
@@ -1912,6 +2362,27 @@ void Game::render() {
 			window.draw(gameplayUIScoreText);
 			window.draw(sugarIcone);
 			window.draw(gameplayUISugarText);
+		}
+		if (levelTwoOn) {
+			// --- FOND PARRALAXE --- //
+			window.draw(levelTwoParralaxBGSprite);
+			window.draw(levelTwoParralaxBGSpriteCopy);
+			window.draw(levelTwoParralax08Sprite);
+			window.draw(levelTwoParralax08SpriteCopy);
+			window.draw(levelTwoParralax07Sprite);
+			window.draw(levelTwoParralax07SpriteCopy);
+			window.draw(levelTwoParralax06Sprite);
+			window.draw(levelTwoParralax06SpriteCopy);
+			window.draw(levelTwoParralax05Sprite);
+			window.draw(levelTwoParralax05SpriteCopy);
+			window.draw(levelTwoParralax04Sprite);
+			window.draw(levelTwoParralax04SpriteCopy);
+			window.draw(levelTwoParralax03Sprite);
+			window.draw(levelTwoParralax03SpriteCopy);
+			window.draw(levelTwoParralax02Sprite);
+			window.draw(levelTwoParralax02SpriteCopy);
+			window.draw(levelTwoParralax01Sprite);
+			window.draw(levelTwoParralax01SpriteCopy);
 		}
 		if (showPauseMenu) {
 			window.draw(screenShadowWhenBlured);

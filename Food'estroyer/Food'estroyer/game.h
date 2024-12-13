@@ -39,6 +39,8 @@ private:
 	std::string language = "EN";
 	// Layers
 	bool levelOneOn = false;
+	bool levelTwoOn = false;
+	bool levelThreeOn = false;
 	bool backgroundActive = true;
 	bool showPauseMenu = false;
 	// Ennemies
@@ -57,6 +59,8 @@ private:
 	void nonPlayerDraw();
 	void clownWalkAnimation();
 	void backgroundMovementLevel1();
+	void backgroundMovementLevel2();
+	void backgroundMovementLevel3();
 	void scoreCalculation();
 	void sugarCalculation();
 	void FPSCalculation();
