@@ -1627,7 +1627,7 @@ void Game::playerHPSetter() {
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar18Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar18Inactive); }
 	}
-	if (player.getPlayerHP() <= 0.f && player.getPlayerHP() > 90.f) {
+	if (player.getPlayerHP() <= 0.f) {
 		if (player.getSpecialCooldown() >= 5.f)
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar19Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar19Inactive); }
