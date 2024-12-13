@@ -83,6 +83,8 @@ namespace {
 	sf::Music bgLvl2Music;
 	sf::Music bgLvl3Music;
 	// SOUNDS
+	sf::SoundBuffer sugarCrunchBuffer;
+	sf::Sound sugarCrunch;
 	// IMAGES
 	sf::Image pieCursorImg;
 	// TEXTURES
@@ -278,6 +280,8 @@ void Game::setupGraphicalElements() {
 	bgStartUpScreenMusic2.setLoop(true);
 	bgStartUpScreenMusic2.play();
 	// SOUNDS
+	sugarCrunchBuffer.loadFromFile("Assets/Sound Effects/sugar crunch.wav");
+	sugarCrunch.setBuffer(sugarCrunchBuffer);
 	// IMAGES
 	pieCursorImg.loadFromFile("Assets/Images/pieCursor.png");
 	window.setIcon(pieCursorImg.getSize().x, pieCursorImg.getSize().y, pieCursorImg.getPixelsPtr());
@@ -1524,14 +1528,15 @@ void Game::playerCollisions() {
 		std::cout << "ded" << std::endl;            //////////////////////////////////////// TEMPORAIRE
 	}
 	for (int i = 0; i < projectiles.size(); i++) {
-		if (player.getGlobalBounds().contains(projectiles[i]->getPosition())) {     //intersects ne fonctionne pas
+		if (player.getGlobalBounds().contains(projectiles[i]->getPosition())) {     ///// hurt box plus petite (cercle) pour les projectiles
 			player.damagePlayer(projectiles[i]->getAtkPower());
 			projectiles[i]->setState(false);
 		}
 	}
 	for (int i = 0; i < vectorSugar.size(); i++) {
-		if (player.getGlobalBounds().contains(vectorSugar[i]->getPosition())) {
+		if (playerCurrentSprite.getGlobalBounds().contains(vectorSugar[i]->getPosition())) {  ////hurt box = sprite du clown pour ramasser les sucres plus facilement
 			player.setSugarCount(vectorSugar[i]->getValue());
+			sugarCrunch.play();                                                ///////////////////////couper le début du son
 			vectorSugar[i]->setState(false);
 		}
 	}
