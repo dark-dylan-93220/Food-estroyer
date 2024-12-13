@@ -15,7 +15,7 @@ public:
 	int getValue() const { return quantity; }
 
 	void setState(bool newState)  { state = newState; }
-	void setValue(float newValue) { quantity = newValue; }
+	void setValue(int newValue) { quantity = newValue; }
 };
 
 //CLASSE DE BASE : ENEMY
@@ -29,7 +29,7 @@ protected:
 	float hp = 1;
 	float hpPerSize = 0;
 	float atkPower = 1;
-	float sugarValue = 0;
+	int sugarValue = 0;
 	float sugarValuePerSize = 0;
 
 	Enemy(float x, float y, char s, sf::RenderWindow &window);
@@ -40,12 +40,12 @@ public:
 	char getSize() const        { return size; }
 	float getHp() const         { return hp; }
 	float getAtkPower() const   { return atkPower; }
-	float getSugarValue() const { return sugarValue; }
+	int getSugarValue() const   { return sugarValue; }
 
 	void setAlive(bool newState)        { alive = newState; }
 	void setHp(float degats)            { hp += degats; }
 	void setAtkPower(float newAtkPower) { atkPower = newAtkPower; }
-	void setSugarValue(float newValue)  { sugarValue = newValue; }
+	void setSugarValue(int newValue)  { sugarValue = newValue; }
 
 	void dropSugar(std::vector<Sugar*>& vectorSugar, Enemy& enemy);
 };

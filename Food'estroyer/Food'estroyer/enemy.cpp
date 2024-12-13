@@ -7,20 +7,20 @@ Enemy::Enemy(float x, float y, char s, sf::RenderWindow &window) : size(s) {
 	switch (s) {
 	case ('s') :
 			this->setScale(0.09f, 0.09f);
-			this->hpPerSize = 0.5;
-			this->sugarValuePerSize = 0.5;
+			this->hpPerSize = 0.5f;
+			this->sugarValuePerSize = 0.5f;
 			moveSpeedX = -400; moveSpeedY = -400;
 			break;
 	case('m') :
 			this->setScale(0.13f, 0.13f);
 			this->hpPerSize = 1;
-			this->sugarValuePerSize = 1;
+			this->sugarValuePerSize = 1.f;
 			moveSpeedX = -300; moveSpeedY = -300;
 			break;
 	case('l') :
 			this->setScale(0.19f, 0.19f);
-			this->hpPerSize = 1.5;
-			this->sugarValuePerSize = 1.5;
+			this->hpPerSize = 1.5f;
+			this->sugarValuePerSize = 1.5f;
 			moveSpeedX = -200; moveSpeedY = -200;
 			break;
 	default: std::cout << "taille d'un ennemi mal initialisée (choisir 's', 'm' ou 'l')" << std::endl; break;
@@ -29,17 +29,17 @@ Enemy::Enemy(float x, float y, char s, sf::RenderWindow &window) : size(s) {
 
 Normal::Normal(float x, float y, char s, sf::RenderWindow& window) : Enemy(x, y, s, window) {
 	hp = 100 * hpPerSize;
-	sugarValue = 50 * sugarValuePerSize;                                                        //ICI : VALEUR EN SUCRES DES MONSTRES
+	sugarValue = int(50 * sugarValuePerSize);                                                        //ICI : VALEUR EN SUCRES DES MONSTRES
 }
 Shooter::Shooter(float x, float y, char s, sf::RenderWindow &window) : Enemy(x, y, s, window) {
 	this->setPosition(sf::Vector2f(window.getSize().x + 100.f, -100.f));
 	hp = 150 * hpPerSize;
-	sugarValue = 100 * sugarValuePerSize;
+	sugarValue = int(100 * sugarValuePerSize);
 	atkPower = 10;
 }
 Elite::Elite(float x, float y, char s, sf::RenderWindow& window) : Enemy(x, y, s, window) {
 	hp = 200 * hpPerSize;
-	sugarValue = 150 * sugarValuePerSize;
+	sugarValue = int(150 * sugarValuePerSize);
 	atkPower = 20;
 }
 

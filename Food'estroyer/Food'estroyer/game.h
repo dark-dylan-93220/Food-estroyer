@@ -4,7 +4,6 @@
 // --- STL --- //
 #include <iostream>
 #include <vector>
-#include <tuple>
 #include <string>
 #include <sstream>
 #include <iomanip>

@@ -7,6 +7,7 @@ namespace {
 	int mouseLastDownX, mouseLastDownY;
 	float scoreCounter;
 	bool isMouseDragging;
+	bool isFullscreen = true;
 	std::vector<sf::VideoMode> modes = sf::VideoMode::getFullscreenModes(); // Gets the native resolutions of the machine this program is running on
 	float clownWalkAnimationTime = 0.f;
 	// CURSORS
@@ -72,6 +73,7 @@ namespace {
 	sf::Text gameplayUISugarForUpgrades;
 	sf::Text gameplayUIBossLife;
 	sf::Text gameplayUISugarText;
+	sf::Text gameplayPauseFullscreenText;
 	// MUSICS
 	sf::Music bgStartUpScreenMusic;
 	sf::Music bgStartUpScreenMusic2;
@@ -158,6 +160,8 @@ namespace {
 	sf::Texture gameplayUILifeBar19Inactive;
 	sf::Texture gameplayUIPauseSoundPlus;
 	sf::Texture gameplayUIPauseSoundMinus;
+	sf::Texture gameplayPauseCheckboxTexture;
+	sf::Texture nothing;
 	// SHAPES
 	sf::RectangleShape screenShadowWhenBlured;
 	sf::RectangleShape menuPauseTopBar; 
@@ -190,6 +194,7 @@ namespace {
 	sf::RectangleShape gameplayPauseSFXControlPlusBtn;
 	sf::RectangleShape gameplayPauseSFXControlMinusBtn;
 	sf::RectangleShape gameplayPauseSettingsMenuBtn;
+	sf::RectangleShape gameplayPauseFullscreenCheckbox;
 	// SPRITES
 	sf::Sprite bgStartUpScreenSprite;
 	sf::Sprite settingsIconSprite;
@@ -345,6 +350,8 @@ void Game::setupGraphicalElements() {
 	gameplayUILifeBar17Inactive.loadFromFile("Assets/Images/GameplayUI/17-inactive.png");
 	gameplayUILifeBar18Inactive.loadFromFile("Assets/Images/GameplayUI/18-inactive.png");
 	gameplayUILifeBar19Inactive.loadFromFile("Assets/Images/GameplayUI/19-inactive.png");
+	gameplayPauseCheckboxTexture.loadFromFile("Assets/Images/GameplayUI/PauseMenu/checkbox-ok.png");
+	nothing.loadFromFile("Assets/images/GameplayUI/PauseMenu/checkbox-no.png");
 	// SHAPES
 	screenShadowWhenBlured.setSize(sf::Vector2f(window.getSize()));
 	screenShadowWhenBlured.setPosition(0.f, 0.f);
@@ -410,6 +417,14 @@ void Game::setupGraphicalElements() {
 	gameplayPauseSFXControlZoneBG = gameplayPauseSFXControlZone;
 	gameplayPauseSFXControlZoneBG.setOutlineThickness(0);
 	gameplayPauseSFXControlZoneBG.setFillColor(sf::Color(30, 30, 30, 100));
+	gameplayPauseFullscreenCheckbox.setSize(sf::Vector2f(gameplayPauseGoBackBtn.getSize().y, gameplayPauseGoBackBtn.getSize().y));
+	gameplayPauseFullscreenCheckbox.setOutlineThickness(1.f);
+	gameplayPauseFullscreenCheckbox.setOutlineColor(sf::Color::Black);
+	gameplayPauseFullscreenCheckbox.setPosition(sf::Vector2f(window.getSize().x / 2 + window.getSize().x * 0.02f, gameplayPauseGoBackBtn.getPosition().y));
+	if (window.getSize() == sf::Vector2u(modes[0].width, modes[0].height))
+		gameplayPauseFullscreenCheckbox.setTexture(&gameplayPauseCheckboxTexture);
+	else
+		gameplayPauseFullscreenCheckbox.setTexture(&nothing);
 	// SPRITES
 	bgStartUpScreenSprite.setTexture(bgStartUpScreen);
 	bgStartUpScreenSprite.setScale(sf::Vector2f((window.getSize().x / bgStartUpScreenSprite.getLocalBounds().width), (window.getSize().y / bgStartUpScreenSprite.getLocalBounds().height)));
@@ -738,6 +753,16 @@ void Game::setupGraphicalElements() {
 	gameplayPauseMinusSoundTextSFX.setPosition(sf::Vector2f(gameplayPauseSFXText.getPosition().x - gameplayPauseSFXText.getGlobalBounds().width / 1.4f, gameplayPauseSFXText.getPosition().y));
 	gameplayPauseMinusSoundTextMusic = gameplayPauseMinusSoundTextSFX;
 	gameplayPauseMinusSoundTextMusic.setPosition(sf::Vector2f(gameplayPauseMusicText.getPosition().x - gameplayPauseMusicText.getGlobalBounds().width / 1.8f, gameplayPauseMusicText.getPosition().y));
+	gameplayPauseFullscreenText.setFont(puppy);
+	gameplayPauseFullscreenText.setCharacterSize(35);
+	gameplayPauseFullscreenText.setFillColor(sf::Color::White);
+	gameplayPauseFullscreenText.setOutlineThickness(1.f);
+	gameplayPauseFullscreenText.setOutlineColor(sf::Color(DARK_THEME));
+	if (language == "EN")
+		gameplayPauseFullscreenText.setString("Fullscreen");
+	else if (language == "FR")
+		gameplayPauseFullscreenText.setString("Plein écran");
+	gameplayPauseFullscreenText.setPosition(sf::Vector2f(window.getSize().x / 2 - gameplayPauseFullscreenText.getGlobalBounds().width / 2 - gameplayPauseFullscreenCheckbox.getSize().x, gameplayPauseGoBackText.getPosition().y));
 	// Gameplay UI
 	gameplayUIScoreText.setFont(score);
 	gameplayUIScoreText.setCharacterSize(50);
@@ -747,13 +772,13 @@ void Game::setupGraphicalElements() {
 	gameplayUIScoreText.setPosition(sf::Vector2f(window.getSize().x - gameplayUIScoreText.getGlobalBounds().width - window.getSize().x * 0.01f, 0));
 	sugarIcone.setScale(0.05f, 0.05f);
 	sugarIcone.setTexture(sugarTexture);
-	sugarIcone.setPosition(window.getSize().x /** 0.99*/ - (sugarIcone.getLocalBounds().width * sugarIcone.getScale().x) * 1.8, window.getSize().y /** 0.97*/ - (sugarIcone.getLocalBounds().height * sugarIcone.getScale().y) * 1.8);
+	sugarIcone.setPosition(window.getSize().x /** 0.99*/ - (sugarIcone.getLocalBounds().width * sugarIcone.getScale().x) * 1.8f, window.getSize().y /** 0.97*/ - (sugarIcone.getLocalBounds().height * sugarIcone.getScale().y) * 1.8f);
 	gameplayUISugarText.setFont(score);
-	gameplayUISugarText.setCharacterSize((int)sugarIcone.getLocalBounds().height * sugarIcone.getScale().y);
+	gameplayUISugarText.setCharacterSize((unsigned int)((float)sugarIcone.getLocalBounds().height * (float)sugarIcone.getScale().y));
 	gameplayUISugarText.setLetterSpacing(1.1f); 
 	gameplayUISugarText.setFillColor(sf::Color::White);
 	gameplayUISugarText.setString("00000000");
-	gameplayUISugarText.setPosition(sugarIcone.getPosition().x - gameplayUISugarText.getGlobalBounds().width - window.getSize().x * 0.005f, sugarIcone.getPosition().y - gameplayUISugarText.getGlobalBounds().height * 0.2);
+	gameplayUISugarText.setPosition(sugarIcone.getPosition().x - gameplayUISugarText.getGlobalBounds().width - window.getSize().x * 0.005f, sugarIcone.getPosition().y - gameplayUISugarText.getGlobalBounds().height * 0.2f);
 	// CURSORS
 	pie.loadFromPixels(pieCursorImg.getPixelsPtr(), pieCursorImg.getSize(), {1, 32});
 }
@@ -1052,56 +1077,89 @@ void Game::pollEvents() {
 					window.create(sf::VideoMode(modes[0].width, modes[0].height), "Food'estroyer", sf::Style::Fullscreen);
 					window.setFramerateLimit(currentFramerateLimit);
 					setupGraphicalElements();
+					bgStartUpScreenMusic2.stop();
+					bgShopMusic.play();
+					isFullscreen = true;
 				}
 				if (pauseResolutionMode1Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					window.create(sf::VideoMode(modes[1].width, modes[1].height), "Food'estroyer", sf::Style::Default);
+					window.create(sf::VideoMode(modes[1].width, modes[1].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
 					window.setFramerateLimit(currentFramerateLimit);
 					setupGraphicalElements();
+					bgStartUpScreenMusic2.stop();
+					bgShopMusic.play();
+					isFullscreen = false;
 				}
 				if (pauseResolutionMode2Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					window.create(sf::VideoMode(modes[2].width, modes[2].height), "Food'estroyer", sf::Style::Default);
+					window.create(sf::VideoMode(modes[2].width, modes[2].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
 					window.setFramerateLimit(currentFramerateLimit);
 					setupGraphicalElements();
+					bgStartUpScreenMusic2.stop();
+					bgShopMusic.play();
+					isFullscreen = false;
 				}
 				if (pauseResolutionMode3Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					window.create(sf::VideoMode(modes[3].width, modes[3].height), "Food'estroyer", sf::Style::Default);
+					window.create(sf::VideoMode(modes[3].width, modes[3].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
 					window.setFramerateLimit(currentFramerateLimit);
 					setupGraphicalElements();
+					bgStartUpScreenMusic2.stop();
+					bgShopMusic.play();
+					isFullscreen = false;
 				}
 				if (pauseResolutionMode4Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					window.create(sf::VideoMode(modes[4].width, modes[4].height), "Food'estroyer", sf::Style::Default);
+					window.create(sf::VideoMode(modes[4].width, modes[4].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
 					window.setFramerateLimit(currentFramerateLimit);
 					setupGraphicalElements();
+					bgStartUpScreenMusic2.stop();
+					bgShopMusic.play(); 
+					isFullscreen = false;
 				}
 				if (pauseResolutionMode5Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					window.create(sf::VideoMode(modes[5].width, modes[5].height), "Food'estroyer", sf::Style::Default);
+					window.create(sf::VideoMode(modes[5].width, modes[5].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
 					window.setFramerateLimit(currentFramerateLimit);
 					setupGraphicalElements();
+					bgStartUpScreenMusic2.stop();
+					bgShopMusic.play();
+					isFullscreen = false;
 				}
 				if (pauseResolutionMode6Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					window.create(sf::VideoMode(modes[6].width, modes[6].height), "Food'estroyer", sf::Style::Default);
+					window.create(sf::VideoMode(modes[6].width, modes[6].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
 					window.setFramerateLimit(currentFramerateLimit);
 					setupGraphicalElements();
+					bgStartUpScreenMusic2.stop();
+					bgShopMusic.play();
+					isFullscreen = false;
 				}
 				if (pauseResolutionMode7Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					window.create(sf::VideoMode(modes[7].width, modes[7].height), "Food'estroyer", sf::Style::Default);
+					window.create(sf::VideoMode(modes[7].width, modes[7].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
 					window.setFramerateLimit(currentFramerateLimit);
 					setupGraphicalElements();
+					bgStartUpScreenMusic2.stop();
+					bgShopMusic.play();
+					isFullscreen = false;
 				}
 				if (pauseResolutionMode8Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					window.create(sf::VideoMode(modes[8].width, modes[8].height), "Food'estroyer", sf::Style::Default);
+					window.create(sf::VideoMode(modes[8].width, modes[8].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
 					window.setFramerateLimit(currentFramerateLimit);
 					setupGraphicalElements();
+					bgStartUpScreenMusic2.stop();
+					bgShopMusic.play();
+					isFullscreen = false;
 				}
 				if (pauseResolutionMode9Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					window.create(sf::VideoMode(modes[9].width, modes[9].height), "Food'estroyer", sf::Style::Default);
+					window.create(sf::VideoMode(modes[9].width, modes[9].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
 					window.setFramerateLimit(currentFramerateLimit);
 					setupGraphicalElements();
+					bgStartUpScreenMusic2.stop();
+					bgShopMusic.play();
+					isFullscreen = false;
 				}
 				if (pauseResolutionMode10Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					window.create(sf::VideoMode(modes[10].width, modes[10].height), "Food'estroyer", sf::Style::Default);
+					window.create(sf::VideoMode(modes[10].width, modes[10].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
 					window.setFramerateLimit(currentFramerateLimit);
 					setupGraphicalElements();
+					bgStartUpScreenMusic2.stop();
+					bgShopMusic.play();
+					isFullscreen = false;
 				}
 				if (pauseFPS60Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 					window.setVerticalSyncEnabled(false);
@@ -1134,10 +1192,14 @@ void Game::pollEvents() {
 				if (pauseLanguageENText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y) && language != "EN") {
 					language = "EN";
 					setupGraphicalElements();
+					bgStartUpScreenMusic2.stop();
+					bgShopMusic.play();
 				}
 				if (pauseLanguageFRText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y) && language != "FR") {
 					language = "FR";
 					setupGraphicalElements();
+					bgStartUpScreenMusic2.stop();
+					bgShopMusic.play();
 				}
 			}
 			if (startUpScreenOn) {
@@ -1207,6 +1269,24 @@ void Game::pollEvents() {
 							if (levelOneOn) {
 								bgLvl1Music.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
 							}
+						}
+					}
+					if (gameplayPauseFullscreenCheckbox.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) 
+					{
+						if (isFullscreen) {
+							window.create(sf::VideoMode(modes[3].width, modes[3].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
+							window.setFramerateLimit(currentFramerateLimit);
+							setupGraphicalElements();
+							bgStartUpScreenMusic2.stop();
+							bgShopMusic.play();
+							isFullscreen = false;
+						}
+						else {
+							window.create(sf::VideoMode(modes[0].width, modes[0].height), "Food'estroyer", sf::Style::Fullscreen);
+							window.setFramerateLimit(currentFramerateLimit);
+							setupGraphicalElements();
+							bgStartUpScreenMusic2.stop();
+							bgShopMusic.play();
 						}
 					}
 				}
@@ -1648,6 +1728,7 @@ void Game::update() {
 
 void Game::render() {
 	window.clear(sf::Color::Black);
+
 	if (settingsScreenOn) {
 		window.draw(bgStartUpScreenSprite);
 		window.draw(screenShadowWhenBlured);
@@ -1739,6 +1820,8 @@ void Game::render() {
 			window.draw(gameplayPauseMinusSoundTextSFX);
 			window.draw(gameplayPausePlusSoundTextMusic);
 			window.draw(gameplayPauseMinusSoundTextMusic);
+			window.draw(gameplayPauseFullscreenCheckbox);
+			window.draw(gameplayPauseFullscreenText);
 		}
 	}
 

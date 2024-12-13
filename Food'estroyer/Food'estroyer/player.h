@@ -8,15 +8,15 @@ protected:
 
 	bool state = true;
 	float atkPower = 1;
-	float speed;
-	float size;
+	float speed = 0;
+	float size = 0;
 	
 public:
 
 	char specialType = 'X';
 	int hitCounter = 0;
 
-	float getState() const              { return state; }
+	bool getState() const              { return state; }
 	float getAtkPower() const           { return atkPower; }
 	float getSpeed() const              { return speed; }
 	float getSize() const               { return size; }
@@ -34,7 +34,7 @@ private:
 	float speed = 800;
 	float atkPower = 50;
 	float pieSpeed = 1000;																			 ////////////// PIE SPEED HERE
-	float pieSize = 0.01;
+	float pieSize = 0.01f;
 	float shootCooldown = 0;
 	float specialCooldown = 0;
 	char specialAtkType = 'b';
@@ -71,7 +71,7 @@ public:
 	void setShootCooldown(float timeElapsed)            { shootCooldown += timeElapsed; }
 	void setSpecialCooldown(float timeElapsed)          { specialCooldown += timeElapsed; }
 	void setSpecialAtkType(char newType)                { specialAtkType = newType; }
-	void setSugarCount(float sugarNumber)               { sugarCount += sugarNumber; }
+	void setSugarCount(int sugarNumber)               { sugarCount += sugarNumber; }
 
 };
 #endif
