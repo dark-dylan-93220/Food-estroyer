@@ -62,6 +62,7 @@ public:
 	int getSugarCount() const              { return sugarCount; }
 	// Setters
 	void setPlayerLife(bool newState)                   { alive = false; }
+	void setPlayerHP(float newHP)                       { hp = newHP; }
 	void damagePlayer(float degats)						{ hp -= degats; }
 	void setPlayerSpeed(int bonusSpeed)					{ speed *= (0.01f * bonusSpeed); }// Bonus speed entre 0 et 100 comme un pourcentage
 	void setPlayerSpeedBackToNormal(int bonusSpeed)		{ speed /= (0.01f * bonusSpeed); }// Opération inverse

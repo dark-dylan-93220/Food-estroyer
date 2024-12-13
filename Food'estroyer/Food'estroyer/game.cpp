@@ -141,6 +141,8 @@ namespace {
 	sf::Texture gameplayUILifeBar17Active;
 	sf::Texture gameplayUILifeBar18Active;
 	sf::Texture gameplayUILifeBar19Active;
+	sf::Texture gameplayUILifeBar20Active;
+	sf::Texture gameplayUILifeBar21Active;
 	sf::Texture gameplayUILifeBar01Inactive;
 	sf::Texture gameplayUILifeBar02Inactive;
 	sf::Texture gameplayUILifeBar03Inactive;
@@ -160,6 +162,8 @@ namespace {
 	sf::Texture gameplayUILifeBar17Inactive;
 	sf::Texture gameplayUILifeBar18Inactive;
 	sf::Texture gameplayUILifeBar19Inactive;
+	sf::Texture gameplayUILifeBar20Inactive;
+	sf::Texture gameplayUILifeBar21Inactive;
 	sf::Texture gameplayUIPauseSoundPlus;
 	sf::Texture gameplayUIPauseSoundMinus;
 	sf::Texture gameplayPauseCheckboxTexture;
@@ -335,6 +339,8 @@ void Game::setupGraphicalElements() {
 	gameplayUILifeBar17Active.loadFromFile  ("Assets/Images/GameplayUI/17-active.png");
 	gameplayUILifeBar18Active.loadFromFile  ("Assets/Images/GameplayUI/18-active.png");
 	gameplayUILifeBar19Active.loadFromFile  ("Assets/Images/GameplayUI/19-active.png");
+	gameplayUILifeBar20Active.loadFromFile  ("Assets/Images/GameplayUI/20-active.png");
+	gameplayUILifeBar21Active.loadFromFile  ("Assets/Images/GameplayUI/21-active.png");
 	gameplayUILifeBar01Inactive.loadFromFile("Assets/Images/GameplayUI/01-inactive.png");
 	gameplayUILifeBar02Inactive.loadFromFile("Assets/Images/GameplayUI/02-inactive.png");
 	gameplayUILifeBar03Inactive.loadFromFile("Assets/Images/GameplayUI/03-inactive.png");
@@ -354,6 +360,8 @@ void Game::setupGraphicalElements() {
 	gameplayUILifeBar17Inactive.loadFromFile("Assets/Images/GameplayUI/17-inactive.png");
 	gameplayUILifeBar18Inactive.loadFromFile("Assets/Images/GameplayUI/18-inactive.png");
 	gameplayUILifeBar19Inactive.loadFromFile("Assets/Images/GameplayUI/19-inactive.png");
+	gameplayUILifeBar20Inactive.loadFromFile("Assets/Images/GameplayUI/20-inactive.png");
+	gameplayUILifeBar21Inactive.loadFromFile("Assets/Images/GameplayUI/21-inactive.png");
 	gameplayPauseCheckboxTexture.loadFromFile("Assets/Images/GameplayUI/PauseMenu/checkbox-ok.png");
 	nothing.loadFromFile("Assets/images/GameplayUI/PauseMenu/checkbox-no.png");
 	// SHAPES
@@ -1515,6 +1523,7 @@ void Game::playerInput() {
 }
 
 void Game::playerCollisions() {
+	std::cout << player.getPlayerHP() << std::endl;
 
 	for (int i = 0; i < projectiles.size(); i++) {
 		if (player.getGlobalBounds().contains(projectiles[i]->getPosition())) {     ///// hurt box plus petite (cercle) pour les projectiles
@@ -1574,63 +1583,69 @@ void Game::playerHPSetter() {
 	}
 	if (player.getPlayerHP() <= 60.f && player.getPlayerHP() > 55.f) {
 		if (player.getSpecialCooldown() >= 5.f)
-			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar01Active);
-		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar01Inactive); }
-	}
-	if (player.getPlayerHP() <= 55.f && player.getPlayerHP() > 50.f) {
-		if (player.getSpecialCooldown() >= 5.f)
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar09Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar09Inactive); }
 	}
-	if (player.getPlayerHP() <= 50.f && player.getPlayerHP() > 45.f) {
+	if (player.getPlayerHP() <= 55.f && player.getPlayerHP() > 50.f) {
 		if (player.getSpecialCooldown() >= 5.f)
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar10Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar10Inactive); }
 	}
-	if (player.getPlayerHP() <= 45.f && player.getPlayerHP() > 40.f) {
+	if (player.getPlayerHP() <= 50.f && player.getPlayerHP() > 45.f) {
 		if (player.getSpecialCooldown() >= 5.f)
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar11Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar11Inactive); }
 	}
-	if (player.getPlayerHP() <= 40.f && player.getPlayerHP() > 35.f) {
+	if (player.getPlayerHP() <= 45.f && player.getPlayerHP() > 40.f) {
 		if (player.getSpecialCooldown() >= 5.f)
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar12Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar12Inactive); }
 	}
-	if (player.getPlayerHP() <= 35.f && player.getPlayerHP() > 30.f) {
+	if (player.getPlayerHP() <= 40.f && player.getPlayerHP() > 35.f) {
 		if (player.getSpecialCooldown() >= 5.f)
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar13Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar13Inactive); }
 	}
-	if (player.getPlayerHP() <= 30.f && player.getPlayerHP() > 25.f) {
+	if (player.getPlayerHP() <= 35.f && player.getPlayerHP() > 30.f) {
 		if (player.getSpecialCooldown() >= 5.f)
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar14Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar14Inactive); }
 	}
-	if (player.getPlayerHP() <= 25.f && player.getPlayerHP() > 20.f) {
+	if (player.getPlayerHP() <= 30.f && player.getPlayerHP() > 25.f) {
 		if (player.getSpecialCooldown() >= 5.f)
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar15Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar15Inactive); }
 	}
-	if (player.getPlayerHP() <= 20.f && player.getPlayerHP() > 15.f) {
+	if (player.getPlayerHP() <= 25.f && player.getPlayerHP() > 20.f) {
 		if (player.getSpecialCooldown() >= 5.f)
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar16Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar16Inactive); }
 	}
-	if (player.getPlayerHP() <= 15.f && player.getPlayerHP() > 10.f) {
+	if (player.getPlayerHP() <= 20.f && player.getPlayerHP() > 15.f) {
 		if (player.getSpecialCooldown() >= 5.f)
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar17Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar17Inactive); }
 	}
-	if (player.getPlayerHP() <= 10.f && player.getPlayerHP() > 0.f) {
+	if (player.getPlayerHP() <= 15.f && player.getPlayerHP() > 10.f) {
 		if (player.getSpecialCooldown() >= 5.f)
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar18Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar18Inactive); }
 	}
-	if (player.getPlayerHP() <= 0.f) {
+	if (player.getPlayerHP() <= 10.f && player.getPlayerHP() > 5.f) {
 		if (player.getSpecialCooldown() >= 5.f)
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar19Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar19Inactive); }
+	}
+	if (player.getPlayerHP() <= 5.f && player.getPlayerHP() > 0.f) {
+		if (player.getSpecialCooldown() >= 5.f)
+			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar20Active);
+		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar20Inactive); }
+	}
+	if (player.getPlayerHP() <= 0.f) {
+		player.setPlayerHP(0);
+		if (player.getSpecialCooldown() >= 5.f)
+			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar21Active);
+		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar21Inactive); }
 	}
 }
 

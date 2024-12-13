@@ -14,7 +14,7 @@ Enemy::Enemy(float x, float y, char s, sf::RenderWindow &window) : size(s) {
 			break;
 	case('m') :
 			this->setScale(0.13f, 0.13f);
-			this->hpPerSize = 1;
+			this->hpPerSize = 1.f;
 			this->atkPowerPerSize = 1.f;
 			this->sugarValuePerSize = 1.f;
 			moveSpeedX = -300; moveSpeedY = -300;
