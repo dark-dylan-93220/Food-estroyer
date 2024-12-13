@@ -7,6 +7,12 @@ Player::Player() {
 	this->setFillColor(sf::Color::Green);
 }
 
+Bonus::Bonus(float PosX, float PosY, std::string setId) : posX(PosX), posY(PosY), id(setId){
+	this->setPosition(posX, posY);
+	this->setFillColor(sf::Color::Red);
+	//potentiellement changer la moveSpeed/size par rapport à l'id
+}
+
 void Player::throwPie(std::vector<Pie*> &vectorPies, sf::RenderWindow &window) {
 	Pie* pie = new Pie;
 	pie->setAtkPower(atkPower);
@@ -29,6 +35,15 @@ void Player::specialAtk(std::vector<Pie*> &vectorPies, sf::RenderWindow &window)
 		vectorPies.push_back(specialPie);
 		specialCooldown = 0;
 		break;
+	}
+}
+
+void Bonus::behavior(float timeElapsed, sf::RenderWindow &window, std::vector<Bonus*> vectorBonus) {
+	move(0, moveSpeed * timeElapsed);
+	if (getPosition().y > window.getSize().y + getSize().y || !state) {
+		auto it = std::find(vectorBonus.begin(), vectorBonus.end(), this);
+		delete this;
+		vectorBonus.erase(it);
 	}
 }
 

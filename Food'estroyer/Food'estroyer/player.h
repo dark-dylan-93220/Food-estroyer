@@ -75,4 +75,26 @@ public:
 	void setSugarCount(int sugarNumber)               { sugarCount += sugarNumber; }
 
 };
+
+class Bonus : public sf::RectangleShape {
+private:
+	bool state = true;
+	std::string id = "not Initialised";
+	float moveSpeed = 100.f;
+	float posX = 0;
+	float posY = 0;
+public:
+
+	Bonus(float PosX, float PosY, std::string setId);
+	
+	bool getState() const { return state; }
+	std::string getId() const { return id; }
+	float getMooveSpeed() const { return moveSpeed; }
+
+	void setState(bool newState) { state = newState; }
+	void setId(std::string newId) { id = newId; }
+	void setMooveSpeed(float newMoveSpeed) { moveSpeed = newMoveSpeed; }
+
+	void behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Bonus*> vectorBonus);
+};
 #endif
