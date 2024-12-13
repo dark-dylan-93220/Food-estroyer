@@ -29,6 +29,7 @@ protected:
 	float hp = 1;
 	float hpPerSize = 0;
 	float atkPower = 1;
+	float atkPowerPerSize = 1;
 	int sugarValue = 0;
 	float sugarValuePerSize = 0;
 

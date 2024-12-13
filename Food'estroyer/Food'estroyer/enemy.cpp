@@ -8,18 +8,21 @@ Enemy::Enemy(float x, float y, char s, sf::RenderWindow &window) : size(s) {
 	case ('s') :
 			this->setScale(0.09f, 0.09f);
 			this->hpPerSize = 0.5f;
+			this->atkPowerPerSize = 0.5f;
 			this->sugarValuePerSize = 0.5f;
 			moveSpeedX = -400; moveSpeedY = -400;
 			break;
 	case('m') :
 			this->setScale(0.13f, 0.13f);
 			this->hpPerSize = 1;
+			this->atkPowerPerSize = 1.f;
 			this->sugarValuePerSize = 1.f;
 			moveSpeedX = -300; moveSpeedY = -300;
 			break;
 	case('l') :
 			this->setScale(0.19f, 0.19f);
 			this->hpPerSize = 1.5f;
+			this->atkPowerPerSize = 1.5f;
 			this->sugarValuePerSize = 1.5f;
 			moveSpeedX = -200; moveSpeedY = -200;
 			break;
@@ -30,17 +33,18 @@ Enemy::Enemy(float x, float y, char s, sf::RenderWindow &window) : size(s) {
 Normal::Normal(float x, float y, char s, sf::RenderWindow& window) : Enemy(x, y, s, window) {
 	hp = 100 * hpPerSize;
 	sugarValue = int(50 * sugarValuePerSize);                                                        //ICI : VALEUR EN SUCRES DES MONSTRES
+	atkPower = 10 * atkPowerPerSize;
 }
 Shooter::Shooter(float x, float y, char s, sf::RenderWindow &window) : Enemy(x, y, s, window) {
 	this->setPosition(sf::Vector2f(window.getSize().x + 100.f, -100.f));
 	hp = 150 * hpPerSize;
 	sugarValue = int(100 * sugarValuePerSize);
-	atkPower = 10;
+	atkPower = 15 * atkPowerPerSize;
 }
 Elite::Elite(float x, float y, char s, sf::RenderWindow& window) : Enemy(x, y, s, window) {
 	hp = 200 * hpPerSize;
 	sugarValue = int(150 * sugarValuePerSize);
-	atkPower = 20;
+	atkPower = 20 * atkPowerPerSize;
 }
 
 void Normal::behavior(float timeElapsed) {

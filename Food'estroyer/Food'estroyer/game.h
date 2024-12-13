@@ -52,6 +52,7 @@ private:
 	void setEnemySpawn();
 	void playerInput();
 	void playerCollisions();
+	void playerHPSetter();
 	void nonPlayerBehavior();
 	void nonPlayerDraw();
 	void clownWalkAnimation();
