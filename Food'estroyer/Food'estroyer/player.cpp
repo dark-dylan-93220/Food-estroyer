@@ -9,7 +9,6 @@ Player::Player() {
 
 Bonus::Bonus(float PosX, float PosY, std::string setId, Player &player) : posX(PosX), posY(PosY), id(setId){
 	this->setPosition(posX, posY);
-	this->setFillColor(sf::Color::Red);
 	//potentiellement changer la moveSpeed/size par rapport à l'id
 	if (id == "shield") {
 		cooldown = 10;

@@ -130,6 +130,8 @@ namespace {
 	sf::Texture playerDeath5;
 	sf::Texture playerDeath6;
 	sf::Texture pieTexture;
+	sf::Texture shieldTexture;
+	sf::Texture shieldIconeTexture;
 		// ENEMMIES
 	sf::Texture deathTexture1;
 	sf::Texture deathTexture2;
@@ -278,6 +280,7 @@ namespace {
 		// Others
 	sf::Sprite playerCurrentSprite;
 	sf::Sprite gameplayUILifeBarCurrentSprite;
+	sf::Sprite shieldSprite;
 	// VECTORS
 	std::vector<sf::Vector2f> shooterPositions; ////////////////////////////////
 	std::vector<Projectile*> vectorProjectile;
@@ -393,6 +396,8 @@ void Game::setupGraphicalElements() {
 	playerDeath5.loadFromFile               ("Assets/Images/Clown/Death/frame_4_death_clown.png");
 	playerDeath6.loadFromFile               ("Assets/Images/Clown/Death/frame_5_death_clown.png");
 	pieTexture.loadFromFile                 ("Assets/Images/Clown/Pies/butterscotchPie.png");
+	shieldTexture.loadFromFile              ("Assets/Images/Clown/shield.png");
+	shieldIconeTexture.loadFromFile         ("Assets/Images/Clown/shieldIcone.png");
 	deathTexture1.loadFromFile              ("Assets/Images/Enemy/Death/death1.png");
 	deathTexture2.loadFromFile              ("Assets/Images/Enemy/Death/death2.png");
 	painBizarre.loadFromFile                ("Assets/Images/Enemy/Shooter/m.png");
@@ -668,6 +673,9 @@ void Game::setupGraphicalElements() {
 	playerCurrentSprite.setTexture(playerMove1);
 	playerCurrentSprite.setScale(sf::Vector2f((window.getSize().x * 0.05f) / (playerCurrentSprite.getLocalBounds().width), (window.getSize().y * 0.10f) / (playerCurrentSprite.getLocalBounds().height)));
 	playerCurrentSprite.setPosition(sf::Vector2f(window.getSize().x * 0.07f, (window.getSize().y / 2) - (playerCurrentSprite.getGlobalBounds().height / 2)));
+	shieldSprite.setTexture(shieldTexture);
+	shieldSprite.setScale(playerCurrentSprite.getScale().x, playerCurrentSprite.getScale().y);
+	shieldSprite.setPosition(playerCurrentSprite.getPosition());
 	player.setPosition(playerCurrentSprite.getPosition());
 	gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar01Active);
 	gameplayUILifeBarCurrentSprite.setScale(sf::Vector2f((window.getSize().x * 0.20f) / (gameplayUILifeBarCurrentSprite.getLocalBounds().width), (window.getSize().x * 0.04356f) / (gameplayUILifeBarCurrentSprite.getLocalBounds().height)));
@@ -1968,6 +1976,7 @@ void Game::playerInput() {
 			playerCurrentSprite.setTexture(playerAttack1);
 		}
 	}
+	shieldSprite.setPosition(playerCurrentSprite.getPosition());
 }
 
 void Game::playerCollisions() {
@@ -2115,7 +2124,7 @@ void Game::playerBonusSetter() {
 	shieldDraw.setSize(sf::Vector2f(30, 30));
 	shieldDraw.setPosition(gameplayUILifeBarCurrentSprite.getPosition().x + window.getSize().y * 0.01,
 		gameplayUILifeBarCurrentSprite.getPosition().y + (gameplayUILifeBarCurrentSprite.getLocalBounds().height * gameplayUILifeBarCurrentSprite.getScale().y) + window.getSize().y * 0.01);
-	shieldDraw.setFillColor(sf::Color::Red);
+	shieldDraw.setTexture(&shieldIconeTexture);
 
 	if (player.getShield()) {
 
@@ -2245,7 +2254,9 @@ void Game::nonPlayerBehavior() {
 void Game::nonPlayerDraw() {
 	for (Bonus*& bonus : vectorBonus) {
 		bonusDraw.setSize(sf::Vector2f(30.f, 30.f));
-		bonusDraw.setFillColor(bonus->getFillColor());
+		if (bonus->getId() == "shield")
+			bonusDraw.setTexture(&shieldIconeTexture);
+		                                                                            //AJOUTER LES TEXTURES DES AUTRES BONUS ICI 
 		bonusDraw.setPosition(bonus->getPosition());
 		window.draw(bonusDraw);
 	}
@@ -2421,6 +2432,8 @@ void Game::render() {
 			// --- ENNEMIS & JOUEUR --- //
 			nonPlayerDraw();
 			window.draw(playerCurrentSprite);
+			if (player.getShield())
+				window.draw(shieldSprite);
 			window.draw(gameplayUILifeBarCurrentSprite);
 			window.draw(gameplayUIScoreText);
 			window.draw(sugarIcone);
