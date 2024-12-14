@@ -25,6 +25,8 @@ public:
 	void setAtkPower(float newAtkPower) { atkPower = newAtkPower; }
 	void setSpeed(float newSpeed)       { speed = newSpeed; }
 	void setSize(float newSize)         { size = newSize; }
+
+	bool behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Pie*> vectorPie);
 };
 
 class Player : public sf::CircleShape {
@@ -35,8 +37,10 @@ private:
 	float atkPower = 50;
 	float pieSpeed = 1000;																			 ////////////// PIE SPEED HERE
 	float pieSize = 0.01f;
-	float shootCooldown = 0;
-	float specialCooldown = 0;
+	float shootTimer = 0;
+	float shootCooldown = 0.2f;
+	float specialTimer = 0;
+	float specialCooldown = 0.f; // on commence avec l'attaque spéciale chargée
 	char specialAtkType = 'b';
 	int sugarCount = 0;
 
@@ -56,7 +60,9 @@ public:
 	float getAtkPower() const              { return atkPower; }
 	float getPieSpeed() const              { return pieSpeed; }
 	float getPieSize() const               { return pieSize; }
+	float getShootTimer() const            { return shootTimer; }
 	float getShootCooldown() const         { return shootCooldown; }
+	float getSpecialTimer() const          { return specialTimer; }
 	float getSpecialCooldown() const       { return specialCooldown; }
 	char getSpectialAtkType() const        { return specialAtkType; }
 	int getSugarCount() const              { return sugarCount; }
@@ -69,10 +75,12 @@ public:
 	void setAtkPower(float atkMultiplier)				{ atkPower *= atkMultiplier; } // Genre 1.2x, 1.55x etc...
 	void setPieSpeed(float newSpeed)                    { pieSpeed = newSpeed; }
 	void setPieSize(float newSize)                      { pieSize = newSize; }
-	void setShootCooldown(float timeElapsed)            { shootCooldown += timeElapsed; }
-	void setSpecialCooldown(float timeElapsed)          { specialCooldown += timeElapsed; }
+	void setShootTimer(float timeElapsed)               { shootTimer += timeElapsed; }
+	void setShootCooldown(float newCooldown)            { shootCooldown = newCooldown; }
+	void setSpecialTimer(float timeElapsed)             { specialTimer += timeElapsed; }
+	void setSpecialCooldown(float newCooldown)          { specialCooldown = newCooldown; }
 	void setSpecialAtkType(char newType)                { specialAtkType = newType; }
-	void setSugarCount(int sugarNumber)               { sugarCount += sugarNumber; }
+	void setSugarCount(int sugarNumber)                 { sugarCount += sugarNumber; }
 
 };
 
@@ -95,6 +103,6 @@ public:
 	void setId(std::string newId) { id = newId; }
 	void setMooveSpeed(float newMoveSpeed) { moveSpeed = newMoveSpeed; }
 
-	void behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Bonus*> vectorBonus);
+	bool behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Bonus*> vectorBonus);
 };
 #endif

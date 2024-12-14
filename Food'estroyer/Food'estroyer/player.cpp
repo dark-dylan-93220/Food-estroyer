@@ -20,30 +20,41 @@ void Player::throwPie(std::vector<Pie*> &vectorPies, sf::RenderWindow &window) {
 	pie->setSpeed(getPieSpeed());
 	pie->setPosition(getPosition().x + getRadius() + pie->getRadius(), getPosition().y + getRadius() - pie->getRadius());
 	vectorPies.push_back(pie);
-	shootCooldown = 0;
+	shootTimer = 0;
 }
 
-void Player::specialAtk(std::vector<Pie*> &vectorPies, sf::RenderWindow &window) {
+void Player::specialAtk(std::vector<Pie*> &vectorPie, sf::RenderWindow &window) {
 	switch (specialAtkType) {
 	case 'b':
+		specialCooldown = 5.f;
 		Pie* specialPie = new Pie;
 		specialPie->specialType = specialAtkType;
 		specialPie->setAtkPower(atkPower * 3);
 		specialPie->setRadius(getPieSize() * 5 * window.getSize().x);
 		specialPie->setSpeed(getPieSpeed());
 		specialPie->setPosition(getPosition().x + getRadius() + specialPie->getRadius(), getPosition().y + getRadius() - specialPie->getRadius());
-		vectorPies.push_back(specialPie);
-		specialCooldown = 0;
+		vectorPie.push_back(specialPie);
+		specialTimer = 0;
 		break;
 	}
 }
 
-void Bonus::behavior(float timeElapsed, sf::RenderWindow &window, std::vector<Bonus*> vectorBonus) {
-	move(0, moveSpeed * timeElapsed);
-	if (getPosition().y > window.getSize().y + getSize().y || !state) {
-		auto it = std::find(vectorBonus.begin(), vectorBonus.end(), this);
-		delete this;
-		vectorBonus.erase(it);
+bool Bonus::behavior(float timeElapsed, sf::RenderWindow &window, std::vector<Bonus*> vectorBonus) {
+	if (state) {
+		move(0, moveSpeed * timeElapsed);
+		if (getPosition().y > window.getSize().y + getSize().y)
+			state = false;
+		return true;
 	}
+	else { return false; }
 }
 
+bool Pie::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Pie*> vectorPie) {
+	if (state) {
+		move(speed * timeElapsed, 0);
+		if (getPosition().x > window.getSize().x + getRadius() * 2)
+			state = false;
+		return true;
+	}
+	else { return false; }
+}

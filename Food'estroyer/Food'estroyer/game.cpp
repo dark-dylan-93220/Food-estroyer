@@ -85,6 +85,8 @@ namespace {
 	// SOUNDS
 	sf::SoundBuffer sugarCrunchBuffer;
 	sf::Sound sugarCrunch;
+	sf::SoundBuffer oofBuffer;
+	sf::Sound oofSound;
 	// IMAGES
 	sf::Image pieCursorImg;
 	// TEXTURES
@@ -276,9 +278,9 @@ namespace {
 	sf::Sprite gameplayUILifeBarCurrentSprite;
 	// VECTORS
 	std::vector<sf::Vector2f> shooterPositions; ////////////////////////////////
-	std::vector<Projectile*> projectiles;
+	std::vector<Projectile*> vectorProjectile;
 	std::vector<Sugar*> vectorSugar;
-	std::vector<Pie*> vectorPies;
+	std::vector<Pie*> vectorPie;
 	std::vector<Normal> vectorNormal;
 	std::vector<Shooter> vectorShooter;
 	std::vector<Elite> vectorElite;
@@ -343,6 +345,8 @@ void Game::setupGraphicalElements() {
 	// SOUNDS
 	sugarCrunchBuffer.loadFromFile("Assets/Sound Effects/sugar crunch.wav");
 	sugarCrunch.setBuffer(sugarCrunchBuffer);
+	oofBuffer.loadFromFile("Assets/Sound Effects/oof.wav");
+	oofSound.setBuffer(oofBuffer);
 	// IMAGES
 	pieCursorImg.loadFromFile("Assets/Images/pieCursor.png");
 	window.setIcon(pieCursorImg.getSize().x, pieCursorImg.getSize().y, pieCursorImg.getPixelsPtr());
@@ -1941,9 +1945,9 @@ void Game::playerInput() {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
 		if (levelOneOn && backgroundActive) {
 			// Ici y'aura le shoot
-			if (player.getShootCooldown() >= 0.2f) {
-				player.throwPie(vectorPies, window);
-				player.setShootCooldown(0);
+			if (player.getShootTimer() >= player.getShootCooldown()) {
+				player.throwPie(vectorPie, window);
+				player.setShootTimer(0);
 			}
 			playerCurrentSprite.setTexture(playerAttack1);
 		}
@@ -1951,9 +1955,9 @@ void Game::playerInput() {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
 		if (levelOneOn && backgroundActive) {
 			// SPECIAL ATTACK
-			if (player.getSpecialCooldown() >= 5.f) {
-				player.specialAtk(vectorPies, window);
-				player.setSpecialCooldown(0);
+			if (player.getSpecialTimer() >= player.getSpecialCooldown()) {
+				player.specialAtk(vectorPie, window);
+				player.setSpecialTimer(0);
 			}
 			playerCurrentSprite.setTexture(playerAttack1);
 		}
@@ -1961,163 +1965,171 @@ void Game::playerInput() {
 }
 
 void Game::playerCollisions() {
-	for (int i = 0; i < projectiles.size(); i++) {
-		if (player.getGlobalBounds().contains(projectiles[i]->getPosition())) {     ///// hurt box plus petite (cercle) pour les projectiles
-			player.damagePlayer(projectiles[i]->getAtkPower());
-			projectiles[i]->setState(false);
+	for (Projectile* &projectile : vectorProjectile) {
+		if (player.getGlobalBounds().contains(projectile->getPosition())) {     ///// hurt box plus petite (cercle) pour les projectiles
+			player.damagePlayer(projectile->getAtkPower());
+			oofSound.play();
+			projectile->setState(false);
 		}
 	}
-	for (int i = 0; i < vectorSugar.size(); i++) {
-		if (playerCurrentSprite.getGlobalBounds().contains(vectorSugar[i]->getPosition())) {  ////hurt box = sprite du clown pour ramasser les sucres plus facilement
-			player.setSugarCount(vectorSugar[i]->getValue());
+	for (Sugar* &sugar : vectorSugar) {
+		if (playerCurrentSprite.getGlobalBounds().contains(sugar->getPosition())) {  ////hurt box = sprite du clown pour ramasser les sucres plus facilement
+			player.setSugarCount(sugar->getValue());
 			sugarCrunch.play();                                                ///////////////////////couper le début du son
-			vectorSugar[i]->setState(false);
+			sugar->setState(false);
+		}
+	}
+	for (Bonus* &bonus : vectorBonus) {
+		if (playerCurrentSprite.getGlobalBounds().contains(bonus->getPosition())) {  ////hurt box = sprite du clown pour ramasser les sucres plus facilement
+			std::cout << "t'as chopped un bonus mgl" << std::endl;
+			bonus->setState(false);
 		}
 	}
 }
 
 void Game::playerHPSetter() {
 	if (player.getPlayerHP() <= 100.f) {
-		if (player.getSpecialCooldown() >= 5.f)
+		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar01Active);
 		else{ gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar01Inactive); }
 	}
 	if (player.getPlayerHP() <= 95.f && player.getPlayerHP() > 90.f) {
-		if (player.getSpecialCooldown() >= 5.f)
+		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar02Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar02Inactive); }
 	}
 	if (player.getPlayerHP() <= 90.f && player.getPlayerHP() > 85.f) {
-		if (player.getSpecialCooldown() >= 5.f)
+		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar03Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar03Inactive); }
 	}
 	if (player.getPlayerHP() <= 85.f && player.getPlayerHP() > 80.f) {
-		if (player.getSpecialCooldown() >= 5.f)
+		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar04Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar04Inactive); }
 	}
 	if (player.getPlayerHP() <= 80.f && player.getPlayerHP() > 75.f) {
-		if (player.getSpecialCooldown() >= 5.f)
+		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar05Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar05Inactive); }
 	}
 	if (player.getPlayerHP() <= 75.f && player.getPlayerHP() > 70.f) {
-		if (player.getSpecialCooldown() >= 5.f)
+		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar06Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar06Inactive); }
 	}
 	if (player.getPlayerHP() <= 70.f && player.getPlayerHP() > 65.f) {
-		if (player.getSpecialCooldown() >= 5.f)
+		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar07Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar07Inactive); }
 	}
 	if (player.getPlayerHP() <= 65.f && player.getPlayerHP() > 60.f) {
-		if (player.getSpecialCooldown() >= 5.f)
+		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar08Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar08Inactive); }
 	}
 	if (player.getPlayerHP() <= 60.f && player.getPlayerHP() > 55.f) {
-		if (player.getSpecialCooldown() >= 5.f)
+		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar09Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar09Inactive); }
 	}
 	if (player.getPlayerHP() <= 55.f && player.getPlayerHP() > 50.f) {
-		if (player.getSpecialCooldown() >= 5.f)
+		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar10Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar10Inactive); }
 	}
 	if (player.getPlayerHP() <= 50.f && player.getPlayerHP() > 45.f) {
-		if (player.getSpecialCooldown() >= 5.f)
+		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar11Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar11Inactive); }
 	}
 	if (player.getPlayerHP() <= 45.f && player.getPlayerHP() > 40.f) {
-		if (player.getSpecialCooldown() >= 5.f)
+		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar12Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar12Inactive); }
 	}
 	if (player.getPlayerHP() <= 40.f && player.getPlayerHP() > 35.f) {
-		if (player.getSpecialCooldown() >= 5.f)
+		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar13Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar13Inactive); }
 	}
 	if (player.getPlayerHP() <= 35.f && player.getPlayerHP() > 30.f) {
-		if (player.getSpecialCooldown() >= 5.f)
+		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar14Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar14Inactive); }
 	}
 	if (player.getPlayerHP() <= 30.f && player.getPlayerHP() > 25.f) {
-		if (player.getSpecialCooldown() >= 5.f)
+		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar15Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar15Inactive); }
 	}
 	if (player.getPlayerHP() <= 25.f && player.getPlayerHP() > 20.f) {
-		if (player.getSpecialCooldown() >= 5.f)
+		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar16Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar16Inactive); }
 	}
 	if (player.getPlayerHP() <= 20.f && player.getPlayerHP() > 15.f) {
-		if (player.getSpecialCooldown() >= 5.f)
+		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar17Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar17Inactive); }
 	}
 	if (player.getPlayerHP() <= 15.f && player.getPlayerHP() > 10.f) {
-		if (player.getSpecialCooldown() >= 5.f)
+		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar18Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar18Inactive); }
 	}
 	if (player.getPlayerHP() <= 10.f && player.getPlayerHP() > 5.f) {
-		if (player.getSpecialCooldown() >= 5.f)
+		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar19Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar19Inactive); }
 	}
 	if (player.getPlayerHP() <= 5.f && player.getPlayerHP() > 0.f) {
-		if (player.getSpecialCooldown() >= 5.f)
+		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar20Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar20Inactive); }
 	}
 	if (player.getPlayerHP() <= 0.f) {
 		player.setPlayerHP(0);
-		if (player.getSpecialCooldown() >= 5.f)
+		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar21Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar21Inactive); }
 	}
 }
 
 void Game::nonPlayerBehavior() {
-	for (Bonus*& bonus : vectorBonus) {
-		bonus->behavior(f_ElapsedTime, window, vectorBonus);
-	}
-	for (int i = 0; i < vectorPies.size(); i++) {
-		vectorPies[i]->move(vectorPies[i]->getSpeed() * f_ElapsedTime, 0);
-		if (vectorPies[i]->getPosition().x > window.getSize().x + vectorPies[i]->getRadius() * 2
-			|| vectorPies[i]->getState() == false) {
-			delete vectorPies[i];
-			vectorPies.erase(vectorPies.begin() + i);
+	for (Bonus* bonus : vectorBonus) {                                                //jsp pk les "&" font crash le jeu, uniquement pour ces boucles
+		if (!bonus->behavior(f_ElapsedTime, window, vectorBonus)) {                   
+			auto it = std::find(vectorBonus.begin(), vectorBonus.end(), bonus);
+			vectorBonus.erase(it);
+			delete bonus;
 		}
 	}
-	for (int i = 0; i < vectorSugar.size(); i++) {
-		vectorSugar[i]->move(-300 * f_ElapsedTime, 0);
-		if (vectorSugar[i]->getPosition().x < 0 - /*(vectorSugar[i]->getLocalBounds().width * vectorSugar[i]->getScale().x)*/ 100.f
-			|| vectorSugar[i]->getState() == false) {
-			delete vectorSugar[i];
-			vectorSugar.erase(vectorSugar.begin() + i);
+	for (Pie* pie : vectorPie) {
+		if (!pie->behavior(f_ElapsedTime, window, vectorPie)) {
+			auto it = std::find(vectorPie.begin(), vectorPie.end(), pie);
+			vectorPie.erase(it);
+			delete pie;
 		}
 	}
-	for (int i = 0; i < projectiles.size(); i++) {
-		projectiles[i]->move(-600 * f_ElapsedTime, 0);
-		if (projectiles[i]->getPosition().x < 0 - /*(projectiles[i]->getLocalBounds().width * projectiles[i]->getScale().x)*/ 100.f
-			|| projectiles[i]->getState() == false) {
-			delete projectiles[i];
-			projectiles.erase(projectiles.begin() + i);
+	for (Sugar* sugar : vectorSugar) {
+		if (!sugar->behavior(f_ElapsedTime, window, vectorSugar)) {
+			auto it = std::find(vectorSugar.begin(), vectorSugar.end(), sugar);
+			vectorSugar.erase(it);
+			delete sugar;
+		}
+	}
+	for (Projectile* projectile : vectorProjectile) {
+		if (!projectile->behavior(f_ElapsedTime, window, vectorProjectile)) {
+			auto it = std::find(vectorProjectile.begin(), vectorProjectile.end(), projectile);
+			vectorProjectile.erase(it);
+			delete projectile;
 		}
 	}
 	for (int i = 0; i < vectorNormal.size(); i++) {
 		if (vectorNormal[i].getAlive()) {
 			vectorNormal[i].behavior(f_ElapsedTime);
 			vectorNormal[i].dropSugar(vectorSugar, vectorNormal[i]);
-			for (Pie*& pie : vectorPies) {
+			for (Pie*& pie : vectorPie) {
 				if (vectorNormal[i].getGlobalBounds().intersects(pie->getGlobalBounds())) {
 					vectorNormal[i].setHp(-pie->getAtkPower()); 
 					if (pie->specialType == 'b') {
@@ -2139,9 +2151,9 @@ void Game::nonPlayerBehavior() {
 	}
 	for (int i = 0; i < vectorShooter.size(); i++) {
 		if (vectorShooter[i].getAlive()) {
-			vectorShooter[i].behavior(f_ElapsedTime, vectorShooter, shooterPositions, projectiles, positionsOccupied);
+			vectorShooter[i].behavior(f_ElapsedTime, vectorShooter, shooterPositions, vectorProjectile, positionsOccupied);
 			vectorShooter[i].dropSugar(vectorSugar, vectorShooter[i]);
-			for (Pie*& pie : vectorPies) {
+			for (Pie*& pie : vectorPie) {
 				if (vectorShooter[i].getGlobalBounds().intersects(pie->getGlobalBounds())) {
 					vectorShooter[i].setHp(-pie->getAtkPower());
 					if (pie->specialType == 'b') {
@@ -2162,9 +2174,9 @@ void Game::nonPlayerBehavior() {
 	}
 	for (int i = 0; i < vectorElite.size(); i++) {
 		if (vectorElite[i].getAlive()) {
-			vectorElite[i].behavior(f_ElapsedTime, player, projectiles, window);
+			vectorElite[i].behavior(f_ElapsedTime, player, vectorProjectile, window);
 			vectorElite[i].dropSugar(vectorSugar, vectorElite[i]);
-			for (Pie*& pie : vectorPies) {
+			for (Pie*& pie : vectorPie) {
 				if (vectorElite[i].getGlobalBounds().intersects(pie->getGlobalBounds())) {
 					vectorElite[i].setHp(-pie->getAtkPower());
 					if (pie->specialType == 'b') {
@@ -2192,13 +2204,13 @@ void Game::nonPlayerDraw() {
 		bonusDraw.setPosition(bonus->getPosition());
 		window.draw(bonusDraw);
 	}
-	for (Pie*& pie : vectorPies) {
+	for (Pie*& pie : vectorPie) {
 		pieDraw.setRadius(pie->getRadius());
 		pieDraw.setTexture(&pieTexture);
 		pieDraw.setPosition(pie->getPosition());
 		window.draw(pieDraw);
 	}
-	for (Projectile*& projectile : projectiles) {
+	for (Projectile*& projectile : vectorProjectile) {
 		projectileDraw.setScale(projectile->getScale());
 		if (projectile->getId() == "shooter")
 			projectileDraw.setTexture(shooterProjectile);
@@ -2272,8 +2284,8 @@ void Game::update() {
 			scoreCalculation();
 			sugarCalculation();
 			playerHPSetter();
-			player.setShootCooldown(f_ElapsedTime);
-			player.setSpecialCooldown(f_ElapsedTime);
+			player.setShootTimer(f_ElapsedTime);
+			player.setSpecialTimer(f_ElapsedTime);
 			playerInput();
 			playerCollisions();
 			nonPlayerBehavior();

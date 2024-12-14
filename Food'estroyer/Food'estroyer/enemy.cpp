@@ -1,5 +1,6 @@
 #include "game.h"
 #include "enemy.h"
+#include "player.h"
 
 Enemy::Enemy(float x, float y, char s, sf::RenderWindow &window) : size(s) {
 	this->setPosition(x, y);
@@ -47,12 +48,7 @@ Elite::Elite(float x, float y, char s, sf::RenderWindow& window) : Enemy(x, y, s
 	atkPower = 20 * atkPowerPerSize;
 }
 
-void Normal::behavior(float timeElapsed) {
-	if (hp <= 0) { alive = false; }
-	move(moveSpeedX * timeElapsed, 0);
-}
-
-void Enemy::dropSugar(std::vector<Sugar*> &vectorSugar, Enemy &enemy) {
+void Enemy::dropSugar(std::vector<Sugar*>& vectorSugar, Enemy& enemy) {
 	if (!alive && !dropedSugar) {
 		dropedSugar = true;
 		Sugar* sugar = new Sugar;
@@ -68,8 +64,13 @@ void Enemy::dropSugar(std::vector<Sugar*> &vectorSugar, Enemy &enemy) {
 	}
 }
 
+void Normal::behavior(float timeElapsed) {
+	if (hp <= 0) { alive = false; }
+	move(moveSpeedX * timeElapsed, 0);
+}
+
 void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, std::vector<sf::Vector2f>& shooterPositions, 
-	std::vector<Projectile*>& projectiles, std::vector<bool>& positionsOccupied){
+	std::vector<Projectile*>& vectorProjectile, std::vector<bool>& positionsOccupied){
 
 	if (hp <= 0) { alive = false; }
 
@@ -151,7 +152,7 @@ void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, s
 				}
 				projectile->setPosition(getPosition().x - (getLocalBounds().width * getScale().x) / 2, 
 					getPosition().y + (getLocalBounds().height * getScale().y) / 2 - (projectile->getLocalBounds().height * projectile->getScale().y) / 2);
-				projectiles.push_back(projectile);
+				vectorProjectile.push_back(projectile);
 				shootCooldown = 0;
 			}
 			else { shootCooldown += timeElapsed; }
@@ -159,7 +160,7 @@ void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, s
 	}
 }
 
-void Elite::behavior(float timeElapsed, sf::CircleShape player, std::vector<Projectile*> &projectiles, sf::RenderWindow &window) 
+void Elite::behavior(float timeElapsed, sf::CircleShape player, std::vector<Projectile*> &vectorProjectile, sf::RenderWindow &window)
 {
 	if (hp <= 0) { alive = false; }
 	
@@ -224,8 +225,28 @@ void Elite::behavior(float timeElapsed, sf::CircleShape player, std::vector<Proj
 		}
 		projectile->setPosition(getPosition().x - (getLocalBounds().width * getScale().x) / 2,
 			getPosition().y + (getLocalBounds().height * getScale().y) / 2 - (projectile->getLocalBounds().height * projectile->getScale().y) / 2);
-		projectiles.push_back(projectile);
+		vectorProjectile.push_back(projectile);
 		shootCooldown = 0;
 	}
 	else { shootCooldown += timeElapsed; }
+}
+
+bool Sugar::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Sugar*> vectorSugar) {
+	if (state) {
+		move(-300 * timeElapsed, 0);
+		if (getPosition().x < 0 - 100.f/*(vectorSugar[i]->getLocalBounds().width * vectorSugar[i]->getScale().x)*/)
+			state = false;
+		return true;
+	}
+	else {  return  false; }
+}
+
+bool Projectile::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Projectile*> vectorProjectiles) {
+	if (state) {
+		move(-600 * timeElapsed, 0);
+		if (getPosition().x < 0 - 100.f/*(projectiles[i]->getLocalBounds().width * projectiles[i]->getScale().x)*/)
+			state = false;
+		return true;
+	}
+	else { return false; }
 }

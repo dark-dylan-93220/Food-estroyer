@@ -16,6 +16,8 @@ public:
 
 	void setState(bool newState)  { state = newState; }
 	void setValue(int newValue) { quantity = newValue; }
+
+	bool behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Sugar*> vectorSugar);
 };
 
 //CLASSE DE BASE : ENEMY
@@ -65,6 +67,8 @@ public:
 	void setId(std::string newId)    { id = newId; }
 	void setAtkPower(float newPower) { atkPower = newPower; }
 	void setState(bool newState)     { state = newState; }
+
+	bool behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Projectile*> vectorProjectiles);
 };
 
 //NORMAL ENEMIES (ONLY MOVING LEFT)
@@ -75,6 +79,7 @@ public:
 	Normal(float x, float y, char s, sf::RenderWindow& window);
 
 	void behavior(float timeElapsed);
+	void globalBehavior();
 
 	std::string getId() const { return id; }
 };
@@ -97,7 +102,7 @@ public:
 
 	Shooter(float x, float y, char s, sf::RenderWindow& window);
 
-	void behavior(float timeElapsed, std::vector<Shooter>& vectorShooters, std::vector<sf::Vector2f> &shooterPositions, std::vector<Projectile*> &projectiles, std::vector<bool>& positionsOccupied);
+	void behavior(float timeElapsed, std::vector<Shooter>& vectorShooters, std::vector<sf::Vector2f> &shooterPositions, std::vector<Projectile*> & vectorProjectile, std::vector<bool>& positionsOccupied);
 
 	std::string getId() const { return id; }
 };
@@ -113,7 +118,8 @@ public:
 
 	Elite(float x, float y, char s, sf::RenderWindow& window);
 
-	void behavior(float timeElapsed, sf::CircleShape player, std::vector<Projectile*> &projectiles, sf::RenderWindow &window);
+	void behavior(float timeElapsed, sf::CircleShape player, std::vector<Projectile*> &vectorProjectile, sf::RenderWindow &window);
+	void globalBehavior();
 
 	std::string getId() const { return id; }
 };
