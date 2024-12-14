@@ -47,6 +47,7 @@ private:
 	std::vector<bool> positionsOccupied;
 	// Testing
 	int numberOfStartingEnnemies = 5;
+	int deathCounter = 0;
 
 private:
 	void setupGraphicalElements();
@@ -55,6 +56,8 @@ private:
 	void playerInput();
 	void playerCollisions();
 	void playerHPSetter();
+	void playerBonusSetter();
+	void playerDeath();
 	void nonPlayerBehavior();
 	void nonPlayerDraw();
 	void clownWalkAnimation();

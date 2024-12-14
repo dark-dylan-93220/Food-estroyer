@@ -36,13 +36,16 @@ private:
 	float speed = 800;
 	float atkPower = 50;
 	float pieSpeed = 1000;																			 ////////////// PIE SPEED HERE
-	float pieSize = 0.01f;
+	float pieSize = 0.01;
 	float shootTimer = 0;
-	float shootCooldown = 0.2f;
+	float shootCooldown = 0.2;
 	float specialTimer = 0;
-	float specialCooldown = 0.f; // on commence avec l'attaque spéciale chargée
+	float specialCooldown = 0; // on commence avec l'attaque spéciale chargée
 	char specialAtkType = 'b';
 	int sugarCount = 0;
+	float bonusTimer = 0;
+	float bonusCooldown = 5;
+	bool shield = false;
 
 public:
 	
@@ -66,6 +69,9 @@ public:
 	float getSpecialCooldown() const       { return specialCooldown; }
 	char getSpectialAtkType() const        { return specialAtkType; }
 	int getSugarCount() const              { return sugarCount; }
+	float getBonusTimer() const            { return bonusTimer; }
+	float getBonusCooldown() const         { return bonusCooldown; }
+	bool getShield() const                 { return shield; }
 	// Setters
 	void setPlayerLife(bool newState)                   { alive = false; }
 	void setPlayerHP(float newHP)                       { hp = newHP; }
@@ -81,6 +87,10 @@ public:
 	void setSpecialCooldown(float newCooldown)          { specialCooldown = newCooldown; }
 	void setSpecialAtkType(char newType)                { specialAtkType = newType; }
 	void setSugarCount(int sugarNumber)                 { sugarCount += sugarNumber; }
+	void setBonusTimer(float timeElapsed)               { bonusTimer += timeElapsed; }
+	void setBonusCooldown(float newCooldown)            { bonusCooldown = newCooldown; }
+	void resetBonusTimer(float time)                    { bonusTimer = time; }
+	void setShield(bool newState)                       { shield = newState; }
 
 };
 
@@ -91,17 +101,20 @@ private:
 	float moveSpeed = 100.f;
 	float posX = 0;
 	float posY = 0;
+	float cooldown = 5;
 public:
 
-	Bonus(float PosX, float PosY, std::string setId);
+	Bonus(float PosX, float PosY, std::string setId, Player& player);
 	
-	bool getState() const { return state; }
-	std::string getId() const { return id; }
-	float getMooveSpeed() const { return moveSpeed; }
+	bool getState() const          { return state; }
+	std::string getId() const      { return id; }
+	float getMooveSpeed() const    { return moveSpeed; }
+	float getCooldown() const      { return cooldown; }
 
-	void setState(bool newState) { state = newState; }
-	void setId(std::string newId) { id = newId; }
-	void setMooveSpeed(float newMoveSpeed) { moveSpeed = newMoveSpeed; }
+	void setState(bool newState)             { state = newState; }
+	void setId(std::string newId)            { id = newId; }
+	void setMooveSpeed(float newMoveSpeed)   { moveSpeed = newMoveSpeed; }
+	void setCooldown(float newCooldown)      { cooldown = newCooldown; }
 
 	bool behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Bonus*> vectorBonus);
 };

@@ -84,9 +84,11 @@ namespace {
 	sf::Music bgLvl3Music;
 	// SOUNDS
 	sf::SoundBuffer sugarCrunchBuffer;
-	sf::Sound sugarCrunch;
+	sf::Sound sugarCrunchSound;
 	sf::SoundBuffer oofBuffer;
 	sf::Sound oofSound;
+	sf::SoundBuffer playerDeathBuffer;
+	sf::Sound playerDeathSound;
 	// IMAGES
 	sf::Image pieCursorImg;
 	// TEXTURES
@@ -290,9 +292,11 @@ namespace {
 	// DESSINER POINTEURS
 	Projectile projectileDraw;
 	Sugar sugarDraw;
-	Sugar sugarIcone;
 	Pie pieDraw;
-	Bonus bonusDraw(1.f, 1.f, "yo");
+	Bonus bonusDraw(1.f, 1.f, "shield",  player);
+	//ICONES UI
+	Sugar sugarIcone;
+	sf::RectangleShape shieldDraw;
 }
 
 Game::Game() :
@@ -344,9 +348,11 @@ void Game::setupGraphicalElements() {
 	bgStartUpScreenMusic2.play();
 	// SOUNDS
 	sugarCrunchBuffer.loadFromFile("Assets/Sound Effects/sugar crunch.wav");
-	sugarCrunch.setBuffer(sugarCrunchBuffer);
+	sugarCrunchSound.setBuffer(sugarCrunchBuffer);
 	oofBuffer.loadFromFile("Assets/Sound Effects/oof.wav");
 	oofSound.setBuffer(oofBuffer);
+	playerDeathBuffer.loadFromFile("Assets/Sound Effects/death.wav");
+	playerDeathSound.setBuffer(playerDeathBuffer);
 	// IMAGES
 	pieCursorImg.loadFromFile("Assets/Images/pieCursor.png");
 	window.setIcon(pieCursorImg.getSize().x, pieCursorImg.getSize().y, pieCursorImg.getPixelsPtr());
@@ -1092,7 +1098,7 @@ void Game::setEnemySpawn() {
 	Elite elite3(1300, 400, 'l', window);
 	elite3.setTexture(carrot);
 	vectorElite.push_back(elite3);
-	Bonus* bonus1 = new Bonus((float)window.getSize().x * 0.1f, -50.f, "yo");
+	Bonus* bonus1 = new Bonus((float)window.getSize().x * 0.1f, -50.f, "shield", player);
 	vectorBonus.push_back(bonus1);
 }
 
@@ -1967,21 +1973,30 @@ void Game::playerInput() {
 void Game::playerCollisions() {
 	for (Projectile* &projectile : vectorProjectile) {
 		if (player.getGlobalBounds().contains(projectile->getPosition())) {     ///// hurt box plus petite (cercle) pour les projectiles
-			player.damagePlayer(projectile->getAtkPower());
-			oofSound.play();
+			if (player.getShield())
+				player.setShield(false);
+			else {
+				player.damagePlayer(projectile->getAtkPower());
+				oofSound.play();
+				std::cout<< "YOU GOT HIT LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOL" << std::endl;
+			}
 			projectile->setState(false);
 		}
 	}
 	for (Sugar* &sugar : vectorSugar) {
 		if (playerCurrentSprite.getGlobalBounds().contains(sugar->getPosition())) {  ////hurt box = sprite du clown pour ramasser les sucres plus facilement
 			player.setSugarCount(sugar->getValue());
-			sugarCrunch.play();                                                ///////////////////////couper le début du son
+			sugarCrunchSound.play();
 			sugar->setState(false);
 		}
 	}
 	for (Bonus* &bonus : vectorBonus) {
-		if (playerCurrentSprite.getGlobalBounds().contains(bonus->getPosition())) {  ////hurt box = sprite du clown pour ramasser les sucres plus facilement
-			std::cout << "t'as chopped un bonus mgl" << std::endl;
+		if (playerCurrentSprite.getGlobalBounds().contains(bonus->getPosition())) {  ////hurt box = sprite du clown pour ramasser les bonus plus facilement
+			player.setBonusCooldown(bonus->getCooldown());
+			if (bonus->getId() == "shield") {
+				player.setShield(true);
+				player.resetBonusTimer(0);
+			}
 			bonus->setState(false);
 		}
 	}
@@ -2093,6 +2108,36 @@ void Game::playerHPSetter() {
 		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar21Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar21Inactive); }
+	}
+}
+
+void Game::playerBonusSetter() {
+	shieldDraw.setSize(sf::Vector2f(30, 30));
+	shieldDraw.setPosition(gameplayUILifeBarCurrentSprite.getPosition().x + window.getSize().y * 0.01,
+		gameplayUILifeBarCurrentSprite.getPosition().y + (gameplayUILifeBarCurrentSprite.getLocalBounds().height * gameplayUILifeBarCurrentSprite.getScale().y) + window.getSize().y * 0.01);
+	shieldDraw.setFillColor(sf::Color::Red);
+
+	if (player.getShield()) {
+
+	}
+	if (player.getBonusTimer() >= player.getBonusCooldown()) {
+		player.setShield(false);
+		player.resetBonusTimer(0);
+		//AJOUTER ICI LES BOOLEENS DES AUTRES  BONUS
+	}
+}
+
+void Game::playerDeath() {
+	if (player.getPlayerHP() == 0) {
+		//on peut ajouter ici une condition qui check si on a une vie supplémentaire (grâce à un bonus)
+		player.setPlayerLife(false);
+	}
+	if (!player.getPlayerLife()) {
+		deathCounter++;
+		if (deathCounter == 1) {
+			std::cout << "game over" << std::endl;
+			playerDeathSound.play();
+		}
 	}
 }
 
@@ -2234,6 +2279,9 @@ void Game::nonPlayerDraw() {
 	for (Elite& elite : vectorElite) {
 		window.draw(elite);
 	}
+	if (player.getShield()) {
+		window.draw(shieldDraw);
+	}
 }
 
 void Game::run() {
@@ -2284,13 +2332,16 @@ void Game::update() {
 			scoreCalculation();
 			sugarCalculation();
 			playerHPSetter();
+			playerBonusSetter();
 			player.setShootTimer(f_ElapsedTime);
-			player.setSpecialTimer(f_ElapsedTime);
+			player.setSpecialTimer(f_ElapsedTime);                                                      
+			player.setBonusTimer(f_ElapsedTime); // (il est reset quand le joueur touche un bonus donc pas besoin de condition)
 			playerInput();
 			playerCollisions();
+			playerDeath();
 			nonPlayerBehavior();
 			clownWalkAnimation();
-
+			
 			backgroundMovementLevel1();
 		}
 	}

@@ -7,10 +7,13 @@ Player::Player() {
 	this->setFillColor(sf::Color::Green);
 }
 
-Bonus::Bonus(float PosX, float PosY, std::string setId) : posX(PosX), posY(PosY), id(setId){
+Bonus::Bonus(float PosX, float PosY, std::string setId, Player &player) : posX(PosX), posY(PosY), id(setId){
 	this->setPosition(posX, posY);
 	this->setFillColor(sf::Color::Red);
 	//potentiellement changer la moveSpeed/size par rapport à l'id
+	if (id == "shield") {
+		cooldown = 10;
+	}
 }
 
 void Player::throwPie(std::vector<Pie*> &vectorPies, sf::RenderWindow &window) {
