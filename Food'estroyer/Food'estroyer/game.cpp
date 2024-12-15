@@ -132,6 +132,8 @@ namespace {
 	sf::Texture pieTexture;
 	sf::Texture shieldTexture;
 	sf::Texture shieldIconeTexture;
+	sf::Texture x2IconeTexture;
+	sf::Texture oneUpIconeTexture;
 		// ENEMMIES
 	sf::Texture deathTexture1;
 	sf::Texture deathTexture2;
@@ -300,6 +302,8 @@ namespace {
 	//ICONES UI
 	Sugar sugarIcone;
 	sf::RectangleShape shieldDraw;
+	sf::RectangleShape x2Draw;
+	sf::RectangleShape oneUpDraw;
 }
 
 Game::Game() :
@@ -398,6 +402,8 @@ void Game::setupGraphicalElements() {
 	pieTexture.loadFromFile                 ("Assets/Images/Clown/Pies/butterscotchPie.png");
 	shieldTexture.loadFromFile              ("Assets/Images/Clown/shield.png");
 	shieldIconeTexture.loadFromFile         ("Assets/Images/Clown/shieldIcone.png");
+	x2IconeTexture.loadFromFile             ("Assets/Images/Clown/x2Icone.png");
+	oneUpIconeTexture.loadFromFile          ("Assets/Images/Clown/oneUpIcone.png");
 	deathTexture1.loadFromFile              ("Assets/Images/Enemy/Death/death1.png");
 	deathTexture2.loadFromFile              ("Assets/Images/Enemy/Death/death2.png");
 	painBizarre.loadFromFile                ("Assets/Images/Enemy/Shooter/m.png");
@@ -1108,6 +1114,10 @@ void Game::setEnemySpawn() {
 	vectorElite.push_back(elite3);
 	Bonus* bonus1 = new Bonus((float)window.getSize().x * 0.1f, -50.f, "shield", player);
 	vectorBonus.push_back(bonus1);
+	Bonus* bonus2 = new Bonus((float)window.getSize().x * 0.2f, -50.f, "x2", player);
+	vectorBonus.push_back(bonus2);
+	Bonus* bonus3 = new Bonus((float)window.getSize().x * 0.3f, -50.f, "oneUp", player);
+	vectorBonus.push_back(bonus3);
 }
 
 void Game::FPSCalculation() {
@@ -2001,12 +2011,14 @@ void Game::playerCollisions() {
 	}
 	for (Bonus* &bonus : vectorBonus) {
 		if (playerCurrentSprite.getGlobalBounds().contains(bonus->getPosition())) {  ////hurt box = sprite du clown pour ramasser les bonus plus facilement
-			player.setBonusCooldown(bonus->getCooldown());
-			if (bonus->getId() == "shield") {
-				player.setShield(true);
-				player.resetBonusTimer(0);
-			}
+
+			player.setBonusCooldown(bonus->getCooldown());                     //actuellement, ramasser un 2e bonus refresh le timer du 1er
+			if (bonus->getId() == "shield") { player.setShield(true); }
+			if (bonus->getId() == "x2")     { player.setX2(true); }
+			if (bonus->getId() == "oneUp")  { player.setOneUp(true); }
+			player.resetBonusTimer(0);
 			bonus->setState(false);
+			std::cout << "cooldown : " << player.getBonusCooldown() << std::endl;
 		}
 	}
 }
@@ -2125,21 +2137,32 @@ void Game::playerBonusSetter() {
 	shieldDraw.setPosition(gameplayUILifeBarCurrentSprite.getPosition().x + window.getSize().y * 0.01,
 		gameplayUILifeBarCurrentSprite.getPosition().y + (gameplayUILifeBarCurrentSprite.getLocalBounds().height * gameplayUILifeBarCurrentSprite.getScale().y) + window.getSize().y * 0.01);
 	shieldDraw.setTexture(&shieldIconeTexture);
+	
+	x2Draw.setSize(sf::Vector2f(30, 30));
+	x2Draw.setPosition(shieldDraw.getPosition().x + shieldDraw.getSize().x + window.getSize().y * 0.01, shieldDraw.getPosition().y);
+	x2Draw.setTexture(&x2IconeTexture);
 
-	if (player.getShield()) {
+	oneUpDraw.setSize(sf::Vector2f(30, 30));
+	oneUpDraw.setPosition(x2Draw.getPosition().x + x2Draw.getSize().x + window.getSize().y * 0.01, x2Draw.getPosition().y);
+	oneUpDraw.setTexture(&oneUpIconeTexture);
 
-	}
 	if (player.getBonusTimer() >= player.getBonusCooldown()) {
 		player.setShield(false);
+		player.setX2(false);
+		player.setOneUp(false);
 		player.resetBonusTimer(0);
-		//AJOUTER ICI LES BOOLEENS DES AUTRES  BONUS
 	}
 }
 
 void Game::playerDeath() {
 	if (player.getPlayerHP() == 0) {
-		//on peut ajouter ici une condition qui check si on a une vie supplémentaire (grâce à un bonus)
-		player.setPlayerLife(false);
+		if (player.getOneUp()) {
+			player.setOneUp(false);
+			player.setPlayerHP(50);
+			std::cout << "revived" << std::endl;
+		}
+		else { player.setPlayerLife(false); }
+		
 	}
 	if (!player.getPlayerLife()) {
 		deathCounter++;
@@ -2254,9 +2277,10 @@ void Game::nonPlayerBehavior() {
 void Game::nonPlayerDraw() {
 	for (Bonus*& bonus : vectorBonus) {
 		bonusDraw.setSize(sf::Vector2f(30.f, 30.f));
-		if (bonus->getId() == "shield")
-			bonusDraw.setTexture(&shieldIconeTexture);
-		                                                                            //AJOUTER LES TEXTURES DES AUTRES BONUS ICI 
+
+		if (bonus->getId() == "shield") bonusDraw.setTexture(&shieldIconeTexture);
+		if (bonus->getId() == "x2") bonusDraw.setTexture(&x2IconeTexture);
+		if (bonus->getId() == "oneUp") bonusDraw.setTexture(&oneUpIconeTexture);
 		bonusDraw.setPosition(bonus->getPosition());
 		window.draw(bonusDraw);
 	}
@@ -2290,9 +2314,10 @@ void Game::nonPlayerDraw() {
 	for (Elite& elite : vectorElite) {
 		window.draw(elite);
 	}
-	if (player.getShield()) {
-		window.draw(shieldDraw);
-	}
+	if (player.getShield()) { window.draw(shieldDraw); }
+	if (player.getX2())     { window.draw(x2Draw); }
+	if (player.getOneUp())  { window.draw(oneUpDraw); }
+
 }
 
 void Game::run() {

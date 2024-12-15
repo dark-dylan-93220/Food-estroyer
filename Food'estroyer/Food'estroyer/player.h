@@ -44,8 +44,10 @@ private:
 	char specialAtkType = 'b';
 	int sugarCount = 0;
 	float bonusTimer = 0;
-	float bonusCooldown = 5;
+	float bonusCooldown = 0;
 	bool shield = false;
+	bool x2 = false;
+	bool oneUp = false;
 
 public:
 	
@@ -72,6 +74,8 @@ public:
 	float getBonusTimer() const            { return bonusTimer; }
 	float getBonusCooldown() const         { return bonusCooldown; }
 	bool getShield() const                 { return shield; }
+	bool getX2() const                     { return x2; }
+	bool getOneUp() const                  { return oneUp; }
 	// Setters
 	void setPlayerLife(bool newState)                   { alive = false; }
 	void setPlayerHP(float newHP)                       { hp = newHP; }
@@ -91,6 +95,8 @@ public:
 	void setBonusCooldown(float newCooldown)            { bonusCooldown = newCooldown; }
 	void resetBonusTimer(float time)                    { bonusTimer = time; }
 	void setShield(bool newState)                       { shield = newState; }
+	void setX2(bool newState)                           { x2 = newState; }
+	void setOneUp(bool newState)                        { oneUp = newState; }
 
 };
 

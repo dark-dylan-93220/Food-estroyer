@@ -13,16 +13,39 @@ Bonus::Bonus(float PosX, float PosY, std::string setId, Player &player) : posX(P
 	if (id == "shield") {
 		cooldown = 10;
 	}
+	if (id == "x2") {
+		cooldown = 5;
+	}
+	if (id == "oneUp") {
+		cooldown = 20;    // ou alors permanent ?
+	}
 }
 
 void Player::throwPie(std::vector<Pie*> &vectorPies, sf::RenderWindow &window) {
-	Pie* pie = new Pie;
-	pie->setAtkPower(atkPower);
-	pie->setRadius(getPieSize() * window.getSize().x);
-	pie->setSpeed(getPieSpeed());
-	pie->setPosition(getPosition().x + getRadius() + pie->getRadius(), getPosition().y + getRadius() - pie->getRadius());
-	vectorPies.push_back(pie);
-	shootTimer = 0;
+	if (x2) {
+		Pie* pie = new Pie;
+		pie->setAtkPower(atkPower);
+		pie->setRadius(getPieSize() * window.getSize().x);
+		pie->setSpeed(getPieSpeed());
+		pie->setPosition(getPosition().x + getRadius() + pie->getRadius(), getPosition().y + pie->getRadius());
+		vectorPies.push_back(pie);
+		Pie* pie2 = new Pie;
+		pie2->setAtkPower(atkPower);
+		pie2->setRadius(getPieSize() * window.getSize().x);
+		pie2->setSpeed(getPieSpeed());
+		pie2->setPosition(getPosition().x + getRadius() + pie2->getRadius(), getPosition().y + getRadius());
+		vectorPies.push_back(pie2);
+		shootTimer = 0;
+	}
+	else {
+		Pie* pie = new Pie;
+		pie->setAtkPower(atkPower);
+		pie->setRadius(getPieSize() * window.getSize().x);
+		pie->setSpeed(getPieSpeed());
+		pie->setPosition(getPosition().x + getRadius() + pie->getRadius(), getPosition().y + getRadius() - pie->getRadius());
+		vectorPies.push_back(pie);
+		shootTimer = 0;
+	}
 }
 
 void Player::specialAtk(std::vector<Pie*> &vectorPie, sf::RenderWindow &window) {
