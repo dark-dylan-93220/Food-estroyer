@@ -1959,6 +1959,8 @@ void Game::run() {
 	changeLanguages();
 	loadLevelAssets();
 	loadTextPositions();
+	setEnemySpawn();
+	setShooterPositions();
 	
 	bgStartUpScreenMusic.play();
 
@@ -2257,10 +2259,10 @@ void Game::pollEvents() {
 			if (startUpScreenOn) {
 				// Options
 				if (settingsIconSprite.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					loadSettings();
-					loadTextPositions();
 					settingsScreenOn = true;
 					startUpScreenOn = false;
+					loadSettings();
+					loadTextPositions();
 					bgStartUpScreenMusic.pause();
 				}
 				// Jouer

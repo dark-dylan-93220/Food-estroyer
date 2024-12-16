@@ -1,4 +1,4 @@
-﻿La génération a démarré 13/12/2024 04:09:51.
+﻿La génération a démarré 16/12/2024 03:15:17.
 La verbosité de la journalisation a la valeur Normal.     1>Projet "C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Food'estroyer.vcxproj" sur le nœud 2 (Build cible(s)).
      1>PrepareForBuild:
          La sortie structurée est activée. La mise en forme du compilateur diagnostics reflète la hiérarchie des erreurs. Pour plus d’informations, consultez https://aka.ms/cpp/structured-output.
@@ -8,16 +8,26 @@ La verbosité de la journalisation a la valeur Normal.     1>Projet "C:\Users\PC
        ClCompile:
          D:\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\bin\HostX64\x64\CL.exe /c /I"C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\include" /Zi /nologo /W3 /WX- /diagnostics:column /sdl /O2 /Oi /GL /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /permissive- /Fo"x64\Release\\" /Fd"x64\Release\vc143.pdb" /external:W3 /Gd /TP /FC /errorReport:prompt game.cpp
          game.cpp
+     1>C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\player.h(43,18): warning C4305: 'initialisation' : troncation de 'double' à 'float'
+         (compiler le fichier source 'game.cpp')
+         
+     1>C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\player.h(45,24): warning C4305: 'initialisation' : troncation de 'double' à 'float'
+         (compiler le fichier source 'game.cpp')
+         
        Link:
          D:\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\bin\HostX64\x64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\x64\Release\Food'estroyer.exe" /NOLOGO /LIBPATH:"C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\lib" "sfml-system.lib" "sfml-window.lib" "sfml-graphics.lib" "sfml-audio.lib" "sfml-network.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\x64\Release\Food'estroyer.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG:incremental /LTCGOUT:"x64\Release\Food'estroyer.iobj" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\x64\Release\Food'estroyer.lib" /MACHINE:X64 x64\Release\enemy.obj
          x64\Release\game.obj
          x64\Release\main.obj
          x64\Release\player.obj
          Génération de code en cours
-         2 of 1260 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+         2 of 1585 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
            0 functions were new in current compilation
            2 functions had inline decision re-evaluated but remain unchanged
          Fin de la génération du code
+     1>main.obj : warning LNK4099: PDB '' n'a pu être trouvé avec 'main.obj' ou sur '' ; l'objet sera lié sans informations de débogage
+     1>enemy.obj : warning LNK4020: un enregistrement de type dans '' est endommagé ; certains symboles et types ne sont peut-être pas accessibles à partir du débogueur
+     1>game.obj : warning LNK4020: un enregistrement de type dans '' est endommagé ; certains symboles et types ne sont peut-être pas accessibles à partir du débogueur
+     1>player.obj : warning LNK4020: un enregistrement de type dans '' est endommagé ; certains symboles et types ne sont peut-être pas accessibles à partir du débogueur
          Food'estroyer.vcxproj -> C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\x64\Release\Food'estroyer.exe
        FinalizeBuildStatus:
          Suppression du fichier "x64\Release\Food'estroyer.tlog\unsuccessfulbuild".
@@ -25,7 +35,21 @@ La verbosité de la journalisation a la valeur Normal.     1>Projet "C:\Users\PC
      1>Génération du projet "C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Food'estroyer.vcxproj" terminée (Build cible(s)).
 
 La génération a réussi.
-    0 Avertissement(s)
+
+       "C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Food'estroyer.vcxproj" (Build cible) (1) ->
+       (ClCompile cible) -> 
+         C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\player.h(43,18): warning C4305: 'initialisation' : troncation de 'double' à 'float'
+         C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\player.h(45,24): warning C4305: 'initialisation' : troncation de 'double' à 'float'
+
+
+       "C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Food'estroyer.vcxproj" (Build cible) (1) ->
+       (Link cible) -> 
+         main.obj : warning LNK4099: PDB '' n'a pu être trouvé avec 'main.obj' ou sur '' ; l'objet sera lié sans informations de débogage
+         enemy.obj : warning LNK4020: un enregistrement de type dans '' est endommagé ; certains symboles et types ne sont peut-être pas accessibles à partir du débogueur
+         game.obj : warning LNK4020: un enregistrement de type dans '' est endommagé ; certains symboles et types ne sont peut-être pas accessibles à partir du débogueur
+         player.obj : warning LNK4020: un enregistrement de type dans '' est endommagé ; certains symboles et types ne sont peut-être pas accessibles à partir du débogueur
+
+    6 Avertissement(s)
     0 Erreur(s)
 
-Temps écoulé 00:00:03.51
+Temps écoulé 00:00:03.64
