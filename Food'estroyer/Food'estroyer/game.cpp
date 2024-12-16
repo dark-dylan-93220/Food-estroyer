@@ -305,6 +305,13 @@ namespace {
 	sf::RectangleShape shieldDraw;
 	sf::RectangleShape x2Draw;
 	sf::RectangleShape oneUpDraw;
+	//STRING DECLARATION
+	std::string atkLvlString;
+	std::string maxHpLvlString;
+	std::string speedLvlString;
+	std::string baseSpecialString;
+	std::string tripleSpecialString;
+	std::string rainSpecialString;
 }
 
 Game::Game() :
@@ -844,32 +851,32 @@ void Game::loadLevelAssets() { // Only loaded once
 	gameplayUIStatAtkText.setCharacterSize(30);
 	gameplayUIStatAtkText.setLetterSpacing(1.1f);
 	gameplayUIStatAtkText.setFillColor(sf::Color::White);
-	gameplayUIStatAtkText.setString("Atk : Lvl 1");
+	gameplayUIStatAtkText.setString("not initialised");
 	gameplayUIStatMaxHpText.setFont(score);
 	gameplayUIStatMaxHpText.setCharacterSize(30);
 	gameplayUIStatMaxHpText.setLetterSpacing(1.1f);
 	gameplayUIStatMaxHpText.setFillColor(sf::Color::White);
-	gameplayUIStatMaxHpText.setString("Max Hp : Lvl 1");
+	gameplayUIStatMaxHpText.setString("not initialised");
 	gameplayUIStatSpeedText.setFont(score);
 	gameplayUIStatSpeedText.setCharacterSize(30);
 	gameplayUIStatSpeedText.setLetterSpacing(1.1f);
 	gameplayUIStatSpeedText.setFillColor(sf::Color::White);
-	gameplayUIStatSpeedText.setString("Speed : Lvl 1");
+	gameplayUIStatSpeedText.setString("not initialised");
 	gameplayUISetSpecialBase.setFont(score);
 	gameplayUISetSpecialBase.setCharacterSize(30);
 	gameplayUISetSpecialBase.setLetterSpacing(1.1f);
 	gameplayUISetSpecialBase.setFillColor(sf::Color::White);
-	gameplayUISetSpecialBase.setString("Base");
+	gameplayUISetSpecialBase.setString("not initialised");
 	gameplayUISetSpecialTriple.setFont(score);
 	gameplayUISetSpecialTriple.setCharacterSize(30);
 	gameplayUISetSpecialTriple.setLetterSpacing(1.1f);
 	gameplayUISetSpecialTriple.setFillColor(sf::Color::White);
-	gameplayUISetSpecialTriple.setString("Triple");
+	gameplayUISetSpecialTriple.setString("not initialised");
 	gameplayUISetSpecialRain.setFont(score);
 	gameplayUISetSpecialRain.setCharacterSize(30);
 	gameplayUISetSpecialRain.setLetterSpacing(1.1f);
 	gameplayUISetSpecialRain.setFillColor(sf::Color::White);
-	gameplayUISetSpecialRain.setString("Rain");
+	gameplayUISetSpecialRain.setString("not initialised");
 }// Called once
 
 // Loaded multiple times
@@ -925,12 +932,7 @@ void Game::loadGameplayAssets() {
 	sugarIcone.setPosition(window.getSize().x /** 0.99*/ - (sugarIcone.getLocalBounds().width * sugarIcone.getScale().x) * 1.8f, window.getSize().y /** 0.97*/ - (sugarIcone.getLocalBounds().height * sugarIcone.getScale().y) * 1.8f);
 	// TEXTS
 	gameplayUISugarText.setPosition(sugarIcone.getPosition().x - gameplayUISugarText.getGlobalBounds().width - window.getSize().x * 0.005f, sugarIcone.getPosition().y - gameplayUISugarText.getGlobalBounds().height * 0.2f);
-	gameplayUISetSpecialBase.setPosition(0.f, (float)window.getSize().y - (float)gameplayUISetSpecialBase.getCharacterSize());
-	gameplayUISetSpecialTriple.setPosition(gameplayUISetSpecialBase.getPosition().x + gameplayUISetSpecialBase.getLocalBounds().width + window.getSize().x * 0.05f, gameplayUISetSpecialBase.getPosition().y);
-	gameplayUISetSpecialRain.setPosition(gameplayUISetSpecialTriple.getPosition().x + gameplayUISetSpecialTriple.getLocalBounds().width + window.getSize().x * 0.05f, gameplayUISetSpecialBase.getPosition().y);
-	gameplayUIStatAtkText.setPosition(gameplayUISetSpecialBase.getPosition().x, gameplayUISetSpecialBase.getPosition().y - gameplayUIStatAtkText.getCharacterSize() * 1.1f);
-	gameplayUIStatMaxHpText.setPosition(gameplayUIStatAtkText.getPosition().x + gameplayUIStatAtkText.getLocalBounds().width + window.getSize().x * 0.05f, gameplayUIStatAtkText.getPosition().y);
-	gameplayUIStatSpeedText.setPosition(gameplayUIStatMaxHpText.getPosition().x + gameplayUIStatMaxHpText.getLocalBounds().width + window.getSize().x * 0.05f, gameplayUIStatAtkText.getPosition().y);
+	
 }
 
 void Game::loadLevel1() {
@@ -1019,20 +1021,6 @@ void Game::loadLevel3() {
 	levelThreeParralaxBGSpriteCopy.setScale(sf::Vector2f((window.getSize().x / levelThreeParralax01Sprite.getLocalBounds().width), (window.getSize().y / levelThreeParralax01Sprite.getLocalBounds().height)));
 	levelThreeParralax01Sprite.setPosition(sf::Vector2f(0, 0));
 	levelThreeParralax02Sprite.setPosition(sf::Vector2f(0, 0));
-	levelThreeParralax03Sprite.setPosition(sf::Vector2f(0, 0));
-	levelThreeParralax04Sprite.setPosition(sf::Vector2f(0, 0));
-	levelThreeParralax05Sprite.setPosition(sf::Vector2f(0, 0));
-	levelThreeParralax06Sprite.setPosition(sf::Vector2f(0, 0));
-	levelThreeParralax07Sprite.setPosition(sf::Vector2f(0, 0));
-	levelThreeParralaxBGSprite.setPosition(sf::Vector2f(0, 0));
-	levelThreeParralax01SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x, 0));
-	levelThreeParralax02SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x, 0));
-	levelThreeParralax03SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x, 0));
-	levelThreeParralax04SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x, 0));
-	levelThreeParralax05SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x, 0));
-	levelThreeParralax06SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x, 0));
-	levelThreeParralax07SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x, 0));
-	levelThreeParralaxBGSpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x, 0));
 }
 
 void Game::backgroundMovementLevel1() {
@@ -1604,6 +1592,32 @@ void Game::sugarCalculation() {
 		gameplayUISugarText.setString("Score : " + std::to_string((int)player.getSugarCount()));
 }
 
+void Game::statCalculation() {
+	// UPDATE STRING
+	atkLvlString = "ATK (" + std::to_string(player.atkLvl) +  ")      UP : " + std::to_string(player.atkLvlUpCost);
+	maxHpLvlString = "HP (" + std::to_string(player.maxHpLvl) + ")        UP : " + std::to_string(player.maxHpLvlUpCost);
+	speedLvlString = "SPEED (" + std::to_string(player.speedLvl) + ")  UP : " + std::to_string(player.speedLvlUpCost);
+	baseSpecialString = "BASE";
+	if (player.tripleBought) tripleSpecialString = "TRIPLE";
+	else { tripleSpecialString = "TRIPLE COST : " + std::to_string(player.tripleCost); }
+	if (player.rainBought) rainSpecialString = "RAIN";
+	else { rainSpecialString = "RAIN COST : " + std::to_string(player.rainCost); }
+	// SET STRING
+	gameplayUIStatAtkText.setString(atkLvlString);
+	gameplayUIStatMaxHpText.setString(maxHpLvlString);
+	gameplayUIStatSpeedText.setString(speedLvlString);
+	gameplayUISetSpecialBase.setString(baseSpecialString);
+	gameplayUISetSpecialTriple.setString(tripleSpecialString);
+	gameplayUISetSpecialRain.setString(rainSpecialString);
+	// SET POSITION
+	gameplayUISetSpecialBase.setPosition(window.getSize().x * 0.01f, window.getSize().y - gameplayUISetSpecialBase.getCharacterSize() * 1.5f);
+	gameplayUISetSpecialTriple.setPosition(gameplayUISetSpecialBase.getPosition().x + gameplayUISetSpecialBase.getLocalBounds().width + window.getSize().x * 0.05f, gameplayUISetSpecialBase.getPosition().y);
+	gameplayUISetSpecialRain.setPosition(gameplayUISetSpecialTriple.getPosition().x + gameplayUISetSpecialTriple.getLocalBounds().width + window.getSize().x * 0.05f, gameplayUISetSpecialBase.getPosition().y);
+	gameplayUIStatAtkText.setPosition(gameplayUISetSpecialBase.getPosition().x, gameplayUIStatMaxHpText.getPosition().y - gameplayUIStatMaxHpText.getCharacterSize());
+	gameplayUIStatMaxHpText.setPosition(gameplayUISetSpecialBase.getPosition().x, gameplayUIStatSpeedText.getPosition().y - gameplayUIStatSpeedText.getCharacterSize());
+	gameplayUIStatSpeedText.setPosition(gameplayUISetSpecialBase.getPosition().x, gameplayUISetSpecialBase.getPosition().y - gameplayUIStatSpeedText.getCharacterSize() * 1.1f);
+}
+
 void Game::playerInput() {
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
@@ -1976,7 +1990,6 @@ void Game::nonPlayerBehavior() {
 						pie->hitCounter++;
 					}
 					else { pie->setState(false); }
-
 				}
 			}
 		}
@@ -2512,13 +2525,53 @@ void Game::pollEvents() {
 						}
 					}
 				}
+				if (gameplayUIStatAtkText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					if (player.getSugarCount() >= player.atkLvlUpCost) {
+						player.setSugarCount(-player.atkLvlUpCost);
+						player.setAtkPower(1.25f); // *= 1.25f
+						player.atkLvl++;
+						player.atkLvlUpCost *= 1.25f;
+					}
+				}
 				if (gameplayUISetSpecialBase.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					player.setSpecialAtkType("base"); player.resetSpecialTimer(0); }
+					player.setSpecialAtkType("base"); player.resetSpecialTimer(0); 
+				}
 				if (gameplayUISetSpecialTriple.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					player.setSpecialAtkType("triple"); player.resetSpecialTimer(0); }
+					if (!player.tripleBought && player.getSugarCount() >= player.tripleCost) {
+						player.tripleBought = true;
+						player.setSugarCount(-player.tripleCost);
+						player.setSpecialAtkType("triple");
+						player.resetSpecialTimer(0);
+					}
+					else if (player.tripleBought) { player.setSpecialAtkType("triple"); player.resetSpecialTimer(0); }
+				}
 				if (gameplayUISetSpecialRain.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					player.setSpecialAtkType("rain"); player.resetSpecialTimer(0); }
+					if (!player.rainBought && player.getSugarCount() >= player.rainCost) {
+						player.rainBought = true;
+						player.setSugarCount(-player.rainCost);
+						player.setSpecialAtkType("rain");
+						player.resetSpecialTimer(0);
+					}
+					else if (player.rainBought) { player.setSpecialAtkType("rain"); player.resetSpecialTimer(0); }
+				}
 			}
+		}
+		if (gameplayUIStatSpeedText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+			if (player.getSugarCount() >= player.speedLvlUpCost) {
+				player.setSugarCount(-player.speedLvlUpCost);
+				player.setPlayerSpeed(100); // += 100
+				player.speedLvl++;
+				player.speedLvlUpCost *= 1.25f;
+			}
+		}
+		if (gameplayUISetSpecialBase.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+			player.setSpecialAtkType("base"); player.resetSpecialTimer(0); 
+		}
+		if (gameplayUISetSpecialTriple.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+			player.setSpecialAtkType("triple"); player.resetSpecialTimer(0); 
+		}
+		if (gameplayUISetSpecialRain.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+			player.setSpecialAtkType("rain"); player.resetSpecialTimer(0); 
 		}
 		// For dragging
 		mouseLastDownX = event.mouseButton.x;
@@ -2599,6 +2652,7 @@ void Game::update() {
 			
 			scoreCalculation();
 			sugarCalculation();
+			statCalculation();
 			playerHPSetter();
 			playerBonusSetter();
 			player.setShootTimer(f_ElapsedTime);
@@ -2624,6 +2678,7 @@ void Game::update() {
 
 			scoreCalculation();
 			sugarCalculation();
+			statCalculation();
 			playerHPSetter();
 			playerBonusSetter();
 			player.setShootTimer(f_ElapsedTime);
@@ -2649,6 +2704,7 @@ void Game::update() {
 
 			scoreCalculation();
 			sugarCalculation();
+			statCalculation();
 			playerHPSetter();
 			playerBonusSetter();
 			player.setShootTimer(f_ElapsedTime);

@@ -14,7 +14,7 @@ protected:
 
 public:
 
-	std::string specialType = "not Initialised";
+	std::string specialType = "not initialised";
 	int hitCounter = 0;
 	int maxHitNumber = 1;
 
@@ -37,9 +37,9 @@ class Player : public sf::CircleShape {
 private:
 	bool alive = true;
 	float hp = 100;               
-	float maxHp = 100;             //COMMECER A 100, AUGMENTER DE 10PV A CHAQUE LVL UP
-	float speed = 800;             //COMMENCER A 400, AUGMENTER DE 100 A CHAQUE LVL UP
-	float atkPower = 50;           //COMMENCER AU NIVEAU 10, AUGMENTER DE 25% A CHAQUE LVL UP
+	float maxHp = 100;             //COMMENCER A 100, AUGMENTER DE 10PV A CHAQUE LVL UP
+	float speed = 400;             //COMMENCER A 400, AUGMENTER DE 100 A CHAQUE LVL UP
+	float atkPower = 10;           //COMMENCER A 10, AUGMENTER DE 25% A CHAQUE LVL UP
 	float pieSpeedX = 1000;																			 ////////////// PIE SPEED HERE
 	float pieSize = 0.01f;
 	float shootTimer = 0;
@@ -47,7 +47,7 @@ private:
 	float specialTimer = 0;
 	float specialCooldown = 0; // on commence avec l'attaque spéciale chargée
 	std::string specialAtkType = "base";
-	int sugarCount = 0;
+	int sugarCount = 100000;
 	float bonusTimer = 0;
 	float bonusCooldown = 0;
 	bool shield = false; //le shield couvre les dégats des projectiles mais pas ceux d'une collision au cac (il annule le premier dégat mais n'active pas le timer d'invincibilité)
@@ -61,6 +61,16 @@ public:
 	float hurtTimer = 0;
 	bool raining = false;
 	int rainCount = 0;
+	int atkLvl = 1;
+	int atkLvlUpCost = 300;
+	int maxHpLvl = 1;
+	int maxHpLvlUpCost = 500;
+	int speedLvl = 1;
+	int speedLvlUpCost = 1000;
+	bool tripleBought = false;
+	int tripleCost = 2000;
+	bool rainBought = false;
+	int rainCost = 3000;
 
 	Player();
 
@@ -91,9 +101,9 @@ public:
 	// Setters
 	void setPlayerLife(bool newState)                   { alive = false; }
 	void setPlayerHP(float newHP)                       { hp = newHP; }
-	void setPlayerMaxHP(float newMaxHP)                 { maxHp = newMaxHP; }
+	void setPlayerMaxHP(float newMaxHP)                 { maxHp += newMaxHP; }
 	void damagePlayer(float degats)                     { hp -= degats; }
-	void setPlayerSpeed(int bonusSpeed)                 { speed *= (0.01f * bonusSpeed); }// Bonus speed entre 0 et 100 comme un pourcentage
+	void setPlayerSpeed(float bonusSpeed)               { speed += bonusSpeed; }
 	void setPlayerSpeedBackToNormal(int bonusSpeed)     { speed /= (0.01f * bonusSpeed); }// Opération inverse
 	void setAtkPower(float atkMultiplier)               { atkPower *= atkMultiplier; } // Genre 1.2x, 1.55x etc...
 	void setPieSpeedX(float newSpeed)                   { pieSpeedX = newSpeed; }
