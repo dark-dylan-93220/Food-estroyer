@@ -231,7 +231,7 @@ void Elite::behavior(float timeElapsed, sf::CircleShape player, std::vector<Proj
 	else { shootCooldown += timeElapsed; }
 }
 
-bool Sugar::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Sugar*> vectorSugar) {
+bool Sugar::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Sugar*> &vectorSugar) {
 	if (state) {
 		move(-300 * timeElapsed, 0);
 		if (getPosition().x < 0 - 100.f/*(vectorSugar[i]->getLocalBounds().width * vectorSugar[i]->getScale().x)*/)
@@ -241,7 +241,7 @@ bool Sugar::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Su
 	else {  return  false; }
 }
 
-bool Projectile::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Projectile*> vectorProjectiles) {
+bool Projectile::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Projectile*> &vectorProjectiles) {
 	if (state) {
 		move(-600 * timeElapsed, 0);
 		if (getPosition().x < 0 - 100.f/*(projectiles[i]->getLocalBounds().width * projectiles[i]->getScale().x)*/)

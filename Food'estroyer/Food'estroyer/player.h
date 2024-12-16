@@ -30,13 +30,14 @@ public:
 	void setSpeedY(float newSpeed)      { speedY = newSpeed; }
 	void setSize(float newSize)         { size = newSize; }
 
-	bool behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Pie*> vectorPie);
+	bool behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Pie*>& vectorPie);
 };
 
 class Player : public sf::CircleShape {
 private:
 	bool alive = true;
 	float hp = 100;
+	float maxHp = 100;
 	float speed = 800;
 	float atkPower = 50;
 	float pieSpeedX = 1000;																			 ////////////// PIE SPEED HERE
@@ -45,7 +46,7 @@ private:
 	float shootCooldown = 0.2;
 	float specialTimer = 0;
 	float specialCooldown = 0; // on commence avec l'attaque spéciale chargée
-	std::string specialAtkType = "rain";
+	std::string specialAtkType = "base";
 	int sugarCount = 0;
 	float bonusTimer = 0;
 	float bonusCooldown = 0;
@@ -69,6 +70,7 @@ public:
 	// Getters
 	bool getPlayerLife() const             { return alive; }
 	float getPlayerHP() const              { return hp; }
+	float getPlayerMaxHP() const           { return maxHp; }
 	float getSpeed() const                 { return speed; }
 	float getAtkPower() const              { return atkPower; }
 	float getPieSpeedX() const             { return pieSpeedX; }
@@ -87,6 +89,7 @@ public:
 	// Setters
 	void setPlayerLife(bool newState)                   { alive = false; }
 	void setPlayerHP(float newHP)                       { hp = newHP; }
+	void setPlayerMaxHP(float newMaxHP)                 { maxHp = newMaxHP; }
 	void damagePlayer(float degats)                     { hp -= degats; }
 	void setPlayerSpeed(int bonusSpeed)                 { speed *= (0.01f * bonusSpeed); }// Bonus speed entre 0 et 100 comme un pourcentage
 	void setPlayerSpeedBackToNormal(int bonusSpeed)     { speed /= (0.01f * bonusSpeed); }// Opération inverse
@@ -132,6 +135,6 @@ public:
 	void setMooveSpeed(float newMoveSpeed)   { moveSpeed = newMoveSpeed; }
 	void setCooldown(float newCooldown)      { cooldown = newCooldown; }
 
-	bool behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Bonus*> vectorBonus);
+	bool behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Bonus*> &vectorBonus);
 };
 #endif

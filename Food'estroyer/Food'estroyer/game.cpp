@@ -1111,6 +1111,18 @@ void Game::setEnemySpawn() {
 	Elite elite3(1300, 400, 'l', window);
 	elite3.setTexture(carrot);
 	vectorElite.push_back(elite3);
+	Elite elite4(1300, 400, 's', window);
+	elite4.setTexture(carrot);
+	vectorElite.push_back(elite4);
+	Elite elite5(1300, 400, 's', window);
+	elite5.setTexture(carrot);
+	vectorElite.push_back(elite5);
+	Elite elite6(1300, 400, 's', window);
+	elite6.setTexture(carrot);
+	vectorElite.push_back(elite6);
+	Elite elite7(1300, 400, 's', window);
+	elite7.setTexture(carrot);
+	vectorElite.push_back(elite7);
 	Bonus* bonus1 = new Bonus((float)window.getSize().x * 0.1f, -50.f, "shield", player);
 	vectorBonus.push_back(bonus1);
 	Bonus* bonus2 = new Bonus((float)window.getSize().x * 0.2f, -50.f, "x2", player);
@@ -1657,108 +1669,107 @@ void Game::playerCollisions() {
 			if (bonus->getId() == "oneUp")  { player.setOneUp(true); }
 			player.resetBonusTimer(0);
 			bonus->setState(false);
-			std::cout << "cooldown : " << player.getBonusCooldown() << std::endl;
 		}
 	}
 }
 
 void Game::playerHPSetter() {
-	if (player.getPlayerHP() <= 100.f) {
+	if (player.getPlayerHP() <= player.getPlayerMaxHP()) {
 		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar01Active);
 		else{ gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar01Inactive); }
 	}
-	if (player.getPlayerHP() <= 95.f && player.getPlayerHP() > 90.f) {
+	if (player.getPlayerHP() <= player.getPlayerMaxHP() * 19 / 20 && player.getPlayerHP() > player.getPlayerMaxHP() * 18 / 20) {
 		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar02Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar02Inactive); }
 	}
-	if (player.getPlayerHP() <= 90.f && player.getPlayerHP() > 85.f) {
+	if (player.getPlayerHP() <= player.getPlayerMaxHP() * 18 / 20 && player.getPlayerHP() > player.getPlayerMaxHP() * 17 / 20) {
 		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar03Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar03Inactive); }
 	}
-	if (player.getPlayerHP() <= 85.f && player.getPlayerHP() > 80.f) {
+	if (player.getPlayerHP() <= player.getPlayerMaxHP() * 17 / 20 && player.getPlayerHP() > player.getPlayerMaxHP() * 16 / 20) {
 		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar04Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar04Inactive); }
 	}
-	if (player.getPlayerHP() <= 80.f && player.getPlayerHP() > 75.f) {
+	if (player.getPlayerHP() <= player.getPlayerMaxHP() * 16 / 20 && player.getPlayerHP() > player.getPlayerMaxHP() * 15 / 20) {
 		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar05Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar05Inactive); }
 	}
-	if (player.getPlayerHP() <= 75.f && player.getPlayerHP() > 70.f) {
+	if (player.getPlayerHP() <= player.getPlayerMaxHP() * 15 / 20 && player.getPlayerHP() > player.getPlayerMaxHP() * 14 / 20) {
 		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar06Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar06Inactive); }
 	}
-	if (player.getPlayerHP() <= 70.f && player.getPlayerHP() > 65.f) {
+	if (player.getPlayerHP() <= player.getPlayerMaxHP() * 14 / 20 && player.getPlayerHP() > player.getPlayerMaxHP() * 13 / 20) {
 		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar07Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar07Inactive); }
 	}
-	if (player.getPlayerHP() <= 65.f && player.getPlayerHP() > 60.f) {
+	if (player.getPlayerHP() <= player.getPlayerMaxHP() * 13 / 20 && player.getPlayerHP() > player.getPlayerMaxHP() * 12 / 20) {
 		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar08Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar08Inactive); }
 	}
-	if (player.getPlayerHP() <= 60.f && player.getPlayerHP() > 55.f) {
+	if (player.getPlayerHP() <= player.getPlayerMaxHP() * 12 / 20 && player.getPlayerHP() > player.getPlayerMaxHP() * 11 / 20) {
 		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar09Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar09Inactive); }
 	}
-	if (player.getPlayerHP() <= 55.f && player.getPlayerHP() > 50.f) {
+	if (player.getPlayerHP() <= player.getPlayerMaxHP() * 11 / 20 && player.getPlayerHP() > player.getPlayerMaxHP() * 10 / 20) {
 		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar10Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar10Inactive); }
 	}
-	if (player.getPlayerHP() <= 50.f && player.getPlayerHP() > 45.f) {
+	if (player.getPlayerHP() <= player.getPlayerMaxHP() * 10 / 20 && player.getPlayerHP() > player.getPlayerMaxHP() * 9 / 20) {
 		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar11Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar11Inactive); }
 	}
-	if (player.getPlayerHP() <= 45.f && player.getPlayerHP() > 40.f) {
+	if (player.getPlayerHP() <= player.getPlayerMaxHP() * 9 / 20 && player.getPlayerHP() > player.getPlayerMaxHP() * 8 / 20) {
 		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar12Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar12Inactive); }
 	}
-	if (player.getPlayerHP() <= 40.f && player.getPlayerHP() > 35.f) {
+	if (player.getPlayerHP() <= player.getPlayerMaxHP() * 8 / 20 && player.getPlayerHP() > player.getPlayerMaxHP() * 7 / 20) {
 		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar13Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar13Inactive); }
 	}
-	if (player.getPlayerHP() <= 35.f && player.getPlayerHP() > 30.f) {
+	if (player.getPlayerHP() <= player.getPlayerMaxHP() * 7 / 20 && player.getPlayerHP() > player.getPlayerMaxHP() * 6 / 20) {
 		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar14Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar14Inactive); }
 	}
-	if (player.getPlayerHP() <= 30.f && player.getPlayerHP() > 25.f) {
+	if (player.getPlayerHP() <= player.getPlayerMaxHP() * 6 / 20 && player.getPlayerHP() > player.getPlayerMaxHP() * 5 / 20) {
 		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar15Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar15Inactive); }
 	}
-	if (player.getPlayerHP() <= 25.f && player.getPlayerHP() > 20.f) {
+	if (player.getPlayerHP() <= player.getPlayerMaxHP() * 5 / 20 && player.getPlayerHP() > player.getPlayerMaxHP() * 4 / 20) {
 		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar16Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar16Inactive); }
 	}
-	if (player.getPlayerHP() <= 20.f && player.getPlayerHP() > 15.f) {
+	if (player.getPlayerHP() <= player.getPlayerMaxHP() * 4 / 20 && player.getPlayerHP() > player.getPlayerMaxHP() * 3 / 20) {
 		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar17Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar17Inactive); }
 	}
-	if (player.getPlayerHP() <= 15.f && player.getPlayerHP() > 10.f) {
+	if (player.getPlayerHP() <= player.getPlayerMaxHP() * 3 / 20 && player.getPlayerHP() > player.getPlayerMaxHP() * 2 / 20) {
 		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar18Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar18Inactive); }
 	}
-	if (player.getPlayerHP() <= 10.f && player.getPlayerHP() > 5.f) {
+	if (player.getPlayerHP() <= player.getPlayerMaxHP() * 2 / 20 && player.getPlayerHP() > player.getPlayerMaxHP() * 1 / 20) {
 		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar19Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar19Inactive); }
 	}
-	if (player.getPlayerHP() <= 5.f && player.getPlayerHP() > 0.f) {
+	if (player.getPlayerHP() <= player.getPlayerMaxHP() * 1 / 20 && player.getPlayerHP() > 0.f) {
 		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar20Active);
 		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar20Inactive); }

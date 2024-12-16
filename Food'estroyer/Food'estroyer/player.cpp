@@ -48,7 +48,7 @@ void Player::throwPie(std::vector<Pie*>& vectorPie, sf::RenderWindow& window) {
 
 void Player::specialAtk(std::vector<Pie*>& vectorPie, sf::RenderWindow& window) {
 	if (specialAtkType == "base") {
-		specialCooldown = 3.f;
+		specialCooldown = 10.f;
 		Pie* specialPie = new Pie;
 		specialPie->specialType = specialAtkType;
 		specialPie->maxHitNumber = 20;
@@ -59,7 +59,7 @@ void Player::specialAtk(std::vector<Pie*>& vectorPie, sf::RenderWindow& window) 
 		vectorPie.push_back(specialPie);
 	}
 	else if (specialAtkType == "triple") {
-		specialCooldown = 7.f;
+		specialCooldown = 5.f;
 		Pie* specialPie = new Pie;
 		specialPie->specialType = specialAtkType;
 		specialPie->setAtkPower(atkPower * 5);
@@ -85,8 +85,9 @@ void Player::specialAtk(std::vector<Pie*>& vectorPie, sf::RenderWindow& window) 
 		vectorPie.push_back(specialPie2);
 	}
 	else if (specialAtkType == "rain") {
-		specialCooldown = 2.f;
+		specialCooldown = 10.f;
 		Pie* pie = new Pie;
+		pie->maxHitNumber = 5.f;
 		pie->setAtkPower(atkPower);
 		pie->setRadius(getPieSize() * window.getSize().x);
 		pie->setSpeedX(getPieSpeedX() / 2);
@@ -96,7 +97,7 @@ void Player::specialAtk(std::vector<Pie*>& vectorPie, sf::RenderWindow& window) 
 	}
 }
 
-bool Bonus::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Bonus*> vectorBonus) {
+bool Bonus::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Bonus*> &vectorBonus) {
 	if (state) {
 		move(0, moveSpeed * timeElapsed);
 		if (getPosition().y > window.getSize().y + getSize().y)
@@ -106,7 +107,7 @@ bool Bonus::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Bo
 	else { return false; }
 }
 
-bool Pie::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Pie*> vectorPie) {
+bool Pie::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Pie*>& vectorPie) {
 	if (state) {
 		move(speedX * timeElapsed, speedY * timeElapsed);
 		if (getPosition().x > window.getSize().x + getRadius() * 2)
