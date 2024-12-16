@@ -2277,8 +2277,6 @@ void Game::pollEvents() {
 					bgLvl3Music.setLoop(false);
 					bgLvl1Music.play();
 					loadGameplayAssets();
-					setShooterPositions();
-					setEnemySpawn();
 					loadLevel1();
 				}
 				// Quitter
