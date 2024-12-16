@@ -1,7 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-// --- STL --- //
+// --- Standard library --- //
 #include <iostream>
 #include <vector>
 #include <string>
@@ -45,14 +45,26 @@ private:
 	bool showPauseMenu = false;
 	// Ennemies
 	std::vector<bool> positionsOccupied;
-	// Testing
 	int numberOfStartingEnnemies = 5;
+	// Testing
 	int deathCounter = 0;
 
 private:
-	void setupGraphicalElements();
+	// Loading elements
+	void splashScreen();
+	void changeLanguages() const;
+	void loadStartUpScreen();
+	void loadSettings();
+	void loadLevelAssets();    // Called once BEFORE laodGameplayAssets()
+	void loadGameplayAssets(); // Called multiple times
+	void loadTextPositions();
+	void loadLevel1();
+	void loadLevel2();
+	void loadLevel3();
+	// Set the game up
 	void setShooterPositions();
 	void setEnemySpawn();
+	// In game collisions & controls
 	void playerInput();
 	void playerCollisions();
 	void playerHPSetter();
@@ -61,12 +73,15 @@ private:
 	void nonPlayerBehavior();
 	void nonPlayerDraw();
 	void clownWalkAnimation();
+	// Parralax backgrounds gestion
 	void backgroundMovementLevel1();
 	void backgroundMovementLevel2();
 	void backgroundMovementLevel3();
+	// Calculations
 	void scoreCalculation();
 	void sugarCalculation();
 	void FPSCalculation();
+	// Main loop
 	void pollEvents();
 	void update();
 	void render();
