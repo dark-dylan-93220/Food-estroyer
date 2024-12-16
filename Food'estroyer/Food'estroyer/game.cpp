@@ -1594,7 +1594,7 @@ void Game::playerInput() {
 			// Ici y'aura le shoot
 			if (player.getShootTimer() >= player.getShootCooldown()) {
 				player.throwPie(vectorPie, window);
-				player.setShootTimer(0);
+				player.resetShootTimer(0);
 			}
 			playerCurrentSprite.setTexture(playerAttack1);
 		}
@@ -1604,12 +1604,28 @@ void Game::playerInput() {
 			// SPECIAL ATTACK
 			if (player.getSpecialTimer() >= player.getSpecialCooldown()) {
 				player.specialAtk(vectorPie, window);
-				player.setSpecialTimer(0);
+				player.resetSpecialTimer(0);
+				if (player.getSpectialAtkType() == "rain") {
+					player.raining = true;
+					player.rainCount++;
+				}
 			}
 			playerCurrentSprite.setTexture(playerAttack1);
 		}
 	}
 	shieldSprite.setPosition(playerCurrentSprite.getPosition());
+
+	if (player.raining) {
+		if (player.getSpecialTimer() >= 0.3 && player.rainCount == 1) { player.specialAtk(vectorPie, window); player.rainCount++; }
+		if (player.getSpecialTimer() >= 0.6 && player.rainCount == 2) { player.specialAtk(vectorPie, window); player.rainCount++; }
+		if (player.getSpecialTimer() >= 0.9 && player.rainCount == 3) { player.specialAtk(vectorPie, window); player.rainCount++; }
+		if (player.getSpecialTimer() >= 1.2 && player.rainCount == 4) { player.specialAtk(vectorPie, window); player.rainCount++; }
+		if (player.getSpecialTimer() >= 1.5 && player.rainCount == 5) { player.specialAtk(vectorPie, window); player.rainCount++; }
+		if (player.getSpecialTimer() >= 1.8 && player.rainCount == 6) { player.specialAtk(vectorPie, window); player.rainCount++; }
+		if (player.getSpecialTimer() >= 2.1 && player.rainCount == 7) { player.specialAtk(vectorPie, window); player.rainCount++; }
+		if (player.getSpecialTimer() >= 2.4 && player.rainCount == 8) { player.specialAtk(vectorPie, window); player.rainCount++; }
+		if (player.getSpecialTimer() >= 2.7) { player.specialAtk(vectorPie, window); player.raining = false; player.rainCount = 0; }
+	}
 }
 
 void Game::playerCollisions() {
@@ -1832,10 +1848,8 @@ void Game::nonPlayerBehavior() {
 			for (Pie*& pie : vectorPie) {
 				if (vectorNormal[i].getGlobalBounds().intersects(pie->getGlobalBounds())) {
 					vectorNormal[i].setHp(-pie->getAtkPower()); 
-					if (pie->specialType == 'b') {
+					if (pie->hitCounter < pie->maxHitNumber) {
 						pie->hitCounter++;
-						if (pie->hitCounter >= 3)//HIT DETECTION INCONSISTENT : specialAtk ne touche que 2 shooter (dans une meme ligne) alors  qu'il les one shot
-							pie->setState(false);
 					}
 					else { pie->setState(false); }
 					
@@ -1856,10 +1870,8 @@ void Game::nonPlayerBehavior() {
 			for (Pie*& pie : vectorPie) {
 				if (vectorShooter[i].getGlobalBounds().intersects(pie->getGlobalBounds())) {
 					vectorShooter[i].setHp(-pie->getAtkPower());
-					if (pie->specialType == 'b') {
+					if (pie->hitCounter < pie->maxHitNumber) {
 						pie->hitCounter++;
-						if (pie->hitCounter >= 3)
-							pie->setState(false);
 					}
 					else { pie->setState(false); }
 				}
@@ -1879,10 +1891,8 @@ void Game::nonPlayerBehavior() {
 			for (Pie*& pie : vectorPie) {
 				if (vectorElite[i].getGlobalBounds().intersects(pie->getGlobalBounds())) {
 					vectorElite[i].setHp(-pie->getAtkPower());
-					if (pie->specialType == 'b') {
+					if (pie->hitCounter < pie->maxHitNumber) {
 						pie->hitCounter++;
-						if (pie->hitCounter >= 3)
-							pie->setState(false);
 					}
 					else { pie->setState(false); }
 				}

@@ -7,7 +7,7 @@ Player::Player() {
 	this->setFillColor(sf::Color::Green);
 }
 
-Bonus::Bonus(float PosX, float PosY, std::string setId, Player &player) : posX(PosX), posY(PosY), id(setId){
+Bonus::Bonus(float PosX, float PosY, std::string setId, Player& player) : posX(PosX), posY(PosY), id(setId) {
 	this->setPosition(posX, posY);
 	//potentiellement changer la moveSpeed/size par rapport à l'id
 	if (id == "shield") {
@@ -21,50 +21,82 @@ Bonus::Bonus(float PosX, float PosY, std::string setId, Player &player) : posX(P
 	}
 }
 
-void Player::throwPie(std::vector<Pie*> &vectorPies, sf::RenderWindow &window) {
+void Player::throwPie(std::vector<Pie*>& vectorPie, sf::RenderWindow& window) {
 	if (x2) {
 		Pie* pie = new Pie;
 		pie->setAtkPower(atkPower);
 		pie->setRadius(getPieSize() * window.getSize().x);
-		pie->setSpeed(getPieSpeed());
+		pie->setSpeedX(getPieSpeedX());
 		pie->setPosition(getPosition().x + getRadius() + pie->getRadius(), getPosition().y + pie->getRadius());
-		vectorPies.push_back(pie);
+		vectorPie.push_back(pie);
 		Pie* pie2 = new Pie;
 		pie2->setAtkPower(atkPower);
 		pie2->setRadius(getPieSize() * window.getSize().x);
-		pie2->setSpeed(getPieSpeed());
+		pie2->setSpeedX(getPieSpeedX());
 		pie2->setPosition(getPosition().x + getRadius() + pie2->getRadius(), getPosition().y + getRadius());
-		vectorPies.push_back(pie2);
-		shootTimer = 0;
+		vectorPie.push_back(pie2);
 	}
 	else {
 		Pie* pie = new Pie;
 		pie->setAtkPower(atkPower);
 		pie->setRadius(getPieSize() * window.getSize().x);
-		pie->setSpeed(getPieSpeed());
+		pie->setSpeedX(getPieSpeedX());
 		pie->setPosition(getPosition().x + getRadius() + pie->getRadius(), getPosition().y + getRadius() - pie->getRadius());
-		vectorPies.push_back(pie);
-		shootTimer = 0;
+		vectorPie.push_back(pie);
 	}
 }
 
-void Player::specialAtk(std::vector<Pie*> &vectorPie, sf::RenderWindow &window) {
-	switch (specialAtkType) {
-	case 'b':
-		specialCooldown = 5.f;
+void Player::specialAtk(std::vector<Pie*>& vectorPie, sf::RenderWindow& window) {
+	if (specialAtkType == "base") {
+		specialCooldown = 3.f;
 		Pie* specialPie = new Pie;
 		specialPie->specialType = specialAtkType;
-		specialPie->setAtkPower(atkPower * 3);
+		specialPie->maxHitNumber = 20;
+		specialPie->setAtkPower(atkPower * 1.5);
 		specialPie->setRadius(getPieSize() * 5 * window.getSize().x);
-		specialPie->setSpeed(getPieSpeed());
+		specialPie->setSpeedX(getPieSpeedX());
 		specialPie->setPosition(getPosition().x + getRadius() + specialPie->getRadius(), getPosition().y + getRadius() - specialPie->getRadius());
 		vectorPie.push_back(specialPie);
-		specialTimer = 0;
-		break;
+	}
+	else if (specialAtkType == "triple") {
+		specialCooldown = 7.f;
+		Pie* specialPie = new Pie;
+		specialPie->specialType = specialAtkType;
+		specialPie->setAtkPower(atkPower * 5);
+		specialPie->setRadius(getPieSize() * 3 * window.getSize().x);
+		specialPie->setSpeedX(getPieSpeedX());
+		specialPie->setPosition(getPosition().x + getRadius() + specialPie->getRadius(), getPosition().y + getRadius() - specialPie->getRadius());
+		vectorPie.push_back(specialPie);
+		Pie* specialPie1 = new Pie;
+		specialPie1->specialType = specialAtkType;
+		specialPie1->setAtkPower(atkPower * 5);
+		specialPie1->setRadius(getPieSize() * 3 * window.getSize().x);
+		specialPie1->setSpeedX(getPieSpeedX());
+		specialPie1->setSpeedY(getPieSpeedX() / 2);
+		specialPie1->setPosition(getPosition().x + getRadius() + specialPie1->getRadius(), getPosition().y + getRadius() - specialPie1->getRadius());
+		vectorPie.push_back(specialPie1);
+		Pie* specialPie2 = new Pie;
+		specialPie2->specialType = specialAtkType;
+		specialPie2->setAtkPower(atkPower * 5);
+		specialPie2->setRadius(getPieSize() * 3 * window.getSize().x);
+		specialPie2->setSpeedX(getPieSpeedX());
+		specialPie2->setSpeedY(-getPieSpeedX() / 2);
+		specialPie2->setPosition(getPosition().x + getRadius() + specialPie2->getRadius(), getPosition().y + getRadius() - specialPie2->getRadius());
+		vectorPie.push_back(specialPie2);
+	}
+	else if (specialAtkType == "rain") {
+		specialCooldown = 2.f;
+		Pie* pie = new Pie;
+		pie->setAtkPower(atkPower);
+		pie->setRadius(getPieSize() * window.getSize().x);
+		pie->setSpeedX(getPieSpeedX() / 2);
+		pie->setSpeedY(rainVariation[rand() % 15]);
+		pie->setPosition(window.getSize().x / 3, -(float)window.getSize().y * 0.01);
+		vectorPie.push_back(pie);
 	}
 }
 
-bool Bonus::behavior(float timeElapsed, sf::RenderWindow &window, std::vector<Bonus*> vectorBonus) {
+bool Bonus::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Bonus*> vectorBonus) {
 	if (state) {
 		move(0, moveSpeed * timeElapsed);
 		if (getPosition().y > window.getSize().y + getSize().y)
@@ -76,7 +108,7 @@ bool Bonus::behavior(float timeElapsed, sf::RenderWindow &window, std::vector<Bo
 
 bool Pie::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Pie*> vectorPie) {
 	if (state) {
-		move(speed * timeElapsed, 0);
+		move(speedX * timeElapsed, speedY * timeElapsed);
 		if (getPosition().x > window.getSize().x + getRadius() * 2)
 			state = false;
 		return true;
