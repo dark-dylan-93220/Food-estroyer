@@ -1,4 +1,104 @@
 ﻿  game.cpp
 C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\player.h(44,18): warning C4305: 'initialisation' : troncation de 'double' à 'float'
 C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\player.h(46,24): warning C4305: 'initialisation' : troncation de 'double' à 'float'
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(930,61): warning C4244: 'argument' : conversion de 'T' en 'float', perte possible de données
+          with
+          [
+              T=unsigned int
+          ]
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(931,132): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(932,134): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(934,119): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(935,123): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(936,127): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2193,91): warning C4244: 'argument' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2193,72): warning C4244: 'argument' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2197,93): warning C4244: 'argument' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2197,74): warning C4244: 'argument' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2201,93): warning C4244: 'argument' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2201,74): warning C4244: 'argument' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2205,94): warning C4244: 'argument' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2205,75): warning C4244: 'argument' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2209,96): warning C4244: 'argument' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2209,77): warning C4244: 'argument' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2213,94): warning C4244: 'argument' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2213,75): warning C4244: 'argument' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2441,99): warning C4244: 'argument' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2441,78): warning C4244: 'argument' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2443,101): warning C4244: 'argument' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2443,80): warning C4244: 'argument' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2445,99): warning C4244: 'argument' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2445,78): warning C4244: 'argument' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
   Food'estroyer.vcxproj -> C:\Users\jrodrigues\Source\Repos\dark-dylan-93220\Food-estroyer\Food'estroyer\x64\Debug\Food'estroyer.exe

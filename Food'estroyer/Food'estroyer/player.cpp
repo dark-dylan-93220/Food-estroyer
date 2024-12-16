@@ -48,7 +48,6 @@ void Player::throwPie(std::vector<Pie*>& vectorPie, sf::RenderWindow& window) {
 
 void Player::specialAtk(std::vector<Pie*>& vectorPie, sf::RenderWindow& window) {
 	if (specialAtkType == "base") {
-		specialCooldown = 10.f;
 		Pie* specialPie = new Pie;
 		specialPie->specialType = specialAtkType;
 		specialPie->maxHitNumber = 20;
@@ -59,7 +58,6 @@ void Player::specialAtk(std::vector<Pie*>& vectorPie, sf::RenderWindow& window) 
 		vectorPie.push_back(specialPie);
 	}
 	else if (specialAtkType == "triple") {
-		specialCooldown = 5.f;
 		Pie* specialPie = new Pie;
 		specialPie->specialType = specialAtkType;
 		specialPie->setAtkPower(atkPower * 5);
@@ -85,7 +83,6 @@ void Player::specialAtk(std::vector<Pie*>& vectorPie, sf::RenderWindow& window) 
 		vectorPie.push_back(specialPie2);
 	}
 	else if (specialAtkType == "rain") {
-		specialCooldown = 10.f;
 		Pie* pie = new Pie;
 		pie->maxHitNumber = 5.f;
 		pie->setAtkPower(atkPower);

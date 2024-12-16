@@ -73,6 +73,12 @@ namespace {
 	sf::Text gameplayUISugarForUpgrades;
 	sf::Text gameplayUIBossLife;
 	sf::Text gameplayUISugarText;
+	sf::Text gameplayUIStatAtkText;
+	sf::Text gameplayUIStatMaxHpText;
+	sf::Text gameplayUIStatSpeedText;
+	sf::Text gameplayUISetSpecialBase;
+	sf::Text gameplayUISetSpecialTriple;
+	sf::Text gameplayUISetSpecialRain;
 	// MUSICS
 	sf::Music bgStartUpScreenMusic;
 	sf::Music bgShopMusic;
@@ -831,9 +837,40 @@ void Game::loadLevelAssets() { // Only loaded once
 	sugarIcone.setScale(0.05f, 0.05f);
 	sugarIcone.setTexture(sugarTexture);
 	gameplayUISugarText.setFont(score);
+	gameplayUISugarText.setCharacterSize((unsigned int)((float)sugarIcone.getLocalBounds().height* (float)sugarIcone.getScale().y));
 	gameplayUISugarText.setLetterSpacing(1.1f);
 	gameplayUISugarText.setFillColor(sf::Color::White);
 	gameplayUISugarText.setString("00000000");
+	gameplayUIStatAtkText.setFont(score);
+	gameplayUIStatAtkText.setCharacterSize(30);
+	gameplayUIStatAtkText.setLetterSpacing(1.1f);
+	gameplayUIStatAtkText.setFillColor(sf::Color::White);
+	gameplayUIStatAtkText.setString("Atk : Lvl 1");
+	gameplayUIStatMaxHpText.setFont(score);
+	gameplayUIStatMaxHpText.setCharacterSize(30);
+	gameplayUIStatMaxHpText.setLetterSpacing(1.1f);
+	gameplayUIStatMaxHpText.setFillColor(sf::Color::White);
+	gameplayUIStatMaxHpText.setString("Max Hp : Lvl 1");
+	gameplayUIStatSpeedText.setFont(score);
+	gameplayUIStatSpeedText.setCharacterSize(30);
+	gameplayUIStatSpeedText.setLetterSpacing(1.1f);
+	gameplayUIStatSpeedText.setFillColor(sf::Color::White);
+	gameplayUIStatSpeedText.setString("Speed : Lvl 1");
+	gameplayUISetSpecialBase.setFont(score);
+	gameplayUISetSpecialBase.setCharacterSize(30);
+	gameplayUISetSpecialBase.setLetterSpacing(1.1f);
+	gameplayUISetSpecialBase.setFillColor(sf::Color::White);
+	gameplayUISetSpecialBase.setString("Base");
+	gameplayUISetSpecialTriple.setFont(score);
+	gameplayUISetSpecialTriple.setCharacterSize(30);
+	gameplayUISetSpecialTriple.setLetterSpacing(1.1f);
+	gameplayUISetSpecialTriple.setFillColor(sf::Color::White);
+	gameplayUISetSpecialTriple.setString("Triple");
+	gameplayUISetSpecialRain.setFont(score);
+	gameplayUISetSpecialRain.setCharacterSize(30);
+	gameplayUISetSpecialRain.setLetterSpacing(1.1f);
+	gameplayUISetSpecialRain.setFillColor(sf::Color::White);
+	gameplayUISetSpecialRain.setString("Rain");
 }// Called once
 
 // Loaded multiple times
@@ -889,7 +926,14 @@ void Game::loadGameplayAssets() {
 	sugarIcone.setPosition(window.getSize().x /** 0.99*/ - (sugarIcone.getLocalBounds().width * sugarIcone.getScale().x) * 1.8f, window.getSize().y /** 0.97*/ - (sugarIcone.getLocalBounds().height * sugarIcone.getScale().y) * 1.8f);
 	// TEXTS
 	gameplayUISugarText.setPosition(sugarIcone.getPosition().x - gameplayUISugarText.getGlobalBounds().width - window.getSize().x * 0.005f, sugarIcone.getPosition().y - gameplayUISugarText.getGlobalBounds().height * 0.2f);
-	gameplayUISugarText.setCharacterSize((unsigned int)((float)sugarIcone.getLocalBounds().height * (float)sugarIcone.getScale().y));
+	
+	gameplayUISetSpecialBase.setPosition(0, window.getSize().y - gameplayUISetSpecialBase.getCharacterSize());
+	gameplayUISetSpecialTriple.setPosition(gameplayUISetSpecialBase.getPosition().x + gameplayUISetSpecialBase.getLocalBounds().width + window.getSize().x * 0.05, gameplayUISetSpecialBase.getPosition().y);
+	gameplayUISetSpecialRain.setPosition(gameplayUISetSpecialTriple.getPosition().x + gameplayUISetSpecialTriple.getLocalBounds().width + window.getSize().x * 0.05, gameplayUISetSpecialBase.getPosition().y);
+	
+	gameplayUIStatAtkText.setPosition(gameplayUISetSpecialBase.getPosition().x, gameplayUISetSpecialBase.getPosition().y - gameplayUIStatAtkText.getCharacterSize() * 1.1);
+	gameplayUIStatMaxHpText.setPosition(gameplayUIStatAtkText.getPosition().x + gameplayUIStatAtkText.getLocalBounds().width + window.getSize().x * 0.05, gameplayUIStatAtkText.getPosition().y);
+	gameplayUIStatSpeedText.setPosition(gameplayUIStatMaxHpText.getPosition().x + gameplayUIStatMaxHpText.getLocalBounds().width + window.getSize().x * 0.05, gameplayUIStatAtkText.getPosition().y);
 }
 
 void Game::loadLevel1() {
@@ -1566,25 +1610,25 @@ void Game::sugarCalculation() {
 void Game::playerInput() {
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
-		player.move(0, -800 * f_ElapsedTime);
+		player.move(0, -player.getSpeed() * f_ElapsedTime);
 		if (player.getPosition().y <= 0)
 			player.setPosition(player.getPosition().x, 0);
 		playerCurrentSprite.setPosition(player.getPosition());
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-		player.move(0, 800 * f_ElapsedTime);
+		player.move(0, player.getSpeed() * f_ElapsedTime);
 		if (player.getPosition().y + player.getRadius() * 2 >= window.getSize().y)
 			player.setPosition(player.getPosition().x, window.getSize().y - player.getRadius() *  2);
 		playerCurrentSprite.setPosition(player.getPosition());
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-		player.move(800 * f_ElapsedTime, 0);
+		player.move(player.getSpeed() * f_ElapsedTime, 0);
 		if (player.getPosition().x >= window.getSize().x - player.getRadius() * 2)
 			player.setPosition(window.getSize().x - player.getRadius() * 2, player.getPosition().y);
 		playerCurrentSprite.setPosition(player.getPosition());
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
-		player.move(-800 * f_ElapsedTime, 0);
+		player.move(-player.getSpeed() * f_ElapsedTime, 0);
 		if (player.getPosition().x <= 0)
 			player.setPosition(0, player.getPosition().y);
 		playerCurrentSprite.setPosition(player.getPosition());
@@ -1641,6 +1685,12 @@ void Game::playerInput() {
 }
 
 void Game::playerCollisions() {
+	// UPDATE PLAYER SPECIAL COOLDOWN
+	if (player.getSpectialAtkType() == "base") player.setSpecialCooldown(1);
+	if (player.getSpectialAtkType() == "triple") player.setSpecialCooldown(5);
+	if (player.getSpectialAtkType() == "rain") player.setSpecialCooldown(10);
+
+	// COLLISIONS
 	for (Projectile* &projectile : vectorProjectile) {
 		if (player.getGlobalBounds().contains(projectile->getPosition())) {     ///// hurt box plus petite (cercle) pour les projectiles
 			if (player.getShield())
@@ -2140,6 +2190,30 @@ void Game::pollEvents() {
 				else
 					gameplayPauseMinusSoundTextMusic.setFillColor(sf::Color(DARK_THEME));
 			}
+			if (gameplayUIStatAtkText.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
+				gameplayUIStatAtkText.setFillColor(LIGHT_YELLOW);
+			else
+				gameplayUIStatAtkText.setFillColor(sf::Color::White);
+			if (gameplayUIStatMaxHpText.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
+				gameplayUIStatMaxHpText.setFillColor(LIGHT_YELLOW);
+			else
+				gameplayUIStatMaxHpText.setFillColor(sf::Color::White);
+			if (gameplayUIStatSpeedText.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
+				gameplayUIStatSpeedText.setFillColor(LIGHT_YELLOW);
+			else
+				gameplayUIStatSpeedText.setFillColor(sf::Color::White);
+			if (gameplayUISetSpecialBase.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
+				gameplayUISetSpecialBase.setFillColor(LIGHT_YELLOW);
+			else
+				gameplayUISetSpecialBase.setFillColor(sf::Color::White);
+			if (gameplayUISetSpecialTriple.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
+				gameplayUISetSpecialTriple.setFillColor(LIGHT_YELLOW);
+			else
+				gameplayUISetSpecialTriple.setFillColor(sf::Color::White);
+			if (gameplayUISetSpecialRain.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
+				gameplayUISetSpecialRain.setFillColor(LIGHT_YELLOW);
+			else
+				gameplayUISetSpecialRain.setFillColor(sf::Color::White);
 		}
 		break;
 	case sf::Event::MouseButtonPressed:
@@ -2364,6 +2438,12 @@ void Game::pollEvents() {
 						}
 					}
 				}
+				if (gameplayUISetSpecialBase.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) { 
+					player.setSpecialAtkType("base"); player.resetSpecialTimer(0); }
+				if (gameplayUISetSpecialTriple.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) { 
+					player.setSpecialAtkType("triple"); player.resetSpecialTimer(0); }
+				if (gameplayUISetSpecialRain.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) { 
+					player.setSpecialAtkType("rain"); player.resetSpecialTimer(0); }
 			}
 		}
 		// For dragging
@@ -2577,6 +2657,12 @@ void Game::render() {
 			window.draw(gameplayUIScoreText);
 			window.draw(sugarIcone);
 			window.draw(gameplayUISugarText);
+			window.draw(gameplayUIStatAtkText);
+			window.draw(gameplayUIStatMaxHpText);
+			window.draw(gameplayUIStatSpeedText);
+			window.draw(gameplayUISetSpecialBase);
+			window.draw(gameplayUISetSpecialTriple);
+			window.draw(gameplayUISetSpecialRain);
 		}
 		if (levelTwoOn) {
 			// --- FOND PARRALAXE --- //
@@ -2607,6 +2693,12 @@ void Game::render() {
 			window.draw(gameplayUIScoreText);
 			window.draw(sugarIcone);
 			window.draw(gameplayUISugarText);
+			window.draw(gameplayUIStatAtkText);
+			window.draw(gameplayUIStatMaxHpText);
+			window.draw(gameplayUIStatSpeedText);
+			window.draw(gameplayUISetSpecialBase);
+			window.draw(gameplayUISetSpecialTriple);
+			window.draw(gameplayUISetSpecialRain);
 		}
 		if (levelThreeOn) {
 			// --- FOND PARRALAXE --- //
@@ -2635,6 +2727,12 @@ void Game::render() {
 			window.draw(gameplayUIScoreText);
 			window.draw(sugarIcone);
 			window.draw(gameplayUISugarText);
+			window.draw(gameplayUIStatAtkText);
+			window.draw(gameplayUIStatMaxHpText);
+			window.draw(gameplayUIStatSpeedText);
+			window.draw(gameplayUISetSpecialBase);
+			window.draw(gameplayUISetSpecialTriple);
+			window.draw(gameplayUISetSpecialRain);
 		}
 		if (showPauseMenu) {
 			window.draw(screenShadowWhenBlured);
