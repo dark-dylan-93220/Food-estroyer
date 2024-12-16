@@ -34,7 +34,7 @@ Enemy::Enemy(float x, float y, char s, sf::RenderWindow &window) : size(s) {
 Normal::Normal(float x, float y, char s, sf::RenderWindow& window) : Enemy(x, y, s, window) {
 	hp = 100 * hpPerSize;
 	sugarValue = int(50 * sugarValuePerSize);                                                        //ICI : VALEUR EN SUCRES DES MONSTRES
-	atkPower = 10 * atkPowerPerSize;
+	atkPower = 30 * atkPowerPerSize; // Les normaux sont facilements esquivables donc il font beaucoup de dégats si on les touches
 }
 Shooter::Shooter(float x, float y, char s, sf::RenderWindow &window) : Enemy(x, y, s, window) {
 	this->setPosition(sf::Vector2f(window.getSize().x + 100.f, -100.f));

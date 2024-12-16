@@ -34,6 +34,7 @@ private:
 	sf::Clock Clock;
 	float f_ElapsedTime;
 	std::chrono::steady_clock::time_point startingTimePoint, currentTimePoint;
+	float spriteUpdateTimer = 0;
 	// Language
 	std::string language = "EN";
 	// Layers
@@ -69,6 +70,7 @@ private:
 	void playerHPSetter();
 	void playerBonusSetter();
 	void playerDeath();
+	void updateStatsSpritesCooldown();
 	void nonPlayerBehavior();
 	void nonPlayerDraw();
 	void clownWalkAnimation();
