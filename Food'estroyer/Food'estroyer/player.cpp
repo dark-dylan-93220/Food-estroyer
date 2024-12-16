@@ -51,7 +51,7 @@ void Player::specialAtk(std::vector<Pie*>& vectorPie, sf::RenderWindow& window) 
 		Pie* specialPie = new Pie;
 		specialPie->specialType = specialAtkType;
 		specialPie->maxHitNumber = 20;
-		specialPie->setAtkPower(atkPower * 1.5);
+		specialPie->setAtkPower(atkPower * 1.5f);
 		specialPie->setRadius(getPieSize() * 5 * window.getSize().x);
 		specialPie->setSpeedX(getPieSpeedX());
 		specialPie->setPosition(getPosition().x + getRadius() + specialPie->getRadius(), getPosition().y + getRadius() - specialPie->getRadius());
@@ -84,12 +84,12 @@ void Player::specialAtk(std::vector<Pie*>& vectorPie, sf::RenderWindow& window) 
 	}
 	else if (specialAtkType == "rain") {
 		Pie* pie = new Pie;
-		pie->maxHitNumber = 5.f;
+		pie->maxHitNumber = 5;
 		pie->setAtkPower(atkPower);
 		pie->setRadius(getPieSize() * window.getSize().x);
-		pie->setSpeedX(getPieSpeedX() / 2);
-		pie->setSpeedY(rainVariation[rand() % 15]);
-		pie->setPosition(window.getSize().x / 3, -(float)window.getSize().y * 0.01);
+		pie->setSpeedX(getPieSpeedX() / 2.f);
+		pie->setSpeedY((float)rainVariation[rand() % 15]);
+		pie->setPosition(window.getSize().x / 3.f, -(float)window.getSize().y * 0.01f);
 		vectorPie.push_back(pie);
 	}
 }

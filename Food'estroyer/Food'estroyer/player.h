@@ -41,9 +41,9 @@ private:
 	float speed = 800;             //COMMENCER A 400, AUGMENTER DE 100 A CHAQUE LVL UP
 	float atkPower = 50;           //COMMENCER AU NIVEAU 10, AUGMENTER DE 25% A CHAQUE LVL UP
 	float pieSpeedX = 1000;																			 ////////////// PIE SPEED HERE
-	float pieSize = 0.01;
+	float pieSize = 0.01f;
 	float shootTimer = 0;
-	float shootCooldown = 0.2;
+	float shootCooldown = 0.2f;
 	float specialTimer = 0;
 	float specialCooldown = 0; // on commence avec l'attaque spéciale chargée
 	std::string specialAtkType = "base";

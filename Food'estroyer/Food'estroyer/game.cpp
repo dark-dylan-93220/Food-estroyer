@@ -29,12 +29,12 @@ namespace {
 	// TEXTS
 		// FPS
 	sf::Text FPSText;
-		// Start-up screen
+	// Start-up screen
 	sf::Text playText;
 	sf::Text shopText;
 	sf::Text quitText;
 	sf::Text copyright;
-		// Options screen
+	// Options screen
 	sf::Text pauseTopBarResolutionText;
 	sf::Text pauseTopBarFPSText;
 	sf::Text pauseTopBarColorThemeText;
@@ -122,7 +122,7 @@ namespace {
 	sf::Texture levelThreeParralax06;
 	sf::Texture levelThreeParralax07;
 	sf::Texture levelThreeParralax08;
-		// PLAYER
+	// PLAYER
 	sf::Texture playerMove1;
 	sf::Texture playerMove2;
 	sf::Texture playerAttack1;
@@ -138,7 +138,7 @@ namespace {
 	sf::Texture shieldIconeTexture;
 	sf::Texture x2IconeTexture;
 	sf::Texture oneUpIconeTexture;
-		// ENEMMIES
+	// ENEMMIES
 	sf::Texture deathTexture1;
 	sf::Texture deathTexture2;
 	sf::Texture sugarTexture;
@@ -150,7 +150,7 @@ namespace {
 	sf::Texture apple;
 	sf::Texture burger;
 	sf::Texture carrot;
-		// UI
+	// UI
 	sf::Texture gameplayUILifeBar01Active;
 	sf::Texture gameplayUILifeBar02Active;
 	sf::Texture gameplayUILifeBar03Active;
@@ -197,7 +197,7 @@ namespace {
 	sf::Texture gameplayUIPauseSoundMinus;
 	// SHAPES
 	sf::RectangleShape screenShadowWhenBlured;
-	sf::RectangleShape menuPauseTopBar; 
+	sf::RectangleShape menuPauseTopBar;
 	sf::RectangleShape menuPauseTopBarResolution;
 	sf::RectangleShape menuPauseTopBarFPS;
 	sf::RectangleShape menuPauseTopBarColorTheme;
@@ -230,7 +230,7 @@ namespace {
 	// SPRITES
 	sf::Sprite bgStartUpScreenSprite;
 	sf::Sprite settingsIconSprite;
-		// Level 1
+	// Level 1
 	sf::Sprite levelOneBackgroundStartSprite;
 	sf::Sprite levelOneParralax01Sprite;
 	sf::Sprite levelOneParralax02Sprite;
@@ -244,7 +244,7 @@ namespace {
 	sf::Sprite levelOneParralax04SpriteCopy;
 	sf::Sprite levelOneParralax05SpriteCopy;
 	sf::Sprite levelOneParralax06SpriteCopy;
-		 // Level 2
+	// Level 2
 	sf::Sprite levelTwoParralax01Sprite;
 	sf::Sprite levelTwoParralax02Sprite;
 	sf::Sprite levelTwoParralax03Sprite;
@@ -263,7 +263,7 @@ namespace {
 	sf::Sprite levelTwoParralax07SpriteCopy;
 	sf::Sprite levelTwoParralax08SpriteCopy;
 	sf::Sprite levelTwoParralaxBGSpriteCopy;
-		 // Level 3
+	// Level 3
 	sf::Sprite levelThreeParralax01Sprite;
 	sf::Sprite levelThreeParralax02Sprite;
 	sf::Sprite levelThreeParralax03Sprite;
@@ -280,7 +280,7 @@ namespace {
 	sf::Sprite levelThreeParralax06SpriteCopy;
 	sf::Sprite levelThreeParralax07SpriteCopy;
 	sf::Sprite levelThreeParralaxBGSpriteCopy;
-		// Others
+	// Others
 	sf::Sprite playerCurrentSprite;
 	sf::Sprite gameplayUILifeBarCurrentSprite;
 	sf::Sprite shieldSprite;
@@ -299,7 +299,7 @@ namespace {
 	Projectile projectileDraw;
 	Sugar sugarDraw;
 	Pie pieDraw;
-	Bonus bonusDraw(1.f, 1.f, "shield",  player);
+	Bonus bonusDraw(1.f, 1.f, "shield", player);
 	//ICONES UI
 	Sugar sugarIcone;
 	sf::RectangleShape shieldDraw;
@@ -308,7 +308,7 @@ namespace {
 }
 
 Game::Game() :
-	window    (sf::VideoMode(modes[0].width, modes[0].height), "Food'estroyer", sf::Style::Fullscreen)
+	window(sf::VideoMode(modes[0].width, modes[0].height), "Food'estroyer", sf::Style::Fullscreen)
 {
 	// Time gestion
 	f_ElapsedTime = 0.f;
@@ -325,7 +325,7 @@ void Game::splashScreen() {
 	splashScreenTexture.loadFromFile("Assets/Images/splashScreenBacgkround.jpg");
 	splashScreenBackground.setTexture(splashScreenTexture);
 	splashScreenBackground.setScale(sf::Vector2f(window.getSize().x / splashScreenBackground.getLocalBounds().width, window.getSize().y / splashScreenBackground.getLocalBounds().height));
-	splashScreenBackground.setPosition(0,0);
+	splashScreenBackground.setPosition(0, 0);
 	window.draw(splashScreenBackground);
 	window.display();
 }
@@ -389,7 +389,7 @@ void Game::loadStartUpScreen() {
 	pie.loadFromPixels(pieCursorImg.getPixelsPtr(), pieCursorImg.getSize(), { 1, 1 });
 }
 
-void Game::changeLanguages() const  {
+void Game::changeLanguages() const {
 	if (language == "EN") {
 		playText.setString("Play");
 		shopText.setString("Shop");
@@ -836,7 +836,7 @@ void Game::loadLevelAssets() { // Only loaded once
 	sugarIcone.setScale(0.05f, 0.05f);
 	sugarIcone.setTexture(sugarTexture);
 	gameplayUISugarText.setFont(score);
-	gameplayUISugarText.setCharacterSize((unsigned int)((float)sugarIcone.getLocalBounds().height* (float)sugarIcone.getScale().y));
+	gameplayUISugarText.setCharacterSize((unsigned int)((float)sugarIcone.getLocalBounds().height * (float)sugarIcone.getScale().y));
 	gameplayUISugarText.setLetterSpacing(1.1f);
 	gameplayUISugarText.setFillColor(sf::Color::White);
 	gameplayUISugarText.setString("00000000");
@@ -925,14 +925,12 @@ void Game::loadGameplayAssets() {
 	sugarIcone.setPosition(window.getSize().x /** 0.99*/ - (sugarIcone.getLocalBounds().width * sugarIcone.getScale().x) * 1.8f, window.getSize().y /** 0.97*/ - (sugarIcone.getLocalBounds().height * sugarIcone.getScale().y) * 1.8f);
 	// TEXTS
 	gameplayUISugarText.setPosition(sugarIcone.getPosition().x - gameplayUISugarText.getGlobalBounds().width - window.getSize().x * 0.005f, sugarIcone.getPosition().y - gameplayUISugarText.getGlobalBounds().height * 0.2f);
-	
-	gameplayUISetSpecialBase.setPosition(0, window.getSize().y - gameplayUISetSpecialBase.getCharacterSize());
-	gameplayUISetSpecialTriple.setPosition(gameplayUISetSpecialBase.getPosition().x + gameplayUISetSpecialBase.getLocalBounds().width + window.getSize().x * 0.05, gameplayUISetSpecialBase.getPosition().y);
-	gameplayUISetSpecialRain.setPosition(gameplayUISetSpecialTriple.getPosition().x + gameplayUISetSpecialTriple.getLocalBounds().width + window.getSize().x * 0.05, gameplayUISetSpecialBase.getPosition().y);
-	
-	gameplayUIStatAtkText.setPosition(gameplayUISetSpecialBase.getPosition().x, gameplayUISetSpecialBase.getPosition().y - gameplayUIStatAtkText.getCharacterSize() * 1.1);
-	gameplayUIStatMaxHpText.setPosition(gameplayUIStatAtkText.getPosition().x + gameplayUIStatAtkText.getLocalBounds().width + window.getSize().x * 0.05, gameplayUIStatAtkText.getPosition().y);
-	gameplayUIStatSpeedText.setPosition(gameplayUIStatMaxHpText.getPosition().x + gameplayUIStatMaxHpText.getLocalBounds().width + window.getSize().x * 0.05, gameplayUIStatAtkText.getPosition().y);
+	gameplayUISetSpecialBase.setPosition(0.f, (float)window.getSize().y - (float)gameplayUISetSpecialBase.getCharacterSize());
+	gameplayUISetSpecialTriple.setPosition(gameplayUISetSpecialBase.getPosition().x + gameplayUISetSpecialBase.getLocalBounds().width + window.getSize().x * 0.05f, gameplayUISetSpecialBase.getPosition().y);
+	gameplayUISetSpecialRain.setPosition(gameplayUISetSpecialTriple.getPosition().x + gameplayUISetSpecialTriple.getLocalBounds().width + window.getSize().x * 0.05f, gameplayUISetSpecialBase.getPosition().y);
+	gameplayUIStatAtkText.setPosition(gameplayUISetSpecialBase.getPosition().x, gameplayUISetSpecialBase.getPosition().y - gameplayUIStatAtkText.getCharacterSize() * 1.1f);
+	gameplayUIStatMaxHpText.setPosition(gameplayUIStatAtkText.getPosition().x + gameplayUIStatAtkText.getLocalBounds().width + window.getSize().x * 0.05f, gameplayUIStatAtkText.getPosition().y);
+	gameplayUIStatSpeedText.setPosition(gameplayUIStatMaxHpText.getPosition().x + gameplayUIStatMaxHpText.getLocalBounds().width + window.getSize().x * 0.05f, gameplayUIStatAtkText.getPosition().y);
 }
 
 void Game::loadLevel1() {
@@ -1035,162 +1033,6 @@ void Game::loadLevel3() {
 	levelThreeParralax06SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x, 0));
 	levelThreeParralax07SpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x, 0));
 	levelThreeParralaxBGSpriteCopy.setPosition(sf::Vector2f(0 + (float)window.getSize().x, 0));
-}
-
-void Game::setShooterPositions() {
-	shooterPositions.push_back({ (float)(window.getSize().x * 0.9), (float)(window.getSize().y * 0.1) });
-	shooterPositions.push_back({ (float)(window.getSize().x * 0.9), (float)(window.getSize().y * 0.3) });
-	shooterPositions.push_back({ (float)(window.getSize().x * 0.9), (float)(window.getSize().y * 0.5) });
-	shooterPositions.push_back({ (float)(window.getSize().x * 0.9), (float)(window.getSize().y * 0.7) });
-	shooterPositions.push_back({ (float)(window.getSize().x * 0.9), (float)(window.getSize().y * 0.9) });
-	shooterPositions.push_back({ (float)(window.getSize().x * 0.8), (float)(window.getSize().y * 0.1) });
-	shooterPositions.push_back({ (float)(window.getSize().x * 0.8), (float)(window.getSize().y * 0.3) });
-	shooterPositions.push_back({ (float)(window.getSize().x * 0.8), (float)(window.getSize().y * 0.5) });
-	shooterPositions.push_back({ (float)(window.getSize().x * 0.8), (float)(window.getSize().y * 0.7) });
-	shooterPositions.push_back({ (float)(window.getSize().x * 0.8), (float)(window.getSize().y * 0.9) });
-	shooterPositions.push_back({ (float)(window.getSize().x * 0.7), (float)(window.getSize().y * 0.1) });
-	shooterPositions.push_back({ (float)(window.getSize().x * 0.7), (float)(window.getSize().y * 0.3) });
-	shooterPositions.push_back({ (float)(window.getSize().x * 0.7), (float)(window.getSize().y * 0.5) });
-	shooterPositions.push_back({ (float)(window.getSize().x * 0.7), (float)(window.getSize().y * 0.7) });
-	shooterPositions.push_back({ (float)(window.getSize().x * 0.7), (float)(window.getSize().y * 0.9) });
-}
-
-void Game::setEnemySpawn() {
-	// Test pour randomiser la génération des ennemis au départ d'un niveau
-	// Il marche mais les textures sont toutes blanches
-	/*int randomYPosition, randomSize, randomClass, randomSkins;
-	float xSpawnPosition = window.getSize().x + 100.f;
-	const int randomHeights[10]           = { 0, 100, 200, 300, 400, 500, 600, 700, 800, 900 };
-	const char randomSizes[3]             = { 's', 'm', 'l' };
-	sf::Texture randomEnemySkins[6] = { apple, burger, banana, painBizarre, carrot, tomato };
-
-	for (int i = 0; i < numberOfStartingEnnemies; ++i) {
-		randomClass = rand() % 3 + 1;
-		randomSize = rand() % 3;
-		randomYPosition = rand() % 10;
-		randomSkins = rand() % 6;
-
-		Normal normal(xSpawnPosition, randomHeights[randomYPosition], randomSizes[randomSize], window);
-		normal.setTexture(randomEnemySkins[randomSkins]);
-
-		Shooter shooter(xSpawnPosition, randomHeights[randomYPosition], randomSizes[randomSize], window);
-		shooter.setTexture(randomEnemySkins[randomSkins]);
-
-		Elite elite(xSpawnPosition, randomHeights[randomYPosition], randomSizes[randomSize], window);
-		elite.setTexture(randomEnemySkins[randomSkins]);
-
-		switch (randomClass) {
-		case 1:
-			vectorNormal.push_back(normal);
-			break;
-		case 2:
-			vectorShooter.push_back(shooter);
-			break;
-		case 3:
-			vectorElite.push_back(elite);
-			break;
-		default:
-			break;
-		}
-
-	}*/
-	Shooter shooter1(window.getSize().x + 100.f, 800, 'm', window);
-	shooter1.setTexture(apple);
-	vectorShooter.push_back(shooter1);
-	Shooter shooter2(window.getSize().x + 100.f, 900, 'm', window);
-	shooter2.setTexture(burger);
-	vectorShooter.push_back(shooter2);
-	Shooter shooter3(window.getSize().x + 100.f, 1000, 'm', window);
-	shooter3.setTexture(burger);
-	vectorShooter.push_back(shooter3);
-	Shooter shooter4(window.getSize().x + 100.f, 100, 'm', window);
-	shooter4.setTexture(banana);
-	vectorShooter.push_back(shooter4);
-	Shooter shooter5(window.getSize().x + 100.f, 200, 'm', window);
-	shooter5.setTexture(apple);
-	vectorShooter.push_back(shooter5);
-	Shooter shooter6(window.getSize().x + 100.f, 300, 'm', window);
-	shooter6.setTexture(banana);
-	vectorShooter.push_back(shooter6);
-	Shooter shooter7(window.getSize().x + 100.f, 400, 'm', window);
-	shooter7.setTexture(painBizarre);
-	vectorShooter.push_back(shooter7);
-	Shooter shooter8(window.getSize().x + 100.f, 500, 'm', window);
-	shooter8.setTexture(banana);
-	vectorShooter.push_back(shooter8);
-	Shooter shooter9(window.getSize().x + 100.f, 600, 'm', window);
-	shooter9.setTexture(carrot);
-	vectorShooter.push_back(shooter9);
-	Shooter shooter10(window.getSize().x + 100.f, 700, 'm', window);
-	shooter10.setTexture(banana);
-	vectorShooter.push_back(shooter10);
-	Shooter shooter11(window.getSize().x + 100.f, 900, 'm', window);
-	shooter11.setTexture(painBizarre);
-	vectorShooter.push_back(shooter11);
-	Shooter shooter12(window.getSize().x + 100.f, 900, 'm', window);
-	shooter12.setTexture(burger);
-	vectorShooter.push_back(shooter12);
-	Shooter shooter13(window.getSize().x + 100.f, 900, 'm', window);
-	shooter13.setTexture(burger);
-	vectorShooter.push_back(shooter13);
-	Shooter shooter14(window.getSize().x + 100.f, 900, 'm', window);
-	shooter14.setTexture(painBizarre);
-	vectorShooter.push_back(shooter14);
-	Shooter shooter15(window.getSize().x + 100.f, 200, 'm', window);
-	shooter15.setTexture(apple);
-	vectorShooter.push_back(shooter15);
-	Shooter shooter16(window.getSize().x + 100.f, 300, 'm', window);
-	shooter16.setTexture(painBizarre);
-	vectorShooter.push_back(shooter16);
-	Normal normal1(1900, 500, 's', window);
-	normal1.setTexture(painBizarre);
-	vectorNormal.push_back(normal1);
-	Elite elite1(1200, 800, 's', window);
-	elite1.setTexture(carrot);
-	vectorElite.push_back(elite1);
-	Elite elite2(1500, 700, 'm', window);
-	elite2.setTexture(tomato);
-	vectorElite.push_back(elite2);
-	Elite elite3(1300, 400, 'l', window);
-	elite3.setTexture(carrot);
-	vectorElite.push_back(elite3);
-	Elite elite4(1300, 400, 's', window);
-	elite4.setTexture(carrot);
-	vectorElite.push_back(elite4);
-	Elite elite5(1300, 400, 's', window);
-	elite5.setTexture(carrot);
-	vectorElite.push_back(elite5);
-	Elite elite6(1300, 400, 's', window);
-	elite6.setTexture(carrot);
-	vectorElite.push_back(elite6);
-	Elite elite7(1300, 400, 's', window);
-	elite7.setTexture(carrot);
-	vectorElite.push_back(elite7);
-	Bonus* bonus1 = new Bonus((float)window.getSize().x * 0.1f, -50.f, "shield", player);
-	vectorBonus.push_back(bonus1);
-	Bonus* bonus2 = new Bonus((float)window.getSize().x * 0.2f, -50.f, "x2", player);
-	vectorBonus.push_back(bonus2);
-	Bonus* bonus3 = new Bonus((float)window.getSize().x * 0.3f, -50.f, "oneUp", player);
-	vectorBonus.push_back(bonus3);
-}
-
-void Game::FPSCalculation() {
-	// FPS calculation
-	f_ElapsedTime = Clock.restart().asSeconds();
-	float f_FPS = (1.f / f_ElapsedTime);
-	std::ostringstream oss;
-	oss << std::fixed << std::setprecision(2) << f_FPS;
-	std::string FPSValue = oss.str();
-	FPSText.setString("FPS : " + FPSValue);
-}
-
-void Game::clownWalkAnimation() {
-	if (clownWalkAnimationTime >= 0.1f) playerCurrentSprite.setTexture(playerMove2);
-	if (clownWalkAnimationTime >= 0.2f) {
-		playerCurrentSprite.setTexture(playerMove1);
-
-		clownWalkAnimationTime = 0.f;
-	}
 }
 
 void Game::backgroundMovementLevel1() {
@@ -1311,7 +1153,7 @@ void Game::backgroundMovementLevel2() {
 	levelTwoParralax06SpriteCopy.move(sf::Vector2f(-600 * f_ElapsedTime, 0));
 	levelTwoParralax07SpriteCopy.move(sf::Vector2f(-300 * f_ElapsedTime, 0));
 	levelTwoParralax08SpriteCopy.move(sf::Vector2f(-200 * f_ElapsedTime, 0));
-	
+
 	// 1 Original
 	if (levelTwoParralax01Sprite.getPosition().x <= 0) {
 		levelTwoParralax01SpriteCopy.setPosition(sf::Vector2f(levelTwoParralax01Sprite.getPosition().x + (levelTwoParralax01Sprite.getLocalBounds().width * levelTwoParralax01Sprite.getScale().x), 0));
@@ -1571,6 +1413,162 @@ void Game::backgroundMovementLevel3() {
 	}
 }
 
+void Game::setShooterPositions() {
+	shooterPositions.push_back({ (float)(window.getSize().x * 0.9), (float)(window.getSize().y * 0.1) });
+	shooterPositions.push_back({ (float)(window.getSize().x * 0.9), (float)(window.getSize().y * 0.3) });
+	shooterPositions.push_back({ (float)(window.getSize().x * 0.9), (float)(window.getSize().y * 0.5) });
+	shooterPositions.push_back({ (float)(window.getSize().x * 0.9), (float)(window.getSize().y * 0.7) });
+	shooterPositions.push_back({ (float)(window.getSize().x * 0.9), (float)(window.getSize().y * 0.9) });
+	shooterPositions.push_back({ (float)(window.getSize().x * 0.8), (float)(window.getSize().y * 0.1) });
+	shooterPositions.push_back({ (float)(window.getSize().x * 0.8), (float)(window.getSize().y * 0.3) });
+	shooterPositions.push_back({ (float)(window.getSize().x * 0.8), (float)(window.getSize().y * 0.5) });
+	shooterPositions.push_back({ (float)(window.getSize().x * 0.8), (float)(window.getSize().y * 0.7) });
+	shooterPositions.push_back({ (float)(window.getSize().x * 0.8), (float)(window.getSize().y * 0.9) });
+	shooterPositions.push_back({ (float)(window.getSize().x * 0.7), (float)(window.getSize().y * 0.1) });
+	shooterPositions.push_back({ (float)(window.getSize().x * 0.7), (float)(window.getSize().y * 0.3) });
+	shooterPositions.push_back({ (float)(window.getSize().x * 0.7), (float)(window.getSize().y * 0.5) });
+	shooterPositions.push_back({ (float)(window.getSize().x * 0.7), (float)(window.getSize().y * 0.7) });
+	shooterPositions.push_back({ (float)(window.getSize().x * 0.7), (float)(window.getSize().y * 0.9) });
+}
+
+void Game::setEnemySpawn() {
+	// Test pour randomiser la génération des ennemis au départ d'un niveau
+	// Il marche mais les textures sont toutes blanches
+	/*int randomYPosition, randomSize, randomClass, randomSkins;
+	float xSpawnPosition = window.getSize().x + 100.f;
+	const int randomHeights[10]           = { 0, 100, 200, 300, 400, 500, 600, 700, 800, 900 };
+	const char randomSizes[3]             = { 's', 'm', 'l' };
+	sf::Texture randomEnemySkins[6] = { apple, burger, banana, painBizarre, carrot, tomato };
+
+	for (int i = 0; i < numberOfStartingEnnemies; ++i) {
+		randomClass = rand() % 3 + 1;
+		randomSize = rand() % 3;
+		randomYPosition = rand() % 10;
+		randomSkins = rand() % 6;
+
+		Normal normal(xSpawnPosition, randomHeights[randomYPosition], randomSizes[randomSize], window);
+		normal.setTexture(randomEnemySkins[randomSkins]);
+
+		Shooter shooter(xSpawnPosition, randomHeights[randomYPosition], randomSizes[randomSize], window);
+		shooter.setTexture(randomEnemySkins[randomSkins]);
+
+		Elite elite(xSpawnPosition, randomHeights[randomYPosition], randomSizes[randomSize], window);
+		elite.setTexture(randomEnemySkins[randomSkins]);
+
+		switch (randomClass) {
+		case 1:
+			vectorNormal.push_back(normal);
+			break;
+		case 2:
+			vectorShooter.push_back(shooter);
+			break;
+		case 3:
+			vectorElite.push_back(elite);
+			break;
+		default:
+			break;
+		}
+
+	}*/
+	Shooter shooter1(window.getSize().x + 100.f, 800, 'm', window);
+	shooter1.setTexture(apple);
+	vectorShooter.push_back(shooter1);
+	Shooter shooter2(window.getSize().x + 100.f, 900, 'm', window);
+	shooter2.setTexture(burger);
+	vectorShooter.push_back(shooter2);
+	Shooter shooter3(window.getSize().x + 100.f, 1000, 'm', window);
+	shooter3.setTexture(burger);
+	vectorShooter.push_back(shooter3);
+	Shooter shooter4(window.getSize().x + 100.f, 100, 'm', window);
+	shooter4.setTexture(banana);
+	vectorShooter.push_back(shooter4);
+	Shooter shooter5(window.getSize().x + 100.f, 200, 'm', window);
+	shooter5.setTexture(apple);
+	vectorShooter.push_back(shooter5);
+	Shooter shooter6(window.getSize().x + 100.f, 300, 'm', window);
+	shooter6.setTexture(banana);
+	vectorShooter.push_back(shooter6);
+	Shooter shooter7(window.getSize().x + 100.f, 400, 'm', window);
+	shooter7.setTexture(painBizarre);
+	vectorShooter.push_back(shooter7);
+	Shooter shooter8(window.getSize().x + 100.f, 500, 'm', window);
+	shooter8.setTexture(banana);
+	vectorShooter.push_back(shooter8);
+	Shooter shooter9(window.getSize().x + 100.f, 600, 'm', window);
+	shooter9.setTexture(carrot);
+	vectorShooter.push_back(shooter9);
+	Shooter shooter10(window.getSize().x + 100.f, 700, 'm', window);
+	shooter10.setTexture(banana);
+	vectorShooter.push_back(shooter10);
+	Shooter shooter11(window.getSize().x + 100.f, 900, 'm', window);
+	shooter11.setTexture(painBizarre);
+	vectorShooter.push_back(shooter11);
+	Shooter shooter12(window.getSize().x + 100.f, 900, 'm', window);
+	shooter12.setTexture(burger);
+	vectorShooter.push_back(shooter12);
+	Shooter shooter13(window.getSize().x + 100.f, 900, 'm', window);
+	shooter13.setTexture(burger);
+	vectorShooter.push_back(shooter13);
+	Shooter shooter14(window.getSize().x + 100.f, 900, 'm', window);
+	shooter14.setTexture(painBizarre);
+	vectorShooter.push_back(shooter14);
+	Shooter shooter15(window.getSize().x + 100.f, 200, 'm', window);
+	shooter15.setTexture(apple);
+	vectorShooter.push_back(shooter15);
+	Shooter shooter16(window.getSize().x + 100.f, 300, 'm', window);
+	shooter16.setTexture(painBizarre);
+	vectorShooter.push_back(shooter16);
+	Normal normal1(1900, 500, 's', window);
+	normal1.setTexture(painBizarre);
+	vectorNormal.push_back(normal1);
+	Elite elite1(1200, 800, 's', window);
+	elite1.setTexture(carrot);
+	vectorElite.push_back(elite1);
+	Elite elite2(1500, 700, 'm', window);
+	elite2.setTexture(tomato);
+	vectorElite.push_back(elite2);
+	Elite elite3(1300, 400, 'l', window);
+	elite3.setTexture(carrot);
+	vectorElite.push_back(elite3);
+	Elite elite4(1300, 400, 's', window);
+	elite4.setTexture(carrot);
+	vectorElite.push_back(elite4);
+	Elite elite5(1300, 400, 's', window);
+	elite5.setTexture(carrot);
+	vectorElite.push_back(elite5);
+	Elite elite6(1300, 400, 's', window);
+	elite6.setTexture(carrot);
+	vectorElite.push_back(elite6);
+	Elite elite7(1300, 400, 's', window);
+	elite7.setTexture(carrot);
+	vectorElite.push_back(elite7);
+	Bonus* bonus1 = new Bonus((float)window.getSize().x * 0.1f, -50.f, "shield", player);
+	vectorBonus.push_back(bonus1);
+	Bonus* bonus2 = new Bonus((float)window.getSize().x * 0.2f, -50.f, "x2", player);
+	vectorBonus.push_back(bonus2);
+	Bonus* bonus3 = new Bonus((float)window.getSize().x * 0.3f, -50.f, "oneUp", player);
+	vectorBonus.push_back(bonus3);
+}
+
+void Game::FPSCalculation() {
+	// FPS calculation
+	f_ElapsedTime = Clock.restart().asSeconds();
+	float f_FPS = (1.f / f_ElapsedTime);
+	std::ostringstream oss;
+	oss << std::fixed << std::setprecision(2) << f_FPS;
+	std::string FPSValue = oss.str();
+	FPSText.setString("FPS : " + FPSValue);
+}
+
+void Game::clownWalkAnimation() {
+	if (clownWalkAnimationTime >= 0.1f) playerCurrentSprite.setTexture(playerMove2);
+	if (clownWalkAnimationTime >= 0.2f) {
+		playerCurrentSprite.setTexture(playerMove1);
+
+		clownWalkAnimationTime = 0.f;
+	}
+}
+
 void Game::scoreCalculation() {
 	scoreCounter += (100.f * f_ElapsedTime);
 	if (scoreCounter < 10)
@@ -1617,7 +1615,7 @@ void Game::playerInput() {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
 		player.move(0, player.getSpeed() * f_ElapsedTime);
 		if (player.getPosition().y + player.getRadius() * 2 >= window.getSize().y)
-			player.setPosition(player.getPosition().x, window.getSize().y - player.getRadius() *  2);
+			player.setPosition(player.getPosition().x, window.getSize().y - player.getRadius() * 2);
 		playerCurrentSprite.setPosition(player.getPosition());
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
@@ -1754,7 +1752,7 @@ void Game::playerHPSetter() {
 	if (player.getPlayerHP() <= player.getPlayerMaxHP()) {
 		if (player.getSpecialTimer() >= player.getSpecialCooldown())
 			gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar01Active);
-		else{ gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar01Inactive); }
+		else { gameplayUILifeBarCurrentSprite.setTexture(gameplayUILifeBar01Inactive); }
 	}
 	if (player.getPlayerHP() <= player.getPlayerMaxHP() * 19 / 20 && player.getPlayerHP() > player.getPlayerMaxHP() * 18 / 20) {
 		if (player.getSpecialTimer() >= player.getSpecialCooldown())
@@ -1864,7 +1862,7 @@ void Game::playerBonusSetter() {
 	shieldDraw.setPosition(gameplayUILifeBarCurrentSprite.getPosition().x + window.getSize().y * 0.01f,
 		gameplayUILifeBarCurrentSprite.getPosition().y + (gameplayUILifeBarCurrentSprite.getLocalBounds().height * gameplayUILifeBarCurrentSprite.getScale().y) + window.getSize().y * 0.01f);
 	shieldDraw.setTexture(&shieldIconeTexture);
-	
+
 	x2Draw.setSize(sf::Vector2f(30, 30));
 	x2Draw.setPosition(shieldDraw.getPosition().x + shieldDraw.getSize().x + window.getSize().y * 0.01f, shieldDraw.getPosition().y);
 	x2Draw.setTexture(&x2IconeTexture);
@@ -1889,7 +1887,7 @@ void Game::playerDeath() {
 			std::cout << "revived" << std::endl;
 		}
 		else { player.setPlayerLife(false); }
-		
+
 	}
 	if (!player.getPlayerLife()) {
 		deathCounter++;
@@ -1925,32 +1923,44 @@ void Game::updateStatsSpritesCooldown() {
 }
 
 void Game::nonPlayerBehavior() {
-	for (Bonus* bonus : vectorBonus) {                                                //jsp pk les "&" font crash le jeu, uniquement pour ces boucles
-		if (!bonus->behavior(f_ElapsedTime, window, vectorBonus)) {                   
-			auto it = std::find(vectorBonus.begin(), vectorBonus.end(), bonus);
-			vectorBonus.erase(it);
-			delete bonus;
+	for (auto it = vectorBonus.begin(); it != vectorBonus.end(); ) {
+		Bonus* bonus = *it;
+		if (!bonus->behavior(f_ElapsedTime, window, vectorBonus)) {
+			delete bonus;                  // Free memory
+			it = vectorBonus.erase(it);    // Erase returns the next valid iterator
+		}
+		else {
+			++it; // Move to the next element
 		}
 	}
-	for (Pie* pie : vectorPie) {
+	for (auto it = vectorPie.begin(); it != vectorPie.end(); ) {
+		Pie* pie = *it;
 		if (!pie->behavior(f_ElapsedTime, window, vectorPie)) {
-			auto it = std::find(vectorPie.begin(), vectorPie.end(), pie);
-			vectorPie.erase(it);
-			delete pie;
+			delete pie;                  // Free memory
+			it = vectorPie.erase(it);    // Erase returns the next valid iterator
+		}
+		else {
+			++it; // Move to the next element
 		}
 	}
-	for (Sugar* sugar : vectorSugar) {
+	for (auto it = vectorSugar.begin(); it != vectorSugar.end(); ) {
+		Sugar* sugar = *it;
 		if (!sugar->behavior(f_ElapsedTime, window, vectorSugar)) {
-			auto it = std::find(vectorSugar.begin(), vectorSugar.end(), sugar);
-			vectorSugar.erase(it);
-			delete sugar;
+			delete sugar;                  // Free memory
+			it = vectorSugar.erase(it);    // Erase returns the next valid iterator
+		}
+		else {
+			++it; // Move to the next element
 		}
 	}
-	for (Projectile* projectile : vectorProjectile) {
+	for (auto it = vectorProjectile.begin(); it != vectorProjectile.end(); ) {
+		Projectile* projectile = *it;
 		if (!projectile->behavior(f_ElapsedTime, window, vectorProjectile)) {
-			auto it = std::find(vectorProjectile.begin(), vectorProjectile.end(), projectile);
-			vectorProjectile.erase(it);
-			delete projectile;
+			delete projectile;                  // Free memory
+			it = vectorProjectile.erase(it);    // Erase returns the next valid iterator
+		}
+		else {
+			++it; // Move to the next element
 		}
 	}
 	for (int i = 0; i < vectorNormal.size(); i++) {
@@ -1966,7 +1976,7 @@ void Game::nonPlayerBehavior() {
 						pie->hitCounter++;
 					}
 					else { pie->setState(false); }
-					
+
 				}
 			}
 		}
@@ -2066,8 +2076,8 @@ void Game::nonPlayerDraw() {
 		window.draw(elite);
 	}
 	if (player.getShield()) { window.draw(shieldDraw); }
-	if (player.getX2())     { window.draw(x2Draw); }
-	if (player.getOneUp())  { window.draw(oneUpDraw); }
+	if (player.getX2()) { window.draw(x2Draw); }
+	if (player.getOneUp()) { window.draw(oneUpDraw); }
 
 }
 
@@ -2246,27 +2256,27 @@ void Game::pollEvents() {
 				else
 					gameplayPauseMinusSoundTextMusic.setFillColor(sf::Color(DARK_THEME));
 			}
-			if (gameplayUIStatAtkText.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
+			if (gameplayUIStatAtkText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
 				gameplayUIStatAtkText.setFillColor(LIGHT_YELLOW);
 			else
 				gameplayUIStatAtkText.setFillColor(sf::Color::White);
-			if (gameplayUIStatMaxHpText.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
+			if (gameplayUIStatMaxHpText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
 				gameplayUIStatMaxHpText.setFillColor(LIGHT_YELLOW);
 			else
 				gameplayUIStatMaxHpText.setFillColor(sf::Color::White);
-			if (gameplayUIStatSpeedText.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
+			if (gameplayUIStatSpeedText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
 				gameplayUIStatSpeedText.setFillColor(LIGHT_YELLOW);
 			else
 				gameplayUIStatSpeedText.setFillColor(sf::Color::White);
-			if (gameplayUISetSpecialBase.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
+			if (gameplayUISetSpecialBase.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
 				gameplayUISetSpecialBase.setFillColor(LIGHT_YELLOW);
 			else
 				gameplayUISetSpecialBase.setFillColor(sf::Color::White);
-			if (gameplayUISetSpecialTriple.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
+			if (gameplayUISetSpecialTriple.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
 				gameplayUISetSpecialTriple.setFillColor(LIGHT_YELLOW);
 			else
 				gameplayUISetSpecialTriple.setFillColor(sf::Color::White);
-			if (gameplayUISetSpecialRain.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
+			if (gameplayUISetSpecialRain.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
 				gameplayUISetSpecialRain.setFillColor(LIGHT_YELLOW);
 			else
 				gameplayUISetSpecialRain.setFillColor(sf::Color::White);
@@ -2502,11 +2512,11 @@ void Game::pollEvents() {
 						}
 					}
 				}
-				if (gameplayUISetSpecialBase.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) { 
+				if (gameplayUISetSpecialBase.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 					player.setSpecialAtkType("base"); player.resetSpecialTimer(0); }
-				if (gameplayUISetSpecialTriple.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) { 
+				if (gameplayUISetSpecialTriple.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 					player.setSpecialAtkType("triple"); player.resetSpecialTimer(0); }
-				if (gameplayUISetSpecialRain.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) { 
+				if (gameplayUISetSpecialRain.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 					player.setSpecialAtkType("rain"); player.resetSpecialTimer(0); }
 			}
 		}
