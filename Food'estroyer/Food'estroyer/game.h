@@ -82,6 +82,7 @@ private:
 	void scoreCalculation();
 	void sugarCalculation();
 	void FPSCalculation();
+	void statCalculation();
 	// Main loop
 	void pollEvents();
 	void update();
