@@ -1685,38 +1685,66 @@ void Game::playerInput() {
 }
 
 void Game::playerCollisions() {
-	// UPDATE PLAYER SPECIAL COOLDOWN
-	if (player.getSpectialAtkType() == "base") player.setSpecialCooldown(1);
-	if (player.getSpectialAtkType() == "triple") player.setSpecialCooldown(5);
-	if (player.getSpectialAtkType() == "rain") player.setSpecialCooldown(10);
 
-	// COLLISIONS
-	for (Projectile* &projectile : vectorProjectile) {
-		if (player.getGlobalBounds().contains(projectile->getPosition())) {     ///// hurt box plus petite (cercle) pour les projectiles
-			if (player.getShield())
-				player.setShield(false);
-			else {
-				player.damagePlayer(projectile->getAtkPower());
-				oofSound.play();
-				std::cout<< "YOU GOT HIT LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOL" << std::endl;
+	if (player.hurtTimer >= 0.5) {   // COOLDOWN D'INVINCIBILITE APRES DEGATS RECUS
+		player.hurtTimer = 0;
+		player.hurtCount = 0;
+	}
+	if (player.hurtCount == 0) {        //INVINCIBLE PENDANT UNE COURTE DUREE APRES AVOIR PRIT DES DEGATS
+		for (Projectile*& projectile : vectorProjectile) {
+			if (player.getGlobalBounds().contains(projectile->getPosition())) {     ///// hurt box plus petite (cercle) pour les projectiles
+				if (player.getShield()) {
+					player.setShield(false);
+					player.hurtCount++;
+				}
+				else {
+					player.damagePlayer(projectile->getAtkPower());
+					oofSound.play();
+					player.hurtCount++;
+					playerCurrentSprite.setColor(LIGHT_RED);
+				}
+				projectile->setState(false);
 			}
-			projectile->setState(false);
+		}
+		for (Normal& normal : vectorNormal) {
+			if (player.getGlobalBounds().intersects(normal.getGlobalBounds())) {
+				if (player.getShield()) {
+					player.setShield(false);
+				}
+				else { player.damagePlayer(normal.getAtkPower()); player.hurtCount++; playerCurrentSprite.setColor(LIGHT_RED); }
+			}
+		}
+		for (Shooter& shooter : vectorShooter) {
+			if (player.getGlobalBounds().intersects(shooter.getGlobalBounds())) {
+				if (player.getShield()) {
+					player.setShield(false);
+				}
+				else { player.damagePlayer(shooter.getAtkPower()); player.hurtCount++; playerCurrentSprite.setColor(LIGHT_RED); }
+			}
+		}
+		for (Elite& elite : vectorElite) {
+			if (player.getGlobalBounds().intersects(elite.getGlobalBounds())) {
+				if (player.getShield()) {
+					player.setShield(false);
+				}
+				else { player.damagePlayer(elite.getAtkPower()); player.hurtCount++; playerCurrentSprite.setColor(LIGHT_RED); }
+			}
 		}
 	}
-	for (Sugar* &sugar : vectorSugar) {
+	for (Sugar*& sugar : vectorSugar) {
 		if (playerCurrentSprite.getGlobalBounds().contains(sugar->getPosition())) {  ////hurt box = sprite du clown pour ramasser les sucres plus facilement
 			player.setSugarCount(sugar->getValue());
 			sugarCrunchSound.play();
 			sugar->setState(false);
 		}
 	}
-	for (Bonus* &bonus : vectorBonus) {
+	for (Bonus*& bonus : vectorBonus) {
 		if (playerCurrentSprite.getGlobalBounds().contains(bonus->getPosition())) {  ////hurt box = sprite du clown pour ramasser les bonus plus facilement
 
 			player.setBonusCooldown(bonus->getCooldown());                     //actuellement, ramasser un 2e bonus refresh le timer du 1er
 			if (bonus->getId() == "shield") { player.setShield(true); }
-			if (bonus->getId() == "x2")     { player.setX2(true); }
-			if (bonus->getId() == "oneUp")  { player.setOneUp(true); }
+			if (bonus->getId() == "x2") { player.setX2(true); }
+			if (bonus->getId() == "oneUp") { player.setOneUp(true); }
 			player.resetBonusTimer(0);
 			bonus->setState(false);
 		}
@@ -1873,6 +1901,30 @@ void Game::playerDeath() {
 	}
 }
 
+void Game::updateStatsSpritesCooldown() {
+	// UPDATE PLAYER SPECIAL COOLDOWN
+	if (player.getSpectialAtkType() == "base") { player.setSpecialCooldown(1); gameplayUISetSpecialBase.setFillColor(sf::Color::Red); }
+	else { gameplayUISetSpecialBase.setFillColor(sf::Color::White); }
+	if (player.getSpectialAtkType() == "triple") { player.setSpecialCooldown(1); gameplayUISetSpecialTriple.setFillColor(sf::Color::Red); }
+	else { gameplayUISetSpecialTriple.setFillColor(sf::Color::White); }
+	if (player.getSpectialAtkType() == "rain") { player.setSpecialCooldown(1); gameplayUISetSpecialRain.setFillColor(sf::Color::Red); }
+	else { gameplayUISetSpecialRain.setFillColor(sf::Color::White); }
+
+	// RESET SPRITE DU JOUEUR APRES UN HIT
+	if (player.hurtTimer >= 0.5) {
+		playerCurrentSprite.setColor(sf::Color::White);
+	}
+	// RESET SPRITES DES ENNEMIS APRES UN HIT
+	if (spriteUpdateTimer >= 0.1) {
+		for (Normal& normal : vectorNormal)
+			normal.setColor(sf::Color::White);
+		for (Shooter& shooter : vectorShooter)
+			shooter.setColor(sf::Color::White);
+		for (Elite& elite : vectorElite)
+			elite.setColor(sf::Color::White);
+	}
+}
+
 void Game::nonPlayerBehavior() {
 	for (Bonus* bonus : vectorBonus) {                                                //jsp pk les "&" font crash le jeu, uniquement pour ces boucles
 		if (!bonus->behavior(f_ElapsedTime, window, vectorBonus)) {                   
@@ -1908,7 +1960,9 @@ void Game::nonPlayerBehavior() {
 			vectorNormal[i].dropSugar(vectorSugar, vectorNormal[i]);
 			for (Pie*& pie : vectorPie) {
 				if (vectorNormal[i].getGlobalBounds().intersects(pie->getGlobalBounds())) {
-					vectorNormal[i].setHp(-pie->getAtkPower()); 
+					vectorNormal[i].setHp(-pie->getAtkPower());
+					spriteUpdateTimer = 0;
+					vectorNormal[i].setColor(sf::Color::Red);
 					if (pie->hitCounter < pie->maxHitNumber) {
 						pie->hitCounter++;
 					}
@@ -1931,6 +1985,8 @@ void Game::nonPlayerBehavior() {
 			for (Pie*& pie : vectorPie) {
 				if (vectorShooter[i].getGlobalBounds().intersects(pie->getGlobalBounds())) {
 					vectorShooter[i].setHp(-pie->getAtkPower());
+					spriteUpdateTimer = 0;
+					vectorShooter[i].setColor(sf::Color::Red);
 					if (pie->hitCounter < pie->maxHitNumber) {
 						pie->hitCounter++;
 					}
@@ -1952,6 +2008,8 @@ void Game::nonPlayerBehavior() {
 			for (Pie*& pie : vectorPie) {
 				if (vectorElite[i].getGlobalBounds().intersects(pie->getGlobalBounds())) {
 					vectorElite[i].setHp(-pie->getAtkPower());
+					spriteUpdateTimer = 0;
+					vectorElite[i].setColor(sf::Color::Red);
 					if (pie->hitCounter < pie->maxHitNumber) {
 						pie->hitCounter++;
 					}
@@ -2531,7 +2589,12 @@ void Game::update() {
 			player.setShootTimer(f_ElapsedTime);
 			player.setSpecialTimer(f_ElapsedTime);                                                      
 			player.setBonusTimer(f_ElapsedTime); // (il est reset quand le joueur touche un bonus donc pas besoin de condition)
+			if (player.hurtCount > 0) {
+				player.hurtTimer += f_ElapsedTime;
+			}
+			spriteUpdateTimer += f_ElapsedTime;
 			playerInput();
+			updateStatsSpritesCooldown();
 			playerCollisions();
 			playerDeath();
 			nonPlayerBehavior();
@@ -2551,7 +2614,12 @@ void Game::update() {
 			player.setShootTimer(f_ElapsedTime);
 			player.setSpecialTimer(f_ElapsedTime);
 			player.setBonusTimer(f_ElapsedTime); // (il est reset quand le joueur touche un bonus donc pas besoin de condition)
+			if (player.hurtCount > 0) {
+				player.hurtTimer += f_ElapsedTime;
+			}
+			spriteUpdateTimer += f_ElapsedTime;
 			playerInput();
+			updateStatsSpritesCooldown();
 			playerCollisions();
 			playerDeath();
 			nonPlayerBehavior();
@@ -2571,7 +2639,12 @@ void Game::update() {
 			player.setShootTimer(f_ElapsedTime);
 			player.setSpecialTimer(f_ElapsedTime);
 			player.setBonusTimer(f_ElapsedTime); // (il est reset quand le joueur touche un bonus donc pas besoin de condition)
+			if (player.hurtCount > 0) {
+				player.hurtTimer += f_ElapsedTime;
+			}
+			spriteUpdateTimer += f_ElapsedTime;
 			playerInput();
+			updateStatsSpritesCooldown();
 			playerCollisions();
 			playerDeath();
 			nonPlayerBehavior();

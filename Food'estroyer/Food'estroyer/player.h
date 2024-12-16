@@ -36,10 +36,10 @@ public:
 class Player : public sf::CircleShape {
 private:
 	bool alive = true;
-	float hp = 100;
-	float maxHp = 100;
-	float speed = 800;
-	float atkPower = 50;
+	float hp = 100;               
+	float maxHp = 100;             //COMMECER A 100, AUGMENTER DE 10PV A CHAQUE LVL UP
+	float speed = 800;             //COMMENCER A 400, AUGMENTER DE 100 A CHAQUE LVL UP
+	float atkPower = 50;           //COMMENCER AU NIVEAU 10, AUGMENTER DE 25% A CHAQUE LVL UP
 	float pieSpeedX = 1000;																			 ////////////// PIE SPEED HERE
 	float pieSize = 0.01;
 	float shootTimer = 0;
@@ -50,13 +50,15 @@ private:
 	int sugarCount = 0;
 	float bonusTimer = 0;
 	float bonusCooldown = 0;
-	bool shield = false;
+	bool shield = false; //le shield couvre les dégats des projectiles mais pas ceux d'une collision au cac (il annule le premier dégat mais n'active pas le timer d'invincibilité)
 	bool x2 = false;
 	bool oneUp = false;
 	int rainVariation[15] = { 50,75,100,150,175,200,250,275,300,350,400,500,550,600,650 };
 
 public:
 
+	int hurtCount = 0;
+	float hurtTimer = 0;
 	bool raining = false;
 	int rainCount = 0;
 
