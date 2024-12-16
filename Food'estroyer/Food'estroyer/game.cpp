@@ -308,16 +308,12 @@ namespace {
 }
 
 Game::Game() :
-	windowBase(sf::VideoMode(modes[0].width, modes[0].height), "Base"),     // To get relative positions to the native resolution if needed
 	window    (sf::VideoMode(modes[0].width, modes[0].height), "Food'estroyer", sf::Style::Fullscreen)
 {
 	// Time gestion
 	f_ElapsedTime = 0.f;
 	m_isRunning = true;
-	windowBase.setVisible(false);
-	window.setFramerateLimit(60);
-	startingTimePoint = std::chrono::high_resolution_clock::now();
-	currentTimePoint = startingTimePoint;
+	window.setVerticalSyncEnabled(true);
 	// Ennemies
 	for (int i = 0; i < 15; ++i) positionsOccupied.push_back(false);
 	splashScreen();
@@ -637,10 +633,13 @@ void Game::loadLevelAssets() { // Only loaded once
 	// SOUNDS
 	sugarCrunchBuffer.loadFromFile("Assets/Sound Effects/sugar crunch.wav");
 	sugarCrunchSound.setBuffer(sugarCrunchBuffer);
-	//oofBuffer.loadFromFile("Assets/Sound Effects/oof.wav");
-	//oofSound.setBuffer(oofBuffer);
-	//playerDeathBuffer.loadFromFile("Assets/Sound Effects/death.wav");
-	//playerDeathSound.setBuffer(playerDeathBuffer);
+	oofBuffer.loadFromFile("Assets/Sound Effects/oof.wav");
+	oofSound.setBuffer(oofBuffer);
+	playerDeathBuffer.loadFromFile("Assets/Sound Effects/death.wav");
+	playerDeathSound.setBuffer(playerDeathBuffer);
+	oofSound.setVolume(50);
+	playerDeathSound.setVolume(50);
+	sugarCrunchSound.setVolume(50);
 	// TEXTURES
 	levelOneParralax01.loadFromFile("Assets/Images/Level1/level1Background01.png");
 	levelOneParralax02.loadFromFile("Assets/Images/Level1/level1Background02.png");
@@ -1698,7 +1697,6 @@ void Game::playerCollisions() {
 			else {
 				player.damagePlayer(projectile->getAtkPower());
 				oofSound.play();
-				std::cout<< "YOU GOT HIT LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOL" << std::endl;
 			}
 			projectile->setState(false);
 		}
@@ -2035,7 +2033,6 @@ void Game::run() {
 
 	std::cout << "Closed" << std::endl;
 	window.close();
-	windowBase.close();
 
 }
 
@@ -2399,13 +2396,21 @@ void Game::pollEvents() {
 					}
 					if (gameplayPausePlusSoundTextSFX.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
 					{
-						if (gameplayPauseSFXControlInnerZone.getScale().x < 1.f)
+						if (gameplayPauseSFXControlInnerZone.getScale().x < 1.f) {
 							gameplayPauseSFXControlInnerZone.setScale(sf::Vector2f(gameplayPauseSFXControlInnerZone.getScale().x + 0.05f, 1.f));
+							oofSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
+							playerDeathSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
+							sugarCrunchSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
+						}
 					}
 					if (gameplayPauseMinusSoundTextSFX.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
 					{
-						if (gameplayPauseSFXControlInnerZone.getScale().x > 0.f)
+						if (gameplayPauseSFXControlInnerZone.getScale().x > 0.f) {
 							gameplayPauseSFXControlInnerZone.setScale(sf::Vector2f(gameplayPauseSFXControlInnerZone.getScale().x - 0.05f, 1.f));
+							oofSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
+							playerDeathSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
+							sugarCrunchSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
+						}
 					}
 					if (gameplayPausePlusSoundTextMusic.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
 					{
@@ -2414,12 +2419,12 @@ void Game::pollEvents() {
 							if (levelOneOn) {
 								bgLvl1Music.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
 							}
-							/*if (levelTwoOn) {
+							if (levelTwoOn) {
 								bgLvl2Music.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
 							}
 							if (levelThreeOn) {
 								bgLvl3Music.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
-							}*/
+							}
 						}
 					}
 					if (gameplayPauseMinusSoundTextMusic.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
@@ -2429,12 +2434,12 @@ void Game::pollEvents() {
 							if (levelOneOn) {
 								bgLvl1Music.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
 							}
-							/*if (levelTwoOn) {
+							if (levelTwoOn) {
 								bgLvl2Music.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
 							}
 							if (levelThreeOn) {
 								bgLvl3Music.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
-							}*/
+							}
 						}
 					}
 				}
@@ -2460,7 +2465,6 @@ void Game::pollEvents() {
 				settingsScreenOn = false;
 				startUpScreenOn = true;
 				settingsIconSprite.setColor(sf::Color::White);
-				//loadStartUpScreen();
 				bgStartUpScreenMusic.play();
 			}
 			else if (startUpScreenOn) {

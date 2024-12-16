@@ -24,7 +24,6 @@ public:
 private:
 	bool m_isRunning;
 	// Window
-	sf::WindowBase windowBase;
 	sf::RenderWindow window;
 	// Views
 	bool startUpScreenOn = true;
