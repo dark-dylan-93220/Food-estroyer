@@ -2,50 +2,54 @@
 #include "enemy.h"
 #include "player.h"
 
-Enemy::Enemy(float x, float y, char s, sf::RenderWindow &window) : size(s) {
+Enemy::Enemy(float x, float y, char s, sf::RenderWindow& window, sf::Texture& texture) : size(s) {
 	this->setPosition(x, y);
+	this->setTexture(texture);
 	// Valeurs à changer en pourcentage de taille de la fenêtre.
 	switch (s) {
-	case ('s') :
-			this->setScale(0.09f, 0.09f);
-			this->hpPerSize = 0.5f;
-			this->atkPowerPerSize = 0.5f;
-			this->sugarValuePerSize = 0.5f;
-			moveSpeedX = -400; moveSpeedY = -400;
-			break;
-	case('m') :
-			this->setScale(0.13f, 0.13f);
-			this->hpPerSize = 1.f;
-			this->atkPowerPerSize = 1.f;
-			this->sugarValuePerSize = 1.f;
-			moveSpeedX = -300; moveSpeedY = -300;
-			break;
-	case('l') :
-			this->setScale(0.19f, 0.19f);
-			this->hpPerSize = 1.5f;
-			this->atkPowerPerSize = 1.5f;
-			this->sugarValuePerSize = 1.5f;
-			moveSpeedX = -200; moveSpeedY = -200;
-			break;
+	case ('s'):
+		this->setScale(0.09f, 0.09f);
+		this->hpPerSize = 0.5f;
+		this->atkPowerPerSize = 0.5f;
+		this->sugarValuePerSize = 0.5f;
+		moveSpeedX = -400; moveSpeedY = -400;
+		break;
+	case('m'):
+		this->setScale(0.13f, 0.13f);
+		this->hpPerSize = 1.f;
+		this->atkPowerPerSize = 1.f;
+		this->sugarValuePerSize = 1.f;
+		moveSpeedX = -300; moveSpeedY = -300;
+		break;
+	case('l'):
+		this->setScale(0.19f, 0.19f);
+		this->hpPerSize = 1.5f;
+		this->atkPowerPerSize = 1.5f;
+		this->sugarValuePerSize = 1.5f;
+		moveSpeedX = -200; moveSpeedY = -200;
+		break;
 	default: std::cout << "taille d'un ennemi mal initialisée (choisir 's', 'm' ou 'l')" << std::endl; break;
 	}
 }
 
-Normal::Normal(float x, float y, char s, sf::RenderWindow& window) : Enemy(x, y, s, window) {
+Normal::Normal(float x, float y, char s, sf::RenderWindow& window, sf::Texture& texture) : Enemy(x, y, s, window, texture) {
 	hp = 100 * hpPerSize;
 	sugarValue = int(50 * sugarValuePerSize);                                                        //ICI : VALEUR EN SUCRES DES MONSTRES
 	atkPower = 30 * atkPowerPerSize; // Les normaux sont facilements esquivables donc il font beaucoup de dégats si on les touches
+	this->setTexture(texture);
 }
-Shooter::Shooter(float x, float y, char s, sf::RenderWindow &window) : Enemy(x, y, s, window) {
+Shooter::Shooter(float x, float y, char s, sf::RenderWindow& window, sf::Texture& texture) : Enemy(x, y, s, window, texture) {
 	this->setPosition(sf::Vector2f(window.getSize().x + 100.f, -100.f));
 	hp = 150 * hpPerSize;
 	sugarValue = int(100 * sugarValuePerSize);
 	atkPower = 15 * atkPowerPerSize;
+	this->setTexture(texture);
 }
-Elite::Elite(float x, float y, char s, sf::RenderWindow& window) : Enemy(x, y, s, window) {
+Elite::Elite(float x, float y, char s, sf::RenderWindow& window, sf::Texture& texture) : Enemy(x, y, s, window, texture) {
 	hp = 200 * hpPerSize;
 	sugarValue = int(150 * sugarValuePerSize);
 	atkPower = 20 * atkPowerPerSize;
+	this->setTexture(texture);
 }
 
 void Enemy::dropSugar(std::vector<Sugar*>& vectorSugar, Enemy& enemy) {
@@ -69,8 +73,8 @@ void Normal::behavior(float timeElapsed) {
 	move(moveSpeedX * timeElapsed, 0);
 }
 
-void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, std::vector<sf::Vector2f>& shooterPositions, 
-	std::vector<Projectile*>& vectorProjectile, std::vector<bool>& positionsOccupied){
+void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, std::vector<sf::Vector2f>& shooterPositions,
+	std::vector<Projectile*>& vectorProjectile, std::vector<bool>& positionsOccupied) {
 
 	if (hp <= 0) { alive = false; }
 
@@ -122,7 +126,7 @@ void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, s
 				moveDirY = 1;
 			else { moveDirY = 3; }
 		}
-		
+
 		if (positionChoice.x < getPosition().x) moveDirX = -moveDirX;
 		if (positionChoice.x > getPosition().x) moveDirX = moveDirX;
 		if (positionChoice.y < getPosition().y) moveDirY = -moveDirY;
@@ -131,7 +135,7 @@ void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, s
 			move((moveDirX * 100) * timeElapsed, 0);
 		if (positionChoice.y - getPosition().y > 3.f && !positionReached)
 			move(0, (moveDirY * 100) * timeElapsed);
-		if(!(getPosition().x - positionChoice.x > 3.f) && !(positionChoice.y - getPosition().y > 3.f))
+		if (!(getPosition().x - positionChoice.x > 3.f) && !(positionChoice.y - getPosition().y > 3.f))
 		{
 			//Center shooter position in relation to his size
 			positionReached = true;
@@ -143,7 +147,7 @@ void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, s
 			}
 			// Shoots here
 			if (shootCooldown >= 1.5f) { // ici : varier le nombre de boucle pour que les ennemis shoot +ou- vite - A remplacer par une durée de temps variable
-				Projectile *projectile = new Projectile;
+				Projectile* projectile = new Projectile;
 				projectile->setId(getId());
 				projectile->setAtkPower(atkPower);
 				switch (getSize()) {
@@ -151,7 +155,7 @@ void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, s
 				case 'm': projectile->setScale(0.10f, 0.10f); break;
 				case 'l': projectile->setScale(0.15f, 0.15f); break;
 				}
-				projectile->setPosition(getPosition().x - (getLocalBounds().width * getScale().x) / 2, 
+				projectile->setPosition(getPosition().x - (getLocalBounds().width * getScale().x) / 2,
 					getPosition().y + (getLocalBounds().height * getScale().y) / 2 - (projectile->getLocalBounds().height * projectile->getScale().y) / 2);
 				vectorProjectile.push_back(projectile);
 				shootCooldown = 0;
@@ -161,10 +165,10 @@ void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, s
 	}
 }
 
-void Elite::behavior(float timeElapsed, sf::CircleShape player, std::vector<Projectile*> &vectorProjectile, sf::RenderWindow &window)
+void Elite::behavior(float timeElapsed, sf::CircleShape player, std::vector<Projectile*>& vectorProjectile, sf::RenderWindow& window)
 {
 	if (hp <= 0) { alive = false; }
-	
+
 	//pour tracker le personnage après un délai
 	//GAUCHE DROITE
 	playerPosition = { player.getPosition().x + (player.getLocalBounds().width * player.getScale().x) / 2 - (getLocalBounds().width * getScale().x) / 2,
@@ -184,7 +188,7 @@ void Elite::behavior(float timeElapsed, sf::CircleShape player, std::vector<Proj
 		else if (getPosition().x > window.getSize().x - getLocalBounds().width * getScale().x) {
 			if (size == 's')
 				setPosition(window.getSize().x - 50.f, getPosition().y);
-			if (size == 'm') 
+			if (size == 'm')
 				setPosition(window.getSize().x - 65.f, getPosition().y);
 			if (size == 'l')
 				setPosition(window.getSize().x - 95.f, getPosition().y);
@@ -192,8 +196,8 @@ void Elite::behavior(float timeElapsed, sf::CircleShape player, std::vector<Proj
 			moveSpeedX = -moveSpeedX;
 		}
 	}
-	move(moveSpeedX* timeElapsed, 0);
-	
+	move(moveSpeedX * timeElapsed, 0);
+
 	//SUIVRE LE JOUEUR SUR L'AXE Y
 	if ((getPosition().y - playerPosition.y > 10.f || getPosition().y - playerPosition.y < -10.f))
 		trackCooldown += timeElapsed; //set un chrono
@@ -232,17 +236,17 @@ void Elite::behavior(float timeElapsed, sf::CircleShape player, std::vector<Proj
 	else { shootCooldown += timeElapsed; }
 }
 
-bool Sugar::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Sugar*> &vectorSugar) {
+bool Sugar::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Sugar*>& vectorSugar) {
 	if (state) {
 		move(-300 * timeElapsed, 0);
 		if (getPosition().x < 0 - 100.f/*(vectorSugar[i]->getLocalBounds().width * vectorSugar[i]->getScale().x)*/)
 			state = false;
 		return true;
 	}
-	else {  return  false; }
+	else { return  false; }
 }
 
-bool Projectile::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Projectile*> &vectorProjectiles) {
+bool Projectile::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Projectile*>& vectorProjectiles) {
 	if (state) {
 		move(-600 * timeElapsed, 0);
 		if (getPosition().x < 0 - 100.f/*(projectiles[i]->getLocalBounds().width * projectiles[i]->getScale().x)*/)

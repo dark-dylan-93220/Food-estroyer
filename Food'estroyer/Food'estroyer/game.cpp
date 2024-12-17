@@ -10,6 +10,8 @@ namespace {
 	bool isFullscreen = true;
 	std::vector<sf::VideoMode> modes = sf::VideoMode::getFullscreenModes(); // Gets the native resolutions of the machine this program is running on
 	float clownWalkAnimationTime = 0.f;
+	float ennemiesSpawnCooldown = 0.5f;
+	float ennemiesSpawnCooldownDuration = 0.f;
 	// CURSORS
 	sf::Cursor pie;
 	// COLORS
@@ -943,7 +945,7 @@ void Game::loadGameplayAssets() {
 	// TEXTS
 	gameplayUISugarText.setPosition(sugarIcone.getPosition().x - gameplayUISugarText.getGlobalBounds().width - window.getSize().x * 0.005f, sugarIcone.getPosition().y - gameplayUISugarText.getGlobalBounds().height * 0.2f);
 	// Should be loading the ennemies here, each time we launch a level.
-	setEnemySpawn();
+	setEnemySpawn(numberOfStartingEnnemies);
 	setShooterPositions();
 }
 
@@ -1431,29 +1433,22 @@ void Game::setShooterPositions() {
 	shooterPositions.push_back({ (float)(window.getSize().x * 0.7), (float)(window.getSize().y * 0.9) });
 }
 
-void Game::setEnemySpawn() {
-	// Test pour randomiser la génération des ennemis au départ d'un niveau
-	// Il marche mais les textures sont toutes blanches
-	/*int randomYPosition, randomSize, randomClass, randomSkins;
-	float xSpawnPosition = window.getSize().x + 100.f;
-	const int randomHeights[10]           = { 0, 100, 200, 300, 400, 500, 600, 700, 800, 900 };
-	const char randomSizes[3]             = { 's', 'm', 'l' };
-	sf::Texture randomEnemySkins[6] = { apple, burger, banana, painBizarre, carrot, tomato };
-
-	for (int i = 0; i < numberOfStartingEnnemies; ++i) {
+void Game::setEnemySpawn(int numberOfEnnemies) {
+	int randomYPosition, randomSize, randomClass, randomBonusName, randomBonusXPos;
+	const float xSpawnPosition = window.getSize().x + 100.f;
+	const int randomHeights[10] = { 0, 100, 200, 300, 400, 500, 600, 700, 800, 900 };
+	const char randomSizes[3] = { 's', 'm', 'l' };
+	const char* bonusNames[3] = { "shield", "x2", "oneUp" };
+	const float bonusXSpawn[3] = { (float)window.getSize().x * 0.1f, (float)window.getSize().x * 0.2f, (float)window.getSize().x * 0.3f };
+	std::vector<sf::Texture*> randomEnemySkins = { &apple, &burger, &banana, &painBizarre, &carrot, &tomato };
+	for (int i = 0; i < numberOfEnnemies; ++i) {
 		randomClass = rand() % 3 + 1;
 		randomSize = rand() % 3;
 		randomYPosition = rand() % 10;
-		randomSkins = rand() % 6;
 
-		Normal normal(xSpawnPosition, randomHeights[randomYPosition], randomSizes[randomSize], window);
-		normal.setTexture(randomEnemySkins[randomSkins]);
-
-		Shooter shooter(xSpawnPosition, randomHeights[randomYPosition], randomSizes[randomSize], window);
-		shooter.setTexture(randomEnemySkins[randomSkins]);
-
-		Elite elite(xSpawnPosition, randomHeights[randomYPosition], randomSizes[randomSize], window);
-		elite.setTexture(randomEnemySkins[randomSkins]);
+		Normal normal(xSpawnPosition, randomHeights[randomYPosition], randomSizes[randomSize], window, *randomEnemySkins[rand() % 6]);
+		Shooter shooter(xSpawnPosition, randomHeights[randomYPosition], randomSizes[randomSize], window, *randomEnemySkins[rand() % 6]);
+		Elite elite(xSpawnPosition, randomHeights[randomYPosition], randomSizes[randomSize], window, *randomEnemySkins[rand() % 6]);
 
 		switch (randomClass) {
 		case 1:
@@ -1468,89 +1463,11 @@ void Game::setEnemySpawn() {
 		default:
 			break;
 		}
-
-	}*/
-	for (int i = 0; i < 15; ++i) {
-		positionsOccupied[i] = false;
 	}
-	Shooter shooter1(window.getSize().x + 100.f, 800, 'm', window);
-	shooter1.setTexture(apple);
-	vectorShooter.push_back(shooter1);
-	Shooter shooter2(window.getSize().x + 100.f, 900, 'm', window);
-	shooter2.setTexture(burger);
-	vectorShooter.push_back(shooter2);
-	Shooter shooter3(window.getSize().x + 100.f, 1000, 'm', window);
-	shooter3.setTexture(burger);
-	vectorShooter.push_back(shooter3);
-	Shooter shooter4(window.getSize().x + 100.f, 100, 'm', window);
-	shooter4.setTexture(banana);
-	vectorShooter.push_back(shooter4);
-	Shooter shooter5(window.getSize().x + 100.f, 200, 'm', window);
-	shooter5.setTexture(apple);
-	vectorShooter.push_back(shooter5);
-	Shooter shooter6(window.getSize().x + 100.f, 300, 'm', window);
-	shooter6.setTexture(banana);
-	vectorShooter.push_back(shooter6);
-	Shooter shooter7(window.getSize().x + 100.f, 400, 'm', window);
-	shooter7.setTexture(painBizarre);
-	vectorShooter.push_back(shooter7);
-	Shooter shooter8(window.getSize().x + 100.f, 500, 'm', window);
-	shooter8.setTexture(banana);
-	vectorShooter.push_back(shooter8);
-	Shooter shooter9(window.getSize().x + 100.f, 600, 'm', window);
-	shooter9.setTexture(carrot);
-	vectorShooter.push_back(shooter9);
-	Shooter shooter10(window.getSize().x + 100.f, 700, 'm', window);
-	shooter10.setTexture(banana);
-	vectorShooter.push_back(shooter10);
-	Shooter shooter11(window.getSize().x + 100.f, 900, 'm', window);
-	shooter11.setTexture(painBizarre);
-	vectorShooter.push_back(shooter11);
-	Shooter shooter12(window.getSize().x + 100.f, 900, 'm', window);
-	shooter12.setTexture(burger);
-	vectorShooter.push_back(shooter12);
-	Shooter shooter13(window.getSize().x + 100.f, 900, 'm', window);
-	shooter13.setTexture(burger);
-	vectorShooter.push_back(shooter13);
-	Shooter shooter14(window.getSize().x + 100.f, 900, 'm', window);
-	shooter14.setTexture(painBizarre);
-	vectorShooter.push_back(shooter14);
-	Shooter shooter15(window.getSize().x + 100.f, 200, 'm', window);
-	shooter15.setTexture(apple);
-	vectorShooter.push_back(shooter15);
-	Shooter shooter16(window.getSize().x + 100.f, 300, 'm', window);
-	shooter16.setTexture(painBizarre);
-	vectorShooter.push_back(shooter16);
-	Normal normal1(1900, 500, 's', window);
-	normal1.setTexture(painBizarre);
-	vectorNormal.push_back(normal1);
-	Elite elite1(1200, 800, 's', window);
-	elite1.setTexture(carrot);
-	vectorElite.push_back(elite1);
-	Elite elite2(1500, 700, 'm', window);
-	elite2.setTexture(tomato);
-	vectorElite.push_back(elite2);
-	Elite elite3(1300, 400, 'l', window);
-	elite3.setTexture(carrot);
-	vectorElite.push_back(elite3);
-	Elite elite4(1300, 400, 's', window);
-	elite4.setTexture(carrot);
-	vectorElite.push_back(elite4);
-	Elite elite5(1300, 400, 's', window);
-	elite5.setTexture(carrot);
-	vectorElite.push_back(elite5);
-	Elite elite6(1300, 400, 's', window);
-	elite6.setTexture(carrot);
-	vectorElite.push_back(elite6);
-	Elite elite7(1300, 400, 's', window);
-	elite7.setTexture(carrot);
-	vectorElite.push_back(elite7);
-	Bonus* bonus1 = new Bonus((float)window.getSize().x * 0.1f, -50.f, "shield", player);
-	vectorBonus.push_back(bonus1);
-	Bonus* bonus2 = new Bonus((float)window.getSize().x * 0.2f, -50.f, "x2", player);
-	vectorBonus.push_back(bonus2);
-	Bonus* bonus3 = new Bonus((float)window.getSize().x * 0.3f, -50.f, "oneUp", player);
-	vectorBonus.push_back(bonus3);
+	randomBonusName = rand() % 3;
+	randomBonusXPos = rand() % 3;
+	Bonus* bonus = new Bonus(bonusXSpawn[randomBonusXPos], -50.f, bonusNames[randomBonusName], player);
+	vectorBonus.push_back(bonus);
 }
 
 void Game::FPSCalculation() {
@@ -1609,14 +1526,26 @@ void Game::sugarCalculation() {
 
 void Game::statCalculation() {
 	// UPDATE STRING
-	atkLvlString = "ATK (" + std::to_string(player.atkLvl) +  ")      UP : " + std::to_string(player.atkLvlUpCost);
-	maxHpLvlString = "HP (" + std::to_string(player.maxHpLvl) + ")        UP : " + std::to_string(player.maxHpLvlUpCost);
-	speedLvlString = "SPEED (" + std::to_string(player.speedLvl) + ")  UP : " + std::to_string(player.speedLvlUpCost);
-	baseSpecialString = "BASE";
-	if (player.tripleBought) tripleSpecialString = "TRIPLE";
-	else { tripleSpecialString = "TRIPLE COST : " + std::to_string(player.tripleCost); }
-	if (player.rainBought) rainSpecialString = "RAIN";
-	else { rainSpecialString = "RAIN COST : " + std::to_string(player.rainCost); }
+	if (language == "EN") {
+		atkLvlString = "ATK (" + std::to_string(player.atkLvl) + ")      UP : " + std::to_string(player.atkLvlUpCost);
+		maxHpLvlString = "HP (" + std::to_string(player.maxHpLvl) + ")        UP : " + std::to_string(player.maxHpLvlUpCost);
+		speedLvlString = "SPEED (" + std::to_string(player.speedLvl) + ")  UP : " + std::to_string(player.speedLvlUpCost);
+		baseSpecialString = "BASE";
+		if (player.tripleBought) tripleSpecialString = "TRIPLE";
+		else { tripleSpecialString = "TRIPLE COST : " + std::to_string(player.tripleCost); }
+		if (player.rainBought) rainSpecialString = "RAIN";
+		else { rainSpecialString = "RAIN COST : " + std::to_string(player.rainCost); }
+	}
+	else if (language == "FR") {
+		atkLvlString = "ATQ (" + std::to_string(player.atkLvl) + ")      SUP : " + std::to_string(player.atkLvlUpCost);
+		maxHpLvlString = "PV (" + std::to_string(player.maxHpLvl) + ")        SUP : " + std::to_string(player.maxHpLvlUpCost);
+		speedLvlString = "VIT (" + std::to_string(player.speedLvl) + ")  SUP : " + std::to_string(player.speedLvlUpCost);
+		baseSpecialString = "BASE";
+		if (player.tripleBought) tripleSpecialString = "TRIPLE";
+		else { tripleSpecialString = "PRIX TRIPLE : " + std::to_string(player.tripleCost); }
+		if (player.rainBought) rainSpecialString = "PLUIE";
+		else { rainSpecialString = "PRIX PLUIE : " + std::to_string(player.rainCost); }
+	}
 	// SET STRING
 	gameplayUIStatAtkText.setString(atkLvlString);
 	gameplayUIStatMaxHpText.setString(maxHpLvlString);
@@ -2032,7 +1961,7 @@ void Game::nonPlayerBehavior() {
 			}
 		}
 		else {
-			positionsOccupied[i] = false;
+			positionsOccupied[i % 15] = false;
 			vectorShooter[i].deathAnimationTimer += f_ElapsedTime;
 			vectorShooter[i].setTexture(deathTexture1);
 			if (vectorShooter[i].deathAnimationTimer >= 0.3f) { vectorShooter[i].setTexture(deathTexture2); }
@@ -2116,7 +2045,7 @@ void Game::run() {
 	changeLanguages();
 	loadLevelAssets();
 	loadTextPositions();
-	
+
 	bgStartUpScreenMusic.play();
 
 	while (m_isRunning) {
@@ -2477,6 +2406,9 @@ void Game::pollEvents() {
 						vectorProjectile.clear();
 						vectorPie.clear();
 						vectorSugar.clear();
+						shooterPositions.clear();
+						for (int i = 0; i < 15; ++i)
+							positionsOccupied[i] = false;
 						startUpScreenOn = true;
 						bgStartUpScreenMusic.play();
 					}
@@ -2539,18 +2471,34 @@ void Game::pollEvents() {
 						}
 					}
 				}
-				if (gameplayUIStatAtkText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+				if (gameplayUIStatAtkText.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
 					if (player.getSugarCount() >= player.atkLvlUpCost) {
 						player.setSugarCount(-player.atkLvlUpCost);
-						player.setAtkPower(1.25f); // *= 1.25f
+						player.setAtkPower(1.25); // *= 1.25
 						player.atkLvl++;
-						player.atkLvlUpCost *= 1.25f;
+						player.atkLvlUpCost *= 1.25;
 					}
 				}
-				if (gameplayUISetSpecialBase.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					player.setSpecialAtkType("base"); player.resetSpecialTimer(0); 
+				if (gameplayUIStatMaxHpText.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+					if (player.getSugarCount() >= player.maxHpLvlUpCost) {
+						player.setSugarCount(-player.maxHpLvlUpCost);
+						player.setPlayerMaxHP(10); // += 10
+						player.maxHpLvl++;
+						player.maxHpLvlUpCost *= 1.25;
+					}
 				}
-				if (gameplayUISetSpecialTriple.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+				if (gameplayUIStatSpeedText.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+					if (player.getSugarCount() >= player.speedLvlUpCost) {
+						player.setSugarCount(-player.speedLvlUpCost);
+						player.setPlayerSpeed(100); // += 100
+						player.speedLvl++;
+						player.speedLvlUpCost *= 1.25;
+					}
+				}
+				if (gameplayUISetSpecialBase.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+					player.setSpecialAtkType("base"); player.resetSpecialTimer(0);
+				}
+				if (gameplayUISetSpecialTriple.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
 					if (!player.tripleBought && player.getSugarCount() >= player.tripleCost) {
 						player.tripleBought = true;
 						player.setSugarCount(-player.tripleCost);
@@ -2559,7 +2507,7 @@ void Game::pollEvents() {
 					}
 					else if (player.tripleBought) { player.setSpecialAtkType("triple"); player.resetSpecialTimer(0); }
 				}
-				if (gameplayUISetSpecialRain.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+				if (gameplayUISetSpecialRain.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
 					if (!player.rainBought && player.getSugarCount() >= player.rainCost) {
 						player.rainBought = true;
 						player.setSugarCount(-player.rainCost);
@@ -2569,23 +2517,6 @@ void Game::pollEvents() {
 					else if (player.rainBought) { player.setSpecialAtkType("rain"); player.resetSpecialTimer(0); }
 				}
 			}
-		}
-		if (gameplayUIStatSpeedText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-			if (player.getSugarCount() >= player.speedLvlUpCost) {
-				player.setSugarCount(-player.speedLvlUpCost);
-				player.setPlayerSpeed(100); // += 100
-				player.speedLvl++;
-				player.speedLvlUpCost *= 1.25f;
-			}
-		}
-		if (gameplayUISetSpecialBase.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-			player.setSpecialAtkType("base"); player.resetSpecialTimer(0); 
-		}
-		if (gameplayUISetSpecialTriple.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-			player.setSpecialAtkType("triple"); player.resetSpecialTimer(0); 
-		}
-		if (gameplayUISetSpecialRain.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-			player.setSpecialAtkType("rain"); player.resetSpecialTimer(0); 
 		}
 		// For dragging
 		mouseLastDownX = event.mouseButton.x;
@@ -2641,101 +2572,108 @@ void Game::pollEvents() {
 
 void Game::update() {
 	// MECHANICS
-	//UPDATE SHOOTER PLACEMENTS IF RESOLUTION IS CHANGED
-	if (settingsScreenOn) { 
-		shooterPositions[0]  = { (float)(window.getSize().x * 0.9), (float)(window.getSize().y * 0.1) };
-		shooterPositions[1]  = { (float)(window.getSize().x * 0.9), (float)(window.getSize().y * 0.3) };
-		shooterPositions[2]  = { (float)(window.getSize().x * 0.9), (float)(window.getSize().y * 0.5) };
-		shooterPositions[3]  = { (float)(window.getSize().x * 0.9), (float)(window.getSize().y * 0.7) };
-		shooterPositions[4]  = { (float)(window.getSize().x * 0.9), (float)(window.getSize().y * 0.9) };
-		shooterPositions[5]  = { (float)(window.getSize().x * 0.8), (float)(window.getSize().y * 0.1) };
-		shooterPositions[6]  = { (float)(window.getSize().x * 0.8), (float)(window.getSize().y * 0.3) };
-		shooterPositions[7]  = { (float)(window.getSize().x * 0.8), (float)(window.getSize().y * 0.5) };
-		shooterPositions[8]  = { (float)(window.getSize().x * 0.8), (float)(window.getSize().y * 0.7) };
-		shooterPositions[9]  = { (float)(window.getSize().x * 0.8), (float)(window.getSize().y * 0.9) };
-		shooterPositions[10] = { (float)(window.getSize().x * 0.7), (float)(window.getSize().y * 0.1) };
-		shooterPositions[11] = { (float)(window.getSize().x * 0.7), (float)(window.getSize().y * 0.3) };
-		shooterPositions[12] = { (float)(window.getSize().x * 0.7), (float)(window.getSize().y * 0.5) };
-		shooterPositions[13] = { (float)(window.getSize().x * 0.7), (float)(window.getSize().y * 0.7) };
-		shooterPositions[14] = { (float)(window.getSize().x * 0.7), (float)(window.getSize().y * 0.9) };
-	}
-
 	if (levelOneOn) {
 		if (backgroundActive) {
-			clownWalkAnimationTime += f_ElapsedTime;
-			
-			scoreCalculation();
-			sugarCalculation();
-			statCalculation();
-			playerHPSetter();
-			playerBonusSetter();
-			player.setShootTimer(f_ElapsedTime);
-			player.setSpecialTimer(f_ElapsedTime);                                                      
-			player.setBonusTimer(f_ElapsedTime); // (il est reset quand le joueur touche un bonus donc pas besoin de condition)
-			if (player.hurtCount > 0) {
-				player.hurtTimer += f_ElapsedTime;
+			if (levelProgression < levelOneDuration) {
+				levelProgression += f_ElapsedTime;
+				clownWalkAnimationTime += f_ElapsedTime;
+
+				scoreCalculation();
+				sugarCalculation();
+				statCalculation();
+				playerHPSetter();
+				playerBonusSetter();
+				player.setShootTimer(f_ElapsedTime);
+				player.setSpecialTimer(f_ElapsedTime);
+				player.setBonusTimer(f_ElapsedTime); // (il est reset quand le joueur touche un bonus donc pas besoin de condition)
+				if (player.hurtCount > 0) {
+					player.hurtTimer += f_ElapsedTime;
+				}
+				spriteUpdateTimer += f_ElapsedTime;
+				ennemiesSpawnCooldownDuration += f_ElapsedTime;
+				if (ennemiesSpawnCooldownDuration > ennemiesSpawnCooldown) {
+					ennemiesSpawnCooldownDuration = 0.f;
+					setEnemySpawn(1);
+				}
+				playerInput();
+				updateStatsSpritesCooldown();
+				playerCollisions();
+				playerDeath();
+				nonPlayerBehavior();
+				clownWalkAnimation();
+
+				backgroundMovementLevel1();
 			}
-			spriteUpdateTimer += f_ElapsedTime;
-			playerInput();
-			updateStatsSpritesCooldown();
-			playerCollisions();
-			playerDeath();
-			nonPlayerBehavior();
-			clownWalkAnimation();
-			
-			backgroundMovementLevel1();
+			else {
+				// Afficher l'écran de fin de niveau (avec les stats et tout) ici
+				playerInput();
+			}
 		}
 	}
 	if (levelTwoOn) {
 		if (backgroundActive) {
-			clownWalkAnimationTime += f_ElapsedTime;
+			if (levelProgression < levelTwoDuration) {
+				levelProgression += f_ElapsedTime;
+				clownWalkAnimationTime += f_ElapsedTime;
 
-			scoreCalculation();
-			sugarCalculation();
-			statCalculation();
-			playerHPSetter();
-			playerBonusSetter();
-			player.setShootTimer(f_ElapsedTime);
-			player.setSpecialTimer(f_ElapsedTime);
-			player.setBonusTimer(f_ElapsedTime); // (il est reset quand le joueur touche un bonus donc pas besoin de condition)
-			if (player.hurtCount > 0) {
-				player.hurtTimer += f_ElapsedTime;
+				scoreCalculation();
+				sugarCalculation();
+				statCalculation();
+				playerHPSetter();
+				playerBonusSetter();
+				player.setShootTimer(f_ElapsedTime);
+				player.setSpecialTimer(f_ElapsedTime);
+				player.setBonusTimer(f_ElapsedTime); // (il est reset quand le joueur touche un bonus donc pas besoin de condition)
+				if (player.hurtCount > 0) {
+					player.hurtTimer += f_ElapsedTime;
+				}
+				spriteUpdateTimer += f_ElapsedTime;
+				playerInput();
+				updateStatsSpritesCooldown();
+				playerCollisions();
+				playerDeath();
+				nonPlayerBehavior();
+				clownWalkAnimation();
+
+				backgroundMovementLevel2();
 			}
-			spriteUpdateTimer += f_ElapsedTime;
-			playerInput();
-			updateStatsSpritesCooldown();
-			playerCollisions();
-			playerDeath();
-			nonPlayerBehavior();
-			clownWalkAnimation();
-
-			backgroundMovementLevel2();
+			else {
+				// Afficher l'écran de fin de niveau (avec les stats et tout) ici
+				playerInput();
+			}
 		}
 	}
 	if (levelThreeOn) {
 		if (backgroundActive) {
-			clownWalkAnimationTime += f_ElapsedTime;
+			if (levelProgression < levelOneDuration) {
+				levelProgression += f_ElapsedTime;
+				clownWalkAnimationTime += f_ElapsedTime;
 
-			scoreCalculation();
-			sugarCalculation();
-			statCalculation();
-			playerHPSetter();
-			playerBonusSetter();
-			player.setShootTimer(f_ElapsedTime);
-			player.setSpecialTimer(f_ElapsedTime);
-			player.setBonusTimer(f_ElapsedTime); // (il est reset quand le joueur touche un bonus donc pas besoin de condition)
-			if (player.hurtCount > 0) {
-				player.hurtTimer += f_ElapsedTime;
+				scoreCalculation();
+				sugarCalculation();
+				statCalculation();
+				playerHPSetter();
+				playerBonusSetter();
+				player.setShootTimer(f_ElapsedTime);
+				player.setSpecialTimer(f_ElapsedTime);
+				player.setBonusTimer(f_ElapsedTime); // (il est reset quand le joueur touche un bonus donc pas besoin de condition)
+				if (player.hurtCount > 0) {
+					player.hurtTimer += f_ElapsedTime;
+				}
+				spriteUpdateTimer += f_ElapsedTime;
+				playerInput();
+				updateStatsSpritesCooldown();
+				playerCollisions();
+				playerDeath();
+				nonPlayerBehavior();
+				clownWalkAnimation();
+
+				backgroundMovementLevel3();
 			}
-			spriteUpdateTimer += f_ElapsedTime;
-			playerInput();
-			updateStatsSpritesCooldown();
-			playerCollisions();
-			playerDeath();
-			nonPlayerBehavior();
-			clownWalkAnimation();
-
-			backgroundMovementLevel3();
+			else {
+				// Transition vers le boss fight ici
+				playerInput();
+			}
 		}
 	}
 }

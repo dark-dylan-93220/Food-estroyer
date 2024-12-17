@@ -35,6 +35,10 @@ private:
 	float f_ElapsedTime;
 	std::chrono::steady_clock::time_point startingTimePoint, currentTimePoint;
 	float spriteUpdateTimer = 0;
+	const float levelOneDuration = 120.f; // 2:00
+	const float levelTwoDuration = 124.f; // 2:04
+	const float levelThreeDuration = 122.f; // 2:02
+	float levelProgression = 0.f;   // augmente au fur et à mesure de l'avancement dans le niveau
 	// Language
 	std::string language = "EN";
 	// Layers
@@ -45,7 +49,7 @@ private:
 	bool showPauseMenu = false;
 	// Ennemies
 	std::vector<bool> positionsOccupied;
-	int numberOfStartingEnnemies = 5;
+	int numberOfStartingEnnemies = 7;
 	// Testing
 	int deathCounter = 0;
 
@@ -63,7 +67,7 @@ private:
 	void loadLevel3();
 	// Set the game up
 	void setShooterPositions();
-	void setEnemySpawn();
+	void setEnemySpawn(int numberOfEnnemies);
 	// In game collisions & controls
 	void playerInput();
 	void playerCollisions();
