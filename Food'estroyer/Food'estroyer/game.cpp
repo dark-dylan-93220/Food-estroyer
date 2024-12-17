@@ -150,6 +150,10 @@ namespace {
 	sf::Texture apple;
 	sf::Texture burger;
 	sf::Texture carrot;
+	sf::Texture avocado;
+	sf::Texture fries;
+	sf::Texture salad;
+	sf::Texture pepper;
 	// UI
 	sf::Texture gameplayUILifeBar01Active;
 	sf::Texture gameplayUILifeBar02Active;
@@ -690,12 +694,16 @@ void Game::loadLevelAssets() { // Only loaded once
 	oneUpIconeTexture.loadFromFile("Assets/Images/Clown/oneUpIcone.png");
 	deathTexture1.loadFromFile("Assets/Images/Enemy/Death/death1.png");
 	deathTexture2.loadFromFile("Assets/Images/Enemy/Death/death2.png");
-	painBizarre.loadFromFile("Assets/Images/Enemy/Shooter/m.png");
-	tomato.loadFromFile("Assets/Images/Enemy/Shooter/tomato.png");
-	banana.loadFromFile("Assets/Images/Enemy/Shooter/banana.png");
-	apple.loadFromFile("Assets/Images/Enemy/Shooter/apple.png");
-	burger.loadFromFile("Assets/Images/Enemy/Shooter/burger.png");
-	carrot.loadFromFile("Assets/Images/Enemy/Shooter/carrot.png");
+	painBizarre.loadFromFile("Assets/Images/Enemy/Modele/m.png");
+	tomato.loadFromFile("Assets/Images/Enemy/Modele/tomato.png");
+	banana.loadFromFile("Assets/Images/Enemy/Modele/banana.png");
+	apple.loadFromFile("Assets/Images/Enemy/Modele/apple.png");
+	burger.loadFromFile("Assets/Images/Enemy/Modele/burger.png");
+	carrot.loadFromFile("Assets/Images/Enemy/Modele/carrot.png");
+	avocado.loadFromFile("Assets/Images/Enemy/Modele/avocado.png");
+	fries.loadFromFile("Assets/Images/Enemy/Modele/fries.png");
+	salad.loadFromFile("Assets/Images/Enemy/Modele/salad.png");
+	pepper.loadFromFile("Assets/Images/Enemy/Modele/pepper.png");
 	sugarTexture.loadFromFile("Assets/Images/Enemy/sugarSquare.png");
 	shooterProjectile.loadFromFile("Assets/Images/Enemy/Projectiles/shooterProjectile.png");
 	eliteProjectile.loadFromFile("Assets/Images/Enemy/Projectiles/eliteProjectile.png");
