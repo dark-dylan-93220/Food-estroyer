@@ -322,6 +322,8 @@ Game::Game() :
 	m_isRunning = true;
 	window.setVerticalSyncEnabled(true);
 	// Ennemies
+	positionsOccupied.reserve(15);
+	positionsOccupied.resize(15);
 	for (int i = 0; i < 15; ++i) positionsOccupied.push_back(false);
 	splashScreen();
 }
@@ -932,7 +934,9 @@ void Game::loadGameplayAssets() {
 	sugarIcone.setPosition(window.getSize().x /** 0.99*/ - (sugarIcone.getLocalBounds().width * sugarIcone.getScale().x) * 1.8f, window.getSize().y /** 0.97*/ - (sugarIcone.getLocalBounds().height * sugarIcone.getScale().y) * 1.8f);
 	// TEXTS
 	gameplayUISugarText.setPosition(sugarIcone.getPosition().x - gameplayUISugarText.getGlobalBounds().width - window.getSize().x * 0.005f, sugarIcone.getPosition().y - gameplayUISugarText.getGlobalBounds().height * 0.2f);
-	
+	// Should be loading the ennemies here, each time we launch a level.
+	setEnemySpawn();
+	setShooterPositions();
 }
 
 void Game::loadLevel1() {
@@ -1458,6 +1462,9 @@ void Game::setEnemySpawn() {
 		}
 
 	}*/
+	for (int i = 0; i < 15; ++i) {
+		positionsOccupied[i] = false;
+	}
 	Shooter shooter1(window.getSize().x + 100.f, 800, 'm', window);
 	shooter1.setTexture(apple);
 	vectorShooter.push_back(shooter1);
@@ -2017,6 +2024,7 @@ void Game::nonPlayerBehavior() {
 			}
 		}
 		else {
+			positionsOccupied[i] = false;
 			vectorShooter[i].deathAnimationTimer += f_ElapsedTime;
 			vectorShooter[i].setTexture(deathTexture1);
 			if (vectorShooter[i].deathAnimationTimer >= 0.3f) { vectorShooter[i].setTexture(deathTexture2); }
@@ -2100,8 +2108,6 @@ void Game::run() {
 	changeLanguages();
 	loadLevelAssets();
 	loadTextPositions();
-	setEnemySpawn();
-	setShooterPositions();
 	
 	bgStartUpScreenMusic.play();
 

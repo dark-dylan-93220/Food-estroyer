@@ -1,4 +1,4 @@
-﻿La génération a démarré 17/12/2024 00:44:12.
+﻿La génération a démarré 17/12/2024 01:20:27.
 La verbosité de la journalisation a la valeur Normal.     1>Projet "C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Food'estroyer.vcxproj" sur le nœud 2 (Build cible(s)).
      1>PrepareForBuild:
          La sortie structurée est activée. La mise en forme du compilateur diagnostics reflète la hiérarchie des erreurs. Pour plus d’informations, consultez https://aka.ms/cpp/structured-output.
@@ -6,23 +6,20 @@ La verbosité de la journalisation a la valeur Normal.     1>Projet "C:\Users\PC
          Création de "x64\Release\Food'estroyer.tlog\unsuccessfulbuild", car "AlwaysCreate" a été spécifié.
          Mise à jour de l'horodatage "x64\Release\Food'estroyer.tlog\unsuccessfulbuild".
        ClCompile:
-         D:\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\bin\HostX64\x64\CL.exe /c /I"C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\include" /Zi /nologo /W3 /WX- /diagnostics:column /sdl /O2 /Oi /GL /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /permissive- /Fo"x64\Release\\" /Fd"x64\Release\vc143.pdb" /external:W3 /Gd /TP /FC /errorReport:prompt enemy.cpp game.cpp player.cpp
-         enemy.cpp
+         D:\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\bin\HostX64\x64\CL.exe /c /I"C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\include" /Zi /nologo /W3 /WX- /diagnostics:column /sdl /O2 /Oi /GL /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /permissive- /Fo"x64\Release\\" /Fd"x64\Release\vc143.pdb" /external:W3 /Gd /TP /FC /errorReport:prompt game.cpp
          game.cpp
-     1>C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2533,30): warning C4244: '*=' : conversion de 'float' en 'int', perte possible de données
-     1>C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2564,30): warning C4244: '*=' : conversion de 'float' en 'int', perte possible de données
-         player.cpp
+     1>C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2539,30): warning C4244: '*=' : conversion de 'float' en 'int', perte possible de données
+     1>C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2570,30): warning C4244: '*=' : conversion de 'float' en 'int', perte possible de données
        Link:
          D:\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\bin\HostX64\x64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\x64\Release\Food'estroyer.exe" /NOLOGO /LIBPATH:"C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\lib" "sfml-system.lib" "sfml-window.lib" "sfml-graphics.lib" "sfml-audio.lib" "sfml-network.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\x64\Release\Food'estroyer.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG:incremental /LTCGOUT:"x64\Release\Food'estroyer.iobj" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\x64\Release\Food'estroyer.lib" /MACHINE:X64 x64\Release\enemy.obj
          x64\Release\game.obj
          x64\Release\main.obj
          x64\Release\player.obj
          Génération de code en cours
-         1044 of 1536 functions (68.0%) were compiled, the rest were copied from previous compilation.
-           65 functions were new in current compilation
-           98 functions had inline decision re-evaluated but remain unchanged
+         38 of 1564 functions ( 2.4%) were compiled, the rest were copied from previous compilation.
+           28 functions were new in current compilation
+           26 functions had inline decision re-evaluated but remain unchanged
          Fin de la génération du code
-     1>main.obj : warning LNK4099: PDB '' n'a pu être trouvé avec 'main.obj' ou sur '' ; l'objet sera lié sans informations de débogage
          Food'estroyer.vcxproj -> C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\x64\Release\Food'estroyer.exe
        FinalizeBuildStatus:
          Suppression du fichier "x64\Release\Food'estroyer.tlog\unsuccessfulbuild".
@@ -33,15 +30,10 @@ La génération a réussi.
 
        "C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Food'estroyer.vcxproj" (Build cible) (1) ->
        (ClCompile cible) -> 
-         C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2533,30): warning C4244: '*=' : conversion de 'float' en 'int', perte possible de données
-         C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2564,30): warning C4244: '*=' : conversion de 'float' en 'int', perte possible de données
+         C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2539,30): warning C4244: '*=' : conversion de 'float' en 'int', perte possible de données
+         C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2570,30): warning C4244: '*=' : conversion de 'float' en 'int', perte possible de données
 
-
-       "C:\Users\PC\source\repos\Food-estroyer\Food'estroyer\Food'estroyer\Food'estroyer.vcxproj" (Build cible) (1) ->
-       (Link cible) -> 
-         main.obj : warning LNK4099: PDB '' n'a pu être trouvé avec 'main.obj' ou sur '' ; l'objet sera lié sans informations de débogage
-
-    3 Avertissement(s)
+    2 Avertissement(s)
     0 Erreur(s)
 
-Temps écoulé 00:00:09.27
+Temps écoulé 00:00:02.98

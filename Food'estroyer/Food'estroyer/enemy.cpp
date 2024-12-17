@@ -85,10 +85,11 @@ void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, s
 		if (counter == 15) {
 			// Some function to make the appearing entity dissapear if every slot is occupied
 			// TEMPORARY
-			positionChoice = { -500.f,-500.f };
+			positionChoice = { 0.f,0.f };
 			positionFound = true;
 			waitingForPosition = false;
 			counter = 0;
+			std::cout << "Full" << std::endl;
 		}
 		randomPositionChoice = rand() % shooterPositions.size();
 		if (positionsOccupied[randomPositionChoice] == false) {
