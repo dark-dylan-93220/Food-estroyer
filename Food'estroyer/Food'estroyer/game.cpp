@@ -140,12 +140,14 @@ namespace {
 	sf::Texture shieldIconeTexture;
 	sf::Texture x2IconeTexture;
 	sf::Texture oneUpIconeTexture;
-	// ENEMMIES
+	// ENEMIES
 	sf::Texture deathTexture1;
 	sf::Texture deathTexture2;
 	sf::Texture sugarTexture;
 	sf::Texture shooterProjectile;
 	sf::Texture eliteProjectile;
+	sf::Texture bossProjectile;
+	sf::Texture bossSpecialProjectile;
 	sf::Texture painBizarre;
 	sf::Texture tomato;
 	sf::Texture banana;
@@ -156,6 +158,8 @@ namespace {
 	sf::Texture fries;
 	sf::Texture salad;
 	sf::Texture pepper;
+	// BOSS 
+	sf::Texture bossTexture;
 	// UI
 	sf::Texture gameplayUILifeBar01Active;
 	sf::Texture gameplayUILifeBar02Active;
@@ -301,6 +305,8 @@ namespace {
 	std::vector<Bonus*> vectorBonus;
 	// PLAYER 
 	Player player;
+	//BOSS
+	Boss boss;
 	// DESSINER POINTEURS
 	Projectile projectileDraw;
 	Sugar sugarDraw;
@@ -679,6 +685,7 @@ void Game::loadLevelAssets() { // Only loaded once
 	levelThreeParralax06.loadFromFile("Assets/Images/Level3/6.png");
 	levelThreeParralax07.loadFromFile("Assets/Images/Level3/7.png");
 	levelThreeParralax08.loadFromFile("Assets/Images/Level3/BG.png");
+	// PLAYER
 	playerMove1.loadFromFile("Assets/Images/Clown/Walk/frame_0_walk_clown.png");
 	playerMove2.loadFromFile("Assets/Images/Clown/Walk/frame_1_walk_clown.png");
 	playerAttack1.loadFromFile("Assets/Images/Clown/Attack/frame_0_attack_clown.png");
@@ -696,6 +703,7 @@ void Game::loadLevelAssets() { // Only loaded once
 	oneUpIconeTexture.loadFromFile("Assets/Images/Clown/oneUpIcone.png");
 	deathTexture1.loadFromFile("Assets/Images/Enemy/Death/death1.png");
 	deathTexture2.loadFromFile("Assets/Images/Enemy/Death/death2.png");
+	// ENEMIES
 	painBizarre.loadFromFile("Assets/Images/Enemy/Modele/m.png");
 	tomato.loadFromFile("Assets/Images/Enemy/Modele/tomato.png");
 	banana.loadFromFile("Assets/Images/Enemy/Modele/banana.png");
@@ -706,9 +714,15 @@ void Game::loadLevelAssets() { // Only loaded once
 	fries.loadFromFile("Assets/Images/Enemy/Modele/fries.png");
 	salad.loadFromFile("Assets/Images/Enemy/Modele/salad.png");
 	pepper.loadFromFile("Assets/Images/Enemy/Modele/pepper.png");
+	// BOSS
+	bossTexture.loadFromFile("Assets/Images/Enemy/Modele/salad.png");
+	// ENEMY CREATIONS
 	sugarTexture.loadFromFile("Assets/Images/Enemy/sugarSquare.png");
 	shooterProjectile.loadFromFile("Assets/Images/Enemy/Projectiles/shooterProjectile.png");
 	eliteProjectile.loadFromFile("Assets/Images/Enemy/Projectiles/eliteProjectile.png");
+	bossProjectile.loadFromFile("Assets/Images/Enemy/Projectiles/bossProjectile.png");
+	bossSpecialProjectile.loadFromFile("Assets/Images/Enemy/Projectiles/bossSpecialProjectile.png");
+	// GAMEPLAY UI
 	gameplayUILifeBar01Active.loadFromFile("Assets/Images/GameplayUI/01-active.png");
 	gameplayUILifeBar02Active.loadFromFile("Assets/Images/GameplayUI/02-active.png");
 	gameplayUILifeBar03Active.loadFromFile("Assets/Images/GameplayUI/03-active.png");
@@ -942,6 +956,8 @@ void Game::loadGameplayAssets() {
 	gameplayUILifeBarCurrentSprite.setPosition(sf::Vector2f(0, 0));
 	gameplayUIScoreText.setPosition(sf::Vector2f(window.getSize().x - gameplayUIScoreText.getGlobalBounds().width - window.getSize().x * 0.01f, 0));
 	sugarIcone.setPosition(window.getSize().x /** 0.99*/ - (sugarIcone.getLocalBounds().width * sugarIcone.getScale().x) * 1.8f, window.getSize().y /** 0.97*/ - (sugarIcone.getLocalBounds().height * sugarIcone.getScale().y) * 1.8f);
+	boss.setTexture(bossTexture);
+	boss.setPosition(window.getSize().x * 1.1, window.getSize().y / 2 - (boss.getLocalBounds().height * boss.getScale().y) / 2);
 	// TEXTS
 	gameplayUISugarText.setPosition(sugarIcone.getPosition().x - gameplayUISugarText.getGlobalBounds().width - window.getSize().x * 0.005f, sugarIcone.getPosition().y - gameplayUISugarText.getGlobalBounds().height * 0.2f);
 	// Should be loading the ennemies here, each time we launch a level.
@@ -1913,7 +1929,7 @@ void Game::nonPlayerBehavior() {
 	}
 	for (auto it = vectorProjectile.begin(); it != vectorProjectile.end(); ) {
 		Projectile* projectile = *it;
-		if (!projectile->behavior(f_ElapsedTime, window, vectorProjectile)) {
+		if (!projectile->behavior(f_ElapsedTime, window, vectorProjectile, player)) {
 			delete projectile;                  // Free memory
 			it = vectorProjectile.erase(it);    // Erase returns the next valid iterator
 		}
@@ -1991,6 +2007,7 @@ void Game::nonPlayerBehavior() {
 			if (vectorElite[i].deathAnimationTimer >= 0.5f) { vectorElite.erase(vectorElite.begin() + i); }
 		}
 	}
+	boss.behavior(f_ElapsedTime, player, vectorProjectile, window);
 }
 
 void Game::nonPlayerDraw() {
@@ -2015,6 +2032,10 @@ void Game::nonPlayerDraw() {
 			projectileDraw.setTexture(shooterProjectile);
 		if (projectile->getId() == "elite")
 			projectileDraw.setTexture(eliteProjectile);
+		if (projectile->getId() == "boss")
+			projectileDraw.setTexture(bossProjectile);
+		if (projectile->getId() == "bossSpecial")
+			projectileDraw.setTexture(bossSpecialProjectile);
 		projectileDraw.setPosition(projectile->getPosition());
 		window.draw(projectileDraw);
 	}
@@ -2037,6 +2058,7 @@ void Game::nonPlayerDraw() {
 	if (player.getX2()) { window.draw(x2Draw); }
 	if (player.getOneUp()) { window.draw(oneUpDraw); }
 
+	window.draw(boss);
 }
 
 void Game::run() {
@@ -2045,7 +2067,7 @@ void Game::run() {
 	changeLanguages();
 	loadLevelAssets();
 	loadTextPositions();
-
+	//setShooterPosition();
 	bgStartUpScreenMusic.play();
 
 	while (m_isRunning) {

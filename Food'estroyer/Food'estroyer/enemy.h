@@ -1,7 +1,8 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
-#include "game.h" // Surtout pour avoir accès aux propriétés de window
+//#include "game.h" // Surtout pour avoir accès aux propriétés de window
+#include "player.h"
 
 //SUGAR DROPPING FROM ENEMIES
 class Sugar : public sf::Sprite {
@@ -25,7 +26,7 @@ class Enemy : public sf::Sprite {
 protected:
 	bool alive = true;
 	bool dropedSugar = false;
-	char size;
+	char size = 'z';
 	float moveSpeedX = -300;
 	float moveSpeedY = -300;
 	float hp = 1;
@@ -36,6 +37,7 @@ protected:
 	float sugarValuePerSize = 0;
 
 	Enemy(float x, float y, char s, sf::RenderWindow& window, sf::Texture& texture);
+	Enemy(); //pour le boss
 public:
 	float deathAnimationTimer = 0;
 
@@ -59,16 +61,24 @@ private:
 	std::string id;
 	float atkPower = 1;
 	bool state = true;
+	float speedX = -600;
+	float speedY = 0;
 public:
+	Projectile();
+
 	std::string getId() const { return id; }
 	float getAtkPower() const { return atkPower; }
 	bool getState() const { return state; }
+	float getSpeedX() const { return speedX; }
+	float getSpeedY() const { return speedY; }
 
 	void setId(std::string newId) { id = newId; }
 	void setAtkPower(float newPower) { atkPower = newPower; }
 	void setState(bool newState) { state = newState; }
+	void setSpeedX(float newSpeed) { speedX = newSpeed; }
+	void setSpeedY(float newSpeed) { speedY = newSpeed; }
 
-	bool behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Projectile*>& vectorProjectiles);
+	bool behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Projectile*>& vectorProjectiles, Player &player);
 };
 
 //NORMAL ENEMIES (ONLY MOVING LEFT)
@@ -117,7 +127,23 @@ public:
 
 	Elite(float x, float y, char s, sf::RenderWindow& window, sf::Texture& texture);
 
-	void behavior(float timeElapsed, sf::CircleShape player, std::vector<Projectile*>& vectorProjectile, sf::RenderWindow& window);
+	void behavior(float timeElapsed, Player &player, std::vector<Projectile*>& vectorProjectile, sf::RenderWindow& window);
+
+	std::string getId() const { return id; }
+};
+class Boss : public Enemy {
+private:
+	std::string id = "boss";
+	float projectileSpeedX = -800;
+	float updatingSpeedY = 0;
+	float updatingSpeedYSetter = 137;
+	float shootCooldown = 0;
+	float specialCooldown = 0;
+public:
+
+	Boss();
+
+	bool behavior(float timeElapsed, Player& player, std::vector<Projectile*>& vectorProjectile, sf::RenderWindow& window);
 
 	std::string getId() const { return id; }
 };
