@@ -4,7 +4,7 @@
 //#include "game.h" // Surtout pour avoir accès aux propriétés de window
 #include "player.h"
 
-//SUGAR DROPPING FROM ENEMIES
+// SUGAR DROPPING FROM ENEMIES
 class Sugar : public sf::Sprite {
 private:
 	char size = 'z';
@@ -21,10 +21,12 @@ public:
 	bool behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Sugar*>& vectorSugar);
 };
 
-//CLASSE DE BASE : ENEMY
+// CLASSE DE BASE : ENEMY
 class Enemy : public sf::Sprite {
 protected:
+	bool hasBeenWaiting = false;
 	bool alive = true;
+	bool deadID = false;
 	bool dropedSugar = false;
 	char size = 'z';
 	float moveSpeedX = -300;
@@ -36,8 +38,8 @@ protected:
 	int sugarValue = 0;
 	float sugarValuePerSize = 0;
 
-	Enemy(float x, float y, char s, sf::RenderWindow& window, sf::Texture& texture);
-	Enemy(); //pour le boss
+	Enemy(float x, float y, char s, sf::RenderWindow& window, sf::Texture& texture); // Constrcuteur pour les normaux, shooters et élites
+	Enemy(); // Constructeur pour le boss
 public:
 	float deathAnimationTimer = 0;
 
@@ -55,7 +57,7 @@ public:
 	void dropSugar(std::vector<Sugar*>& vectorSugar, Enemy& enemy);
 };
 
-//PROJECTILES
+// PROJECTILES
 class Projectile : public sf::Sprite {
 private:
 	std::string id;
@@ -81,7 +83,7 @@ public:
 	bool behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Projectile*>& vectorProjectiles, Player &player);
 };
 
-//NORMAL ENEMIES (ONLY MOVING LEFT)
+// NORMAL ENEMIES (ONLY MOVING LEFT)
 class Normal : public Enemy {
 private:
 	std::string id = "normal";
@@ -93,10 +95,11 @@ public:
 	std::string getId() const { return id; }
 };
 
-//SHOOTERS (FIXED POSITIONS, CAN SHOOT)
+// SHOOTERS (FIXED POSITIONS, CAN SHOOT)
 class Shooter : public Enemy {
 private:
 	std::string id = "shooter";
+	int idNum = -1;
 public:
 	bool positionFound = false;
 	bool positionReached = false;
@@ -111,12 +114,14 @@ public:
 
 	Shooter(float x, float y, char s, sf::RenderWindow& window, sf::Texture& texture);
 
-	void behavior(float timeElapsed, std::vector<Shooter>& vectorShooters, std::vector<sf::Vector2f>& shooterPositions, std::vector<Projectile*>& vectorProjectile, std::vector<bool>& positionsOccupied);
+	void behavior(float timeElapsed, std::vector<Shooter>& vectorShooters, std::vector<sf::Vector2f>& shooterPositions, std::vector<Projectile*>& vectorProjectile, std::vector<bool>& positionsOccupied, sf::RenderWindow& window);
 
+	void setId(int newId) { idNum = newId; }
 	std::string getId() const { return id; }
+	int getIdNum() const { return idNum; }
 };
 
-//ELITES (TRACK THE PLAYER, CAN SHOOT)
+// ELITES (TRACK THE PLAYER, CAN SHOOT)
 class Elite : public Enemy {
 private:
 	std::string id = "elite";
@@ -131,6 +136,8 @@ public:
 
 	std::string getId() const { return id; }
 };
+
+// BOSS (PROJECTILES TRACKS THE PLAYER, CAN SHOOT AND TAKES ALL THE HEIGHT OF THE SCREEN)
 class Boss : public Enemy {
 private:
 	std::string id = "boss";

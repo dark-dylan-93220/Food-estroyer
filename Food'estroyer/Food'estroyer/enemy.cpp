@@ -55,7 +55,7 @@ Elite::Elite(float x, float y, char s, sf::RenderWindow& window, sf::Texture& te
 Boss::Boss() {
 	hp = 10000;
 	atkPower = 20;
-	sugarValue = (int)5000;
+	sugarValue = 5000;
 	moveSpeedY = 0;
 }
 Projectile::Projectile() {
@@ -83,8 +83,10 @@ void Normal::behavior(float timeElapsed) {
 	move(moveSpeedX * timeElapsed, 0);
 }
 
-void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, std::vector<sf::Vector2f>& shooterPositions,
-	std::vector<Projectile*>& vectorProjectile, std::vector<bool>& positionsOccupied) {
+void Shooter::behavior(
+	float timeElapsed, 
+	std::vector<Shooter>& vectorShooter, std::vector<sf::Vector2f>& shooterPositions, 
+	std::vector<Projectile*>& vectorProjectile, std::vector<bool>& positionsOccupied, sf::RenderWindow& window) {
 
 	if (hp <= 0) { alive = false; }
 
@@ -97,13 +99,10 @@ void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, s
 			}
 		}
 		if (counter == 15) {
-			// Some function to make the appearing entity dissapear if every slot is occupied
-			// TEMPORARY
-			positionChoice = { 0.f,0.f };
+			positionChoice = { 9999.f,9999.f };
 			positionFound = true;
 			waitingForPosition = false;
 			counter = 0;
-			std::cout << "Full" << std::endl;
 		}
 		randomPositionChoice = rand() % shooterPositions.size();
 		if (positionsOccupied[randomPositionChoice] == false) {
@@ -115,7 +114,6 @@ void Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooter, s
 	}
 	// REDUCE SPEED IF SHOOTER IS APPROACHING POSITION
 	if (positionFound == true && waitingForPosition == false) {
-
 		if (positionChoice.x > getPosition().x) {
 			if (positionChoice.x - getPosition().x <= 20)
 				moveDirX = 1;
@@ -259,10 +257,10 @@ bool Sugar::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Su
 bool Projectile::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Projectile*>& vectorProjectiles, Player &player) {
 	if (state) {
 		if (getId() == "bossSpecial") {
-			if (getPosition().y > player.getPosition().y + player.getRadius() * 1.5 && getPosition().x + (getLocalBounds().width * getScale().x) > player.getPosition().x)
-				speedY = -player.getSpeed() * 0.75; //la tete chercheuse garde son efficacité peu importe la vitesse du joueur
-			else if (getPosition().y < player.getPosition().y + player.getRadius() * 0.5 && getPosition().x + (getLocalBounds().width * getScale().x) > player.getPosition().x)
-				speedY = player.getSpeed() * 0.75;
+			if (getPosition().y > player.getPosition().y + player.getRadius() * 1.5f && getPosition().x + (getLocalBounds().width * getScale().x) > player.getPosition().x)
+				speedY = -player.getSpeed() * 0.75f; //la tete chercheuse garde son efficacité peu importe la vitesse du joueur
+			else if (getPosition().y < player.getPosition().y + player.getRadius() * 0.5f && getPosition().x + (getLocalBounds().width * getScale().x) > player.getPosition().x)
+				speedY = player.getSpeed() * 0.75f;
 			else { speedY = 0; }
 		}
 		move(speedX * timeElapsed, speedY * timeElapsed);
@@ -318,7 +316,7 @@ bool Boss::behavior(float timeElapsed, Player& player, std::vector<Projectile*>&
 				projectile->setAtkPower(getAtkPower() * 2);
 				projectile->setScale(0.3f, 0.3f);
 				projectile->setPosition(getPosition().x - (projectile->getLocalBounds().width * projectile->getScale().x) / 2, player.getPosition().y + player.getRadius());
-				projectile->setSpeedX(projectileSpeedX * 0.75);
+				projectile->setSpeedX(projectileSpeedX * 0.75f);
 				vectorProjectile.push_back(projectile);
 
 				specialCooldown = 0;

@@ -10,8 +10,13 @@ namespace {
 	bool isFullscreen = true;
 	std::vector<sf::VideoMode> modes = sf::VideoMode::getFullscreenModes(); // Gets the native resolutions of the machine this program is running on
 	float clownWalkAnimationTime = 0.f;
-	float ennemiesSpawnCooldown = 0.5f;
+	float ennemiesSpawnCooldown = 0.8f;
 	float ennemiesSpawnCooldownDuration = 0.f;
+	bool levelOneCompleted = false;
+	bool levelTwoCompleted = false;
+	bool levelThreeCompleted = false;
+	int deadEnnemies = 0;
+	int damageTakenPlayer = 0;
 	// CURSORS
 	sf::Cursor pie;
 	// COLORS
@@ -81,6 +86,13 @@ namespace {
 	sf::Text gameplayUISetSpecialBase;
 	sf::Text gameplayUISetSpecialTriple;
 	sf::Text gameplayUISetSpecialRain;
+	sf::Text levelEndScreenTotalScore;
+	sf::Text levelEndScreenTotalEnnemiesKilled;
+	sf::Text levelEndScreenTotalDamageTaken;
+	sf::Text levelEndScreenTitle;
+	sf::Text levelEndScreenNextButton;
+	sf::Text levelEndScreenQuitButton;
+	// --- FIN CHANGEMENTS DYLAN --- //
 	// MUSICS
 	sf::Music bgStartUpScreenMusic;
 	sf::Music bgShopMusic;
@@ -237,6 +249,8 @@ namespace {
 	sf::RectangleShape gameplayPauseSFXControlPlusBtn;
 	sf::RectangleShape gameplayPauseSFXControlMinusBtn;
 	sf::RectangleShape gameplayPauseSettingsMenuBtn;
+	sf::RectangleShape levelProgressionBarBG;
+	sf::RectangleShape levelProgressionBarFG;
 	// SPRITES
 	sf::Sprite bgStartUpScreenSprite;
 	sf::Sprite settingsIconSprite;
@@ -334,8 +348,6 @@ Game::Game() :
 	m_isRunning = true;
 	window.setVerticalSyncEnabled(true);
 	// Ennemies
-	positionsOccupied.reserve(15);
-	positionsOccupied.resize(15);
 	for (int i = 0; i < 15; ++i) positionsOccupied.push_back(false);
 	splashScreen();
 }
@@ -413,7 +425,7 @@ void Game::loadStartUpScreen() {
 void Game::changeLanguages() const {
 	if (language == "EN") {
 		playText.setString("Play");
-		shopText.setString("Shop");
+		shopText.setString("How to play");
 		quitText.setString("Quit");
 		pauseTopBarResolutionText.setString("Resolution");
 		pauseTopBarColorThemeText.setString("Theme");
@@ -425,7 +437,7 @@ void Game::changeLanguages() const {
 	}
 	else if (language == "FR") {
 		playText.setString("Jouer");
-		shopText.setString("Boutique");
+		shopText.setString("Tutos");
 		quitText.setString("Quitter");
 		pauseTopBarResolutionText.setString("Résolution");
 		pauseTopBarColorThemeText.setString("Thème");
@@ -704,7 +716,7 @@ void Game::loadLevelAssets() { // Only loaded once
 	deathTexture1.loadFromFile("Assets/Images/Enemy/Death/death1.png");
 	deathTexture2.loadFromFile("Assets/Images/Enemy/Death/death2.png");
 	// ENEMIES
-	painBizarre.loadFromFile("Assets/Images/Enemy/Modele/m.png");
+	painBizarre.loadFromFile("Assets/Images/Enemy/Modele/pixelatedBread.png");
 	tomato.loadFromFile("Assets/Images/Enemy/Modele/tomato.png");
 	banana.loadFromFile("Assets/Images/Enemy/Modele/banana.png");
 	apple.loadFromFile("Assets/Images/Enemy/Modele/apple.png");
@@ -908,6 +920,15 @@ void Game::loadLevelAssets() { // Only loaded once
 // Loaded multiple times
 void Game::loadGameplayAssets() {
 	// SHAPES
+	levelProgressionBarBG.setSize(sf::Vector2f(window.getSize().x * 0.20f, window.getSize().y * 0.03f));
+	levelProgressionBarBG.setPosition(window.getSize().x - levelProgressionBarBG.getLocalBounds().width - window.getSize().x * 0.01f, window.getSize().y - levelProgressionBarBG.getLocalBounds().height - window.getSize().x * 0.01f);
+	levelProgressionBarBG.setFillColor(sf::Color::Transparent);
+	levelProgressionBarBG.setOutlineThickness(2);
+	levelProgressionBarBG.setOutlineColor(sf::Color::Black);
+	levelProgressionBarFG = levelProgressionBarBG;
+	levelProgressionBarFG.setOutlineThickness(0);
+	levelProgressionBarFG.setFillColor(sf::Color::Green);
+	levelProgressionBarFG.scale(sf::Vector2f(0, 1)); // On initialise la barre de progression à 0%, en gros vide
 	gameplayPauseContent.setSize(sf::Vector2f((window.getSize().x * 0.66f), (window.getSize().y * 0.65f)));
 	gameplayPauseContent.setPosition(sf::Vector2f(window.getSize().x / 2 - gameplayPauseContent.getLocalBounds().width / 2, window.getSize().y / 2 - gameplayPauseContent.getLocalBounds().height / 2));
 	gameplayPauseContent.setFillColor(sf::Color(200, 200, 200, 200));
@@ -955,13 +976,13 @@ void Game::loadGameplayAssets() {
 	gameplayUILifeBarCurrentSprite.setScale(sf::Vector2f((window.getSize().x * 0.20f) / (gameplayUILifeBarCurrentSprite.getLocalBounds().width), (window.getSize().x * 0.04356f) / (gameplayUILifeBarCurrentSprite.getLocalBounds().height)));
 	gameplayUILifeBarCurrentSprite.setPosition(sf::Vector2f(0, 0));
 	gameplayUIScoreText.setPosition(sf::Vector2f(window.getSize().x - gameplayUIScoreText.getGlobalBounds().width - window.getSize().x * 0.01f, 0));
-	sugarIcone.setPosition(window.getSize().x /** 0.99*/ - (sugarIcone.getLocalBounds().width * sugarIcone.getScale().x) * 1.8f, window.getSize().y /** 0.97*/ - (sugarIcone.getLocalBounds().height * sugarIcone.getScale().y) * 1.8f);
+	sugarIcone.setPosition(window.getSize().x / 2 - sugarIcone.getGlobalBounds().width / 2 + gameplayUISugarText.getLocalBounds().width / 2, window.getSize().y - (sugarIcone.getLocalBounds().height * sugarIcone.getScale().y) * 1.8f);
 	boss.setTexture(bossTexture);
-	boss.setPosition(window.getSize().x * 1.1, window.getSize().y / 2 - (boss.getLocalBounds().height * boss.getScale().y) / 2);
+	boss.setPosition(window.getSize().x * 1.1f, window.getSize().y / 2 - (boss.getLocalBounds().height * boss.getScale().y) / 2);
 	// TEXTS
 	gameplayUISugarText.setPosition(sugarIcone.getPosition().x - gameplayUISugarText.getGlobalBounds().width - window.getSize().x * 0.005f, sugarIcone.getPosition().y - gameplayUISugarText.getGlobalBounds().height * 0.2f);
 	// Should be loading the ennemies here, each time we launch a level.
-	setEnemySpawn(numberOfStartingEnnemies);
+	setEnemySpawn(numberOfStartingEnnemies, true);
 	setShooterPositions();
 }
 
@@ -1449,22 +1470,22 @@ void Game::setShooterPositions() {
 	shooterPositions.push_back({ (float)(window.getSize().x * 0.7), (float)(window.getSize().y * 0.9) });
 }
 
-void Game::setEnemySpawn(int numberOfEnnemies) {
+void Game::setEnemySpawn(int numberOfEnnemies, bool isBonusSpawning) {
 	int randomYPosition, randomSize, randomClass, randomBonusName, randomBonusXPos;
 	const float xSpawnPosition = window.getSize().x + 100.f;
 	const int randomHeights[10] = { 0, 100, 200, 300, 400, 500, 600, 700, 800, 900 };
 	const char randomSizes[3] = { 's', 'm', 'l' };
 	const char* bonusNames[3] = { "shield", "x2", "oneUp" };
 	const float bonusXSpawn[3] = { (float)window.getSize().x * 0.1f, (float)window.getSize().x * 0.2f, (float)window.getSize().x * 0.3f };
-	std::vector<sf::Texture*> randomEnemySkins = { &apple, &burger, &banana, &painBizarre, &carrot, &tomato };
+	std::vector<sf::Texture*> randomEnemySkins = { &apple, &burger, &banana, &painBizarre, &carrot, &tomato, &fries, &salad, &avocado, &pepper };
 	for (int i = 0; i < numberOfEnnemies; ++i) {
 		randomClass = rand() % 3 + 1;
 		randomSize = rand() % 3;
 		randomYPosition = rand() % 10;
 
-		Normal normal(xSpawnPosition, randomHeights[randomYPosition], randomSizes[randomSize], window, *randomEnemySkins[rand() % 6]);
-		Shooter shooter(xSpawnPosition, randomHeights[randomYPosition], randomSizes[randomSize], window, *randomEnemySkins[rand() % 6]);
-		Elite elite(xSpawnPosition, randomHeights[randomYPosition], randomSizes[randomSize], window, *randomEnemySkins[rand() % 6]);
+		Normal normal  (xSpawnPosition, randomHeights[randomYPosition], randomSizes[randomSize], window, *randomEnemySkins[rand() % 10]);
+		Shooter shooter(xSpawnPosition, randomHeights[randomYPosition], randomSizes[randomSize], window, *randomEnemySkins[rand() % 10]);
+		Elite elite    (xSpawnPosition, randomHeights[randomYPosition], randomSizes[randomSize], window, *randomEnemySkins[rand() % 10]);
 
 		switch (randomClass) {
 		case 1:
@@ -1480,10 +1501,12 @@ void Game::setEnemySpawn(int numberOfEnnemies) {
 			break;
 		}
 	}
-	randomBonusName = rand() % 3;
-	randomBonusXPos = rand() % 3;
-	Bonus* bonus = new Bonus(bonusXSpawn[randomBonusXPos], -50.f, bonusNames[randomBonusName], player);
-	vectorBonus.push_back(bonus);
+	if (isBonusSpawning) { // Paramètre optionnel, valeur par défaut set à false.
+		randomBonusName = rand() % 3;
+		randomBonusXPos = rand() % 3;
+		Bonus* bonus = new Bonus(bonusXSpawn[randomBonusXPos], -50.f, bonusNames[randomBonusName], player);
+		vectorBonus.push_back(bonus);
+	}
 }
 
 void Game::FPSCalculation() {
@@ -1574,6 +1597,8 @@ void Game::statCalculation() {
 	gameplayUISetSpecialTriple.setPosition(gameplayUISetSpecialBase.getPosition().x + gameplayUISetSpecialBase.getLocalBounds().width + window.getSize().x * 0.05f, gameplayUISetSpecialBase.getPosition().y);
 	gameplayUISetSpecialRain.setPosition(gameplayUISetSpecialTriple.getPosition().x + gameplayUISetSpecialTriple.getLocalBounds().width + window.getSize().x * 0.05f, gameplayUISetSpecialBase.getPosition().y);
 	gameplayUIStatAtkText.setPosition(gameplayUISetSpecialBase.getPosition().x, gameplayUIStatMaxHpText.getPosition().y - gameplayUIStatMaxHpText.getCharacterSize());
+	sugarIcone.setPosition(gameplayUIStatAtkText.getPosition().x + gameplayUISugarText.getLocalBounds().width + window.getSize().x * 0.005f, gameplayUIStatAtkText.getPosition().y - gameplayUIStatAtkText.getLocalBounds().height);
+	gameplayUISugarText.setPosition(sugarIcone.getPosition().x - gameplayUISugarText.getGlobalBounds().width - window.getSize().x * 0.005f, sugarIcone.getPosition().y - gameplayUISugarText.getGlobalBounds().height * 0.2f);
 	gameplayUIStatMaxHpText.setPosition(gameplayUISetSpecialBase.getPosition().x, gameplayUIStatSpeedText.getPosition().y - gameplayUIStatSpeedText.getCharacterSize());
 	gameplayUIStatSpeedText.setPosition(gameplayUISetSpecialBase.getPosition().x, gameplayUISetSpecialBase.getPosition().y - gameplayUIStatSpeedText.getCharacterSize() * 1.1f);
 }
@@ -1673,6 +1698,7 @@ void Game::playerCollisions() {
 					oofSound.play();
 					player.hurtCount++;
 					playerCurrentSprite.setColor(LIGHT_RED);
+					damageTakenPlayer += (int)projectile->getAtkPower();
 				}
 				projectile->setState(false);
 			}
@@ -1682,7 +1708,7 @@ void Game::playerCollisions() {
 				if (player.getShield()) {
 					player.setShield(false);
 				}
-				else { player.damagePlayer(normal.getAtkPower()); player.hurtCount++; playerCurrentSprite.setColor(LIGHT_RED); }
+				else { player.damagePlayer(normal.getAtkPower()); player.hurtCount++; playerCurrentSprite.setColor(LIGHT_RED); damageTakenPlayer += (int)normal.getAtkPower(); }
 			}
 		}
 		for (Shooter& shooter : vectorShooter) {
@@ -1690,7 +1716,7 @@ void Game::playerCollisions() {
 				if (player.getShield()) {
 					player.setShield(false);
 				}
-				else { player.damagePlayer(shooter.getAtkPower()); player.hurtCount++; playerCurrentSprite.setColor(LIGHT_RED); }
+				else { player.damagePlayer(shooter.getAtkPower()); player.hurtCount++; playerCurrentSprite.setColor(LIGHT_RED); damageTakenPlayer += (int)shooter.getAtkPower(); }
 			}
 		}
 		for (Elite& elite : vectorElite) {
@@ -1698,7 +1724,7 @@ void Game::playerCollisions() {
 				if (player.getShield()) {
 					player.setShield(false);
 				}
-				else { player.damagePlayer(elite.getAtkPower()); player.hurtCount++; playerCurrentSprite.setColor(LIGHT_RED); }
+				else { player.damagePlayer(elite.getAtkPower()); player.hurtCount++; playerCurrentSprite.setColor(LIGHT_RED); damageTakenPlayer += (int)elite.getAtkPower(); }
 			}
 		}
 	}
@@ -1957,12 +1983,15 @@ void Game::nonPlayerBehavior() {
 			vectorNormal[i].deathAnimationTimer += f_ElapsedTime;
 			vectorNormal[i].setTexture(deathTexture1);
 			if (vectorNormal[i].deathAnimationTimer >= 0.3f) { vectorNormal[i].setTexture(deathTexture2); }
-			if (vectorNormal[i].deathAnimationTimer >= 0.5f) { vectorNormal.erase(vectorNormal.begin() + i); }
+			if (vectorNormal[i].deathAnimationTimer >= 0.5f) { 
+				vectorNormal.erase(vectorNormal.begin() + i); 
+				deadEnnemies++;
+			}
 		}
 	}
 	for (int i = 0; i < vectorShooter.size(); i++) {
 		if (vectorShooter[i].getAlive()) {
-			vectorShooter[i].behavior(f_ElapsedTime, vectorShooter, shooterPositions, vectorProjectile, positionsOccupied);
+			vectorShooter[i].behavior(f_ElapsedTime, vectorShooter, shooterPositions, vectorProjectile, positionsOccupied, window);
 			vectorShooter[i].dropSugar(vectorSugar, vectorShooter[i]);
 			for (Pie*& pie : vectorPie) {
 				if (vectorShooter[i].getGlobalBounds().intersects(pie->getGlobalBounds())) {
@@ -1981,7 +2010,10 @@ void Game::nonPlayerBehavior() {
 			vectorShooter[i].deathAnimationTimer += f_ElapsedTime;
 			vectorShooter[i].setTexture(deathTexture1);
 			if (vectorShooter[i].deathAnimationTimer >= 0.3f) { vectorShooter[i].setTexture(deathTexture2); }
-			if (vectorShooter[i].deathAnimationTimer >= 0.5f) { vectorShooter.erase(vectorShooter.begin() + i); }
+			if (vectorShooter[i].deathAnimationTimer >= 0.5f) { 
+				vectorShooter.erase(vectorShooter.begin() + i); 
+				deadEnnemies++;
+			}
 		}
 	}
 	for (int i = 0; i < vectorElite.size(); i++) {
@@ -2004,7 +2036,10 @@ void Game::nonPlayerBehavior() {
 			vectorElite[i].deathAnimationTimer += f_ElapsedTime;
 			vectorElite[i].setTexture(deathTexture1);
 			if (vectorElite[i].deathAnimationTimer >= 0.3f) { vectorElite[i].setTexture(deathTexture2); }
-			if (vectorElite[i].deathAnimationTimer >= 0.5f) { vectorElite.erase(vectorElite.begin() + i); }
+			if (vectorElite[i].deathAnimationTimer >= 0.5f) { 
+				vectorElite.erase(vectorElite.begin() + i); 
+				deadEnnemies++;
+			}
 		}
 	}
 	boss.behavior(f_ElapsedTime, player, vectorProjectile, window);
@@ -2058,7 +2093,7 @@ void Game::nonPlayerDraw() {
 	if (player.getX2()) { window.draw(x2Draw); }
 	if (player.getOneUp()) { window.draw(oneUpDraw); }
 
-	window.draw(boss);
+	// window.draw(boss);
 }
 
 void Game::run() {
@@ -2493,34 +2528,34 @@ void Game::pollEvents() {
 						}
 					}
 				}
-				if (gameplayUIStatAtkText.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+				if (gameplayUIStatAtkText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 					if (player.getSugarCount() >= player.atkLvlUpCost) {
 						player.setSugarCount(-player.atkLvlUpCost);
-						player.setAtkPower(1.25); // *= 1.25
+						player.setAtkPower(1.25f); // *= 1.25
 						player.atkLvl++;
-						player.atkLvlUpCost *= 1.25;
+						player.atkLvlUpCost *= 1.25f;
 					}
 				}
-				if (gameplayUIStatMaxHpText.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+				if (gameplayUIStatMaxHpText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 					if (player.getSugarCount() >= player.maxHpLvlUpCost) {
 						player.setSugarCount(-player.maxHpLvlUpCost);
-						player.setPlayerMaxHP(10); // += 10
+						player.setPlayerMaxHP(10.f); // += 10
 						player.maxHpLvl++;
-						player.maxHpLvlUpCost *= 1.25;
+						player.maxHpLvlUpCost *= 1.25f;
 					}
 				}
-				if (gameplayUIStatSpeedText.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+				if (gameplayUIStatSpeedText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 					if (player.getSugarCount() >= player.speedLvlUpCost) {
 						player.setSugarCount(-player.speedLvlUpCost);
-						player.setPlayerSpeed(100); // += 100
+						player.setPlayerSpeed(100.f); // += 100
 						player.speedLvl++;
-						player.speedLvlUpCost *= 1.25;
+						player.speedLvlUpCost *= 1.25f;
 					}
 				}
-				if (gameplayUISetSpecialBase.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+				if (gameplayUISetSpecialBase.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 					player.setSpecialAtkType("base"); player.resetSpecialTimer(0);
 				}
-				if (gameplayUISetSpecialTriple.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+				if (gameplayUISetSpecialTriple.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 					if (!player.tripleBought && player.getSugarCount() >= player.tripleCost) {
 						player.tripleBought = true;
 						player.setSugarCount(-player.tripleCost);
@@ -2529,7 +2564,7 @@ void Game::pollEvents() {
 					}
 					else if (player.tripleBought) { player.setSpecialAtkType("triple"); player.resetSpecialTimer(0); }
 				}
-				if (gameplayUISetSpecialRain.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+				if (gameplayUISetSpecialRain.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 					if (!player.rainBought && player.getSugarCount() >= player.rainCost) {
 						player.rainBought = true;
 						player.setSugarCount(-player.rainCost);
@@ -2598,6 +2633,9 @@ void Game::update() {
 		if (backgroundActive) {
 			if (levelProgression < levelOneDuration) {
 				levelProgression += f_ElapsedTime;
+				levelProgressionBarFG.setScale(sf::Vector2f((levelProgression / levelOneDuration), 1.f));
+				// On augmente la taille de la barre de progression de façon relative à l'avancement dans le niveau 
+				// (en gros du pourcentage fini de la musique).
 				clownWalkAnimationTime += f_ElapsedTime;
 
 				scoreCalculation();
@@ -2615,7 +2653,12 @@ void Game::update() {
 				ennemiesSpawnCooldownDuration += f_ElapsedTime;
 				if (ennemiesSpawnCooldownDuration > ennemiesSpawnCooldown) {
 					ennemiesSpawnCooldownDuration = 0.f;
-					setEnemySpawn(1);
+					if (levelOneDuration / levelProgression < 0.5f) { // Un bonus spawn à la moitié du niveau
+						setEnemySpawn(1, true);
+					}
+					else {
+						setEnemySpawn(1);
+					}
 				}
 				playerInput();
 				updateStatsSpritesCooldown();
@@ -2628,7 +2671,49 @@ void Game::update() {
 			}
 			else {
 				// Afficher l'écran de fin de niveau (avec les stats et tout) ici
-				playerInput();
+				loadTextPositions();
+				levelOneCompleted = true;
+				backgroundActive = false;
+				std::string totalScore;
+				if(language == "FR")
+					totalScore = "Score final : " + std::to_string((int)scoreCounter);
+				else if(language == "EN")
+					totalScore = "Final score : " + std::to_string((int)scoreCounter);
+				std::string totalKills = std::to_string(deadEnnemies);
+				std::string damageTaken = std::to_string(damageTakenPlayer);
+				levelEndScreenTitle = gameplayPauseTitleText;
+				if (language == "EN")
+					levelEndScreenTitle.setString("Level completed");
+				else if (language == "FR")
+					levelEndScreenTitle.setString("Niveau terminé");
+				levelEndScreenTitle.setPosition(sf::Vector2f(window.getSize().x / 2 - levelEndScreenTitle.getLocalBounds().width / 2, levelEndScreenTitle.getPosition().y));
+				levelEndScreenNextButton = gameplayPauseGoBackText;
+				if (language == "EN")
+					levelEndScreenNextButton.setString("Next");
+				else if (language == "FR")
+					levelEndScreenNextButton.setString("Suivant");
+				levelEndScreenNextButton.setPosition(sf::Vector2f(gameplayPauseContent.getPosition().x + gameplayPauseContent.getLocalBounds().width - levelEndScreenNextButton.getLocalBounds().width - window.getSize().x * 0.03f, levelEndScreenNextButton.getPosition().y));
+				levelEndScreenQuitButton = gameplayPauseExitText;
+				if (language == "EN")
+					levelEndScreenQuitButton.setString("Quit");
+				else if (language == "FR")
+					levelEndScreenQuitButton.setString("Quitter");
+				levelEndScreenQuitButton.setPosition(sf::Vector2f(gameplayPauseContent.getPosition().x + window.getSize().x * 0.03f, levelEndScreenQuitButton.getPosition().y));
+				levelEndScreenTotalScore = levelEndScreenQuitButton;
+				levelEndScreenTotalScore.setString(totalScore);
+				levelEndScreenTotalScore.setPosition(sf::Vector2f(window.getSize().x / 2 - levelEndScreenTotalScore.getLocalBounds().width / 2, levelEndScreenQuitButton.getPosition().y - 70.f));
+				levelEndScreenTotalEnnemiesKilled = levelEndScreenTotalScore;
+				if(language == "EN")
+					levelEndScreenTotalEnnemiesKilled.setString("Enemies killed : " + totalKills);
+				else if(language == "FR")
+					levelEndScreenTotalEnnemiesKilled.setString("Ennemis tués : " + totalKills);
+				levelEndScreenTotalEnnemiesKilled.setPosition(sf::Vector2f(window.getSize().x / 2 - levelEndScreenTotalEnnemiesKilled.getLocalBounds().width / 2, levelEndScreenTotalScore.getPosition().y - 70.f));
+				levelEndScreenTotalDamageTaken = levelEndScreenTotalEnnemiesKilled;
+				if(language == "EN")
+					levelEndScreenTotalDamageTaken.setString("Damage taken : " + damageTaken);
+				else if(language == "FR")
+					levelEndScreenTotalDamageTaken.setString("Dégats pris : " + damageTaken);
+				levelEndScreenTotalDamageTaken.setPosition(sf::Vector2f(window.getSize().x / 2 - levelEndScreenTotalDamageTaken.getLocalBounds().width / 2, levelEndScreenTotalEnnemiesKilled.getPosition().y - 70.f));
 			}
 		}
 	}
@@ -2781,6 +2866,17 @@ void Game::render() {
 			window.draw(gameplayUISetSpecialBase);
 			window.draw(gameplayUISetSpecialTriple);
 			window.draw(gameplayUISetSpecialRain);
+			window.draw(levelProgressionBarBG);
+			window.draw(levelProgressionBarFG);
+			if (levelOneCompleted) {
+				window.draw(gameplayPauseContent);
+				window.draw(levelEndScreenTitle);
+				window.draw(levelEndScreenTotalScore);
+				window.draw(levelEndScreenTotalDamageTaken);
+				window.draw(levelEndScreenTotalEnnemiesKilled);
+				window.draw(levelEndScreenNextButton);
+				window.draw(levelEndScreenQuitButton);
+			}
 		}
 		if (levelTwoOn) {
 			// --- FOND PARRALAXE --- //
@@ -2817,6 +2913,8 @@ void Game::render() {
 			window.draw(gameplayUISetSpecialBase);
 			window.draw(gameplayUISetSpecialTriple);
 			window.draw(gameplayUISetSpecialRain);
+			window.draw(levelProgressionBarBG);
+			window.draw(levelProgressionBarFG);
 		}
 		if (levelThreeOn) {
 			// --- FOND PARRALAXE --- //
@@ -2851,6 +2949,8 @@ void Game::render() {
 			window.draw(gameplayUISetSpecialBase);
 			window.draw(gameplayUISetSpecialTriple);
 			window.draw(gameplayUISetSpecialRain);
+			window.draw(levelProgressionBarBG);
+			window.draw(levelProgressionBarFG);
 		}
 		if (showPauseMenu) {
 			window.draw(screenShadowWhenBlured);

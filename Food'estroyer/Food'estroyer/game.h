@@ -35,7 +35,7 @@ private:
 	float f_ElapsedTime;
 	std::chrono::steady_clock::time_point startingTimePoint, currentTimePoint;
 	float spriteUpdateTimer = 0;
-	const float levelOneDuration = 120.f; // 2:00
+	const float levelOneDuration = 20.f; // 2:00
 	const float levelTwoDuration = 124.f; // 2:04
 	const float levelThreeDuration = 122.f; // 2:02
 	float levelProgression = 0.f;   // augmente au fur et à mesure de l'avancement dans le niveau
@@ -67,7 +67,7 @@ private:
 	void loadLevel3();
 	// Set the game up
 	void setShooterPositions();
-	void setEnemySpawn(int numberOfEnnemies);
+	void setEnemySpawn(int numberOfEnnemies, bool bonus = false);
 	// In game collisions & controls
 	void playerInput();
 	void playerCollisions();
