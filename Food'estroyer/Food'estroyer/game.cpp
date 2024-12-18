@@ -10,6 +10,9 @@ namespace {
 	bool isFullscreen = true;
 	std::vector<sf::VideoMode> modes = sf::VideoMode::getFullscreenModes(); // Gets the native resolutions of the machine this program is running on
 	float clownWalkAnimationTime = 0.f;
+	float bossAnimationTime = 0.f;
+	float bossEyeAnimationTime = 0.f;
+	float gameOverAnimation = 0;
 	float ennemiesSpawnCooldown = 0.8f;
 	float ennemiesSpawnCooldownDuration = 0.f;
 	bool levelOneCompleted = false;
@@ -159,6 +162,7 @@ namespace {
 	sf::Texture shooterProjectile;
 	sf::Texture eliteProjectile;
 	sf::Texture bossProjectile;
+	sf::Texture bossSecondProjectile;
 	sf::Texture bossSpecialProjectile;
 	sf::Texture painBizarre;
 	sf::Texture tomato;
@@ -171,7 +175,12 @@ namespace {
 	sf::Texture salad;
 	sf::Texture pepper;
 	// BOSS 
-	sf::Texture bossTexture;
+	sf::Texture bossTexture1;
+	sf::Texture bossTexture2;
+	sf::Texture bossTexture3;
+	sf::Texture bossEyeTexture1;
+	sf::Texture bossEyeTexture2;
+	sf::Texture bossEyeTexture3;
 	// UI
 	sf::Texture gameplayUILifeBar01Active;
 	sf::Texture gameplayUILifeBar02Active;
@@ -321,8 +330,11 @@ namespace {
 	Player player;
 	//BOSS
 	Boss boss;
+	sf::Sprite bossEye;
+	sf::Sprite bossEye2;
 	// DESSINER POINTEURS
 	Projectile projectileDraw;
+	Projectile projectileDrawRound;
 	Sugar sugarDraw;
 	Pie pieDraw;
 	Bonus bonusDraw(1.f, 1.f, "shield", player);
@@ -727,12 +739,18 @@ void Game::loadLevelAssets() { // Only loaded once
 	salad.loadFromFile("Assets/Images/Enemy/Modele/salad.png");
 	pepper.loadFromFile("Assets/Images/Enemy/Modele/pepper.png");
 	// BOSS
-	bossTexture.loadFromFile("Assets/Images/Enemy/Modele/salad.png");
+	bossTexture1.loadFromFile("Assets/Images/Enemy/Boss/spaghettiBoss1.png");
+	bossTexture2.loadFromFile("Assets/Images/Enemy/Boss/spaghettiBoss2.png");
+	bossTexture3.loadFromFile("Assets/Images/Enemy/Boss/spaghettiBoss3.png");
+	bossEyeTexture1.loadFromFile("Assets/Images/Enemy/Boss/bossEye1.png");
+	bossEyeTexture2.loadFromFile("Assets/Images/Enemy/Boss/bossEye2.png");
+	bossEyeTexture3.loadFromFile("Assets/Images/Enemy/Boss/bossEye3.png");
 	// ENEMY CREATIONS
 	sugarTexture.loadFromFile("Assets/Images/Enemy/sugarSquare.png");
 	shooterProjectile.loadFromFile("Assets/Images/Enemy/Projectiles/shooterProjectile.png");
 	eliteProjectile.loadFromFile("Assets/Images/Enemy/Projectiles/eliteProjectile.png");
 	bossProjectile.loadFromFile("Assets/Images/Enemy/Projectiles/bossProjectile.png");
+	bossSecondProjectile.loadFromFile("Assets/Images/Enemy/Projectiles/meatBall.png");
 	bossSpecialProjectile.loadFromFile("Assets/Images/Enemy/Projectiles/bossSpecialProjectile.png");
 	// GAMEPLAY UI
 	gameplayUILifeBar01Active.loadFromFile("Assets/Images/GameplayUI/01-active.png");
@@ -977,8 +995,13 @@ void Game::loadGameplayAssets() {
 	gameplayUILifeBarCurrentSprite.setPosition(sf::Vector2f(0, 0));
 	gameplayUIScoreText.setPosition(sf::Vector2f(window.getSize().x - gameplayUIScoreText.getGlobalBounds().width - window.getSize().x * 0.01f, 0));
 	sugarIcone.setPosition(window.getSize().x / 2 - sugarIcone.getGlobalBounds().width / 2 + gameplayUISugarText.getLocalBounds().width / 2, window.getSize().y - (sugarIcone.getLocalBounds().height * sugarIcone.getScale().y) * 1.8f);
-	boss.setTexture(bossTexture);
-	boss.setPosition(window.getSize().x * 1.1f, window.getSize().y / 2 - (boss.getLocalBounds().height * boss.getScale().y) / 2);
+	boss.setTexture(bossTexture1);
+	boss.setPosition(window.getSize().x * 1.1, 0/*window.getSize().y / 2 - (boss.getLocalBounds().height * boss.getScale().y) / 2*/); //taille boss texture : 640x1080 donc le calcul égale à 0 en ajustant le scaling
+	boss.setScale(window.getSize().x / 3 / boss.getLocalBounds().width, window.getSize().y / boss.getLocalBounds().height);
+	bossEye.setTexture(bossEyeTexture1);
+	bossEye.setScale(window.getSize().x * 0.05 / bossEye.getLocalBounds().width, window.getSize().y * 0.09 / bossEye.getLocalBounds().height);
+	bossEye2.setTexture(bossEyeTexture1);
+	bossEye2.setScale(window.getSize().x * 0.05 / bossEye2.getLocalBounds().width, window.getSize().y * 0.09 / bossEye2.getLocalBounds().height);
 	// TEXTS
 	gameplayUISugarText.setPosition(sugarIcone.getPosition().x - gameplayUISugarText.getGlobalBounds().width - window.getSize().x * 0.005f, sugarIcone.getPosition().y - gameplayUISugarText.getGlobalBounds().height * 0.2f);
 	// Should be loading the ennemies here, each time we launch a level.
@@ -1520,16 +1543,48 @@ void Game::FPSCalculation() {
 }
 
 void Game::clownWalkAnimation() {
-	if (clownWalkAnimationTime >= 0.1f) playerCurrentSprite.setTexture(playerMove2);
-	if (clownWalkAnimationTime >= 0.2f) {
-		playerCurrentSprite.setTexture(playerMove1);
+	if (player.getPlayerLife()) {
+		if (clownWalkAnimationTime >= 0.1f) playerCurrentSprite.setTexture(playerMove2);
+		if (clownWalkAnimationTime >= 0.2f) {
+			playerCurrentSprite.setTexture(playerMove1);
 
-		clownWalkAnimationTime = 0.f;
+			clownWalkAnimationTime = 0.f;
+		}
 	}
 }
 
+void Game::bossAnimation() {
+	if (bossAnimationTime >= 0.1f)
+		boss.setTexture(bossTexture1);
+	if (bossAnimationTime >= 0.2f)
+		boss.setTexture(bossTexture2);
+	if (bossAnimationTime >= 0.3f) {
+		boss.setTexture(bossTexture3);
+		bossAnimationTime = 0;
+	}
+
+	if (bossEyeAnimationTime <= 3.f) {
+		bossEye.setTexture(bossEyeTexture1);
+		bossEye2.setTexture(bossEyeTexture1);
+	}
+	if (bossEyeAnimationTime >= 3.1f) {
+		bossEye.setTexture(bossEyeTexture2);
+		bossEye2.setTexture(bossEyeTexture2);
+	}
+	if (bossEyeAnimationTime >= 3.2f) {
+		bossEye.setTexture(bossEyeTexture3);
+		bossEye2.setTexture(bossEyeTexture3);
+	}
+	if (bossEyeAnimationTime >= 3.3f) {
+		bossEye.setTexture(bossEyeTexture2);
+		bossEye2.setTexture(bossEyeTexture2);
+	}
+	if (bossEyeAnimationTime >= 3.4f)
+		bossEyeAnimationTime = 0.f;
+}
+
 void Game::scoreCalculation() {
-	scoreCounter += (100.f * f_ElapsedTime);
+	//scoreCounter += (100.f * f_ElapsedTime);
 	if (scoreCounter < 10)
 		gameplayUIScoreText.setString("Score : 00000" + std::to_string((int)scoreCounter));
 	else if (scoreCounter < 100)
@@ -1698,6 +1753,7 @@ void Game::playerCollisions() {
 					oofSound.play();
 					player.hurtCount++;
 					playerCurrentSprite.setColor(LIGHT_RED);
+					player.noHitTimer = 0;
 					damageTakenPlayer += (int)projectile->getAtkPower();
 				}
 				projectile->setState(false);
@@ -1708,7 +1764,11 @@ void Game::playerCollisions() {
 				if (player.getShield()) {
 					player.setShield(false);
 				}
-				else { player.damagePlayer(normal.getAtkPower()); player.hurtCount++; playerCurrentSprite.setColor(LIGHT_RED); damageTakenPlayer += (int)normal.getAtkPower(); }
+				else { 
+					player.damagePlayer(normal.getAtkPower()); player.hurtCount++; playerCurrentSprite.setColor(LIGHT_RED);
+					player.noHitTimer = 0;
+					damageTakenPlayer += (int)normal.getAtkPower();
+				}
 			}
 		}
 		for (Shooter& shooter : vectorShooter) {
@@ -1716,7 +1776,11 @@ void Game::playerCollisions() {
 				if (player.getShield()) {
 					player.setShield(false);
 				}
-				else { player.damagePlayer(shooter.getAtkPower()); player.hurtCount++; playerCurrentSprite.setColor(LIGHT_RED); damageTakenPlayer += (int)shooter.getAtkPower(); }
+				else { 
+					player.damagePlayer(shooter.getAtkPower()); player.hurtCount++; playerCurrentSprite.setColor(LIGHT_RED);
+					player.noHitTimer = 0;
+					damageTakenPlayer += (int)shooter.getAtkPower(); 
+				}
 			}
 		}
 		for (Elite& elite : vectorElite) {
@@ -1724,7 +1788,21 @@ void Game::playerCollisions() {
 				if (player.getShield()) {
 					player.setShield(false);
 				}
-				else { player.damagePlayer(elite.getAtkPower()); player.hurtCount++; playerCurrentSprite.setColor(LIGHT_RED); damageTakenPlayer += (int)elite.getAtkPower(); }
+				else { 
+					player.damagePlayer(elite.getAtkPower()); player.hurtCount++; playerCurrentSprite.setColor(LIGHT_RED);
+					player.noHitTimer = 0;
+					damageTakenPlayer += (int)elite.getAtkPower(); 
+				}
+			}
+		}
+		if (player.getGlobalBounds().intersects(boss.getGlobalBounds())) {
+			if (player.getShield()) {
+				player.setShield(false);
+			}
+			else { 
+				player.damagePlayer(boss.getAtkPower()); player.hurtCount++; playerCurrentSprite.setColor(LIGHT_RED);
+				player.noHitTimer = 0;
+				damageTakenPlayer += (int)boss.getAtkPower();
 			}
 		}
 	}
@@ -1858,6 +1936,18 @@ void Game::playerHPSetter() {
 }
 
 void Game::playerBonusSetter() {
+	//SCORE MULTIPLIER
+	if (player.noHitTimer > player.noHitCooldown) {
+		player.noHitMultiplier = 1.5;
+	}
+	else { player.noHitMultiplier = 1; }
+
+	if (player.accuracyCounter >= 5) {
+		player.accuracyMultiplier = 1.5;
+	}
+	else { player.accuracyMultiplier = 1; }
+
+	//ACTUAL BONUS
 	shieldDraw.setSize(sf::Vector2f(30, 30));
 	shieldDraw.setPosition(gameplayUILifeBarCurrentSprite.getPosition().x + window.getSize().y * 0.01f,
 		gameplayUILifeBarCurrentSprite.getPosition().y + (gameplayUILifeBarCurrentSprite.getLocalBounds().height * gameplayUILifeBarCurrentSprite.getScale().y) + window.getSize().y * 0.01f);
@@ -1879,7 +1969,7 @@ void Game::playerBonusSetter() {
 	}
 }
 
-void Game::playerDeath() {
+bool Game::playerDeath() {
 	if (player.getPlayerHP() == 0) {
 		if (player.getOneUp()) {
 			player.setOneUp(false);
@@ -1895,7 +1985,44 @@ void Game::playerDeath() {
 			std::cout << "game over" << std::endl;
 			playerDeathSound.play();
 		}
+		gameOverAnimation += f_ElapsedTime;
+		//for (int i = 0; i < 3; i += 0.4) {
+		//	for (int j = 0.4; j += 0.4;) {                                ////////////////////////////////////REPRENDRE  ICI
+
+		//	}
+		//}
+		/*if (gameOverAnimation > 0 && gameOverAnimation <= 0.2)
+			playerCurrentSprite.setTexture(playerDeath1);
+		if (gameOverAnimation > 0.6 && gameOverAnimation <= 0.4)
+			playerCurrentSprite.setTexture(playerDeath2);
+		if (gameOverAnimation > 0.9 && gameOverAnimation <= 0.6)
+			playerCurrentSprite.setTexture(playerDeath3);
+		if (gameOverAnimation > 0.12 && gameOverAnimation <= 0.8)
+			playerCurrentSprite.setTexture(playerDeath4);
+		if (gameOverAnimation > 0.15 && gameOverAnimation <= 0.10)
+			playerCurrentSprite.setTexture(playerDeath5);
+		if (gameOverAnimation > 0.10 && gameOverAnimation <= 0.12)
+			playerCurrentSprite.setTexture(playerDeath6);
+		if (gameOverAnimation > 0.12 && gameOverAnimation <= 0.14)
+			playerCurrentSprite.setTexture(playerDeath3);
+		if (gameOverAnimation > 0.14 && gameOverAnimation <= 0.16)
+			playerCurrentSprite.setTexture(playerDeath4);
+		if (gameOverAnimation > 0.16 && gameOverAnimation <= 0.18)
+			playerCurrentSprite.setTexture(playerDeath5);
+		if (gameOverAnimation > 0.18 && gameOverAnimation <= 0.20)
+			playerCurrentSprite.setTexture(playerDeath6);
+		if (gameOverAnimation > 0.20 && gameOverAnimation <= 0.22)
+			playerCurrentSprite.setTexture(playerDeath3);
+		if (gameOverAnimation > 0.22 && gameOverAnimation <= 0.24)
+			playerCurrentSprite.setTexture(playerDeath4);
+		if (gameOverAnimation > 0.24 && gameOverAnimation <= 0.26)
+			playerCurrentSprite.setTexture(playerDeath5);
+		if (gameOverAnimation > 0.26)
+			playerCurrentSprite.setTexture(playerDeath6);
+		if (gameOverAnimation > 3)
+			return true;*/
 	}
+	return false;
 }
 
 void Game::updateStatsSpritesCooldown() {
@@ -1919,6 +2046,10 @@ void Game::updateStatsSpritesCooldown() {
 			shooter.setColor(sf::Color::White);
 		for (Elite& elite : vectorElite)
 			elite.setColor(sf::Color::White);
+		boss.setColor(sf::Color::White);
+		bossEye.setColor(sf::Color::White);
+		bossEye2.setColor(sf::Color::White);
+
 	}
 }
 
@@ -1936,6 +2067,7 @@ void Game::nonPlayerBehavior() {
 	for (auto it = vectorPie.begin(); it != vectorPie.end(); ) {
 		Pie* pie = *it;
 		if (!pie->behavior(f_ElapsedTime, window, vectorPie)) {
+			if (pie->missed) { player.accuracyCounter = 0; }                                         //RESET ACCURACY COUNTER ICI
 			delete pie;                  // Free memory
 			it = vectorPie.erase(it);    // Erase returns the next valid iterator
 		}
@@ -1965,11 +2097,12 @@ void Game::nonPlayerBehavior() {
 	}
 	for (int i = 0; i < vectorNormal.size(); i++) {
 		if (vectorNormal[i].getAlive()) {
-			vectorNormal[i].behavior(f_ElapsedTime);
+			vectorNormal[i].behavior(f_ElapsedTime, vectorNormal, window);
 			vectorNormal[i].dropSugar(vectorSugar, vectorNormal[i]);
 			for (Pie*& pie : vectorPie) {
 				if (vectorNormal[i].getGlobalBounds().intersects(pie->getGlobalBounds())) {
 					vectorNormal[i].setHp(-pie->getAtkPower());
+					if (pie->maxHitNumber == 1) player.accuracyCounter++; //POUR SET LE MULTIPLIER, IL FAUT UNIQUEMENT TOUCHER HIT AVEC UNE NORMAL ATK
 					spriteUpdateTimer = 0;
 					vectorNormal[i].setColor(sf::Color::Red);
 					if (pie->hitCounter < pie->maxHitNumber) {
@@ -1983,8 +2116,9 @@ void Game::nonPlayerBehavior() {
 			vectorNormal[i].deathAnimationTimer += f_ElapsedTime;
 			vectorNormal[i].setTexture(deathTexture1);
 			if (vectorNormal[i].deathAnimationTimer >= 0.3f) { vectorNormal[i].setTexture(deathTexture2); }
-			if (vectorNormal[i].deathAnimationTimer >= 0.5f) { 
-				vectorNormal.erase(vectorNormal.begin() + i); 
+			if (vectorNormal[i].deathAnimationTimer >= 0.5f) {
+				vectorNormal.erase(vectorNormal.begin() + i);
+				scoreCounter += 100 * player.noHitMultiplier * player.accuracyMultiplier;
 				deadEnnemies++;
 			}
 		}
@@ -1996,6 +2130,7 @@ void Game::nonPlayerBehavior() {
 			for (Pie*& pie : vectorPie) {
 				if (vectorShooter[i].getGlobalBounds().intersects(pie->getGlobalBounds())) {
 					vectorShooter[i].setHp(-pie->getAtkPower());
+					if (pie->maxHitNumber == 1) player.accuracyCounter++;
 					spriteUpdateTimer = 0;
 					vectorShooter[i].setColor(sf::Color::Red);
 					if (pie->hitCounter < pie->maxHitNumber) {
@@ -2010,8 +2145,9 @@ void Game::nonPlayerBehavior() {
 			vectorShooter[i].deathAnimationTimer += f_ElapsedTime;
 			vectorShooter[i].setTexture(deathTexture1);
 			if (vectorShooter[i].deathAnimationTimer >= 0.3f) { vectorShooter[i].setTexture(deathTexture2); }
-			if (vectorShooter[i].deathAnimationTimer >= 0.5f) { 
-				vectorShooter.erase(vectorShooter.begin() + i); 
+			if (vectorShooter[i].deathAnimationTimer >= 0.5f) {
+				vectorShooter.erase(vectorShooter.begin() + i);
+				scoreCounter += 100 * player.noHitMultiplier * player.accuracyMultiplier;
 				deadEnnemies++;
 			}
 		}
@@ -2023,6 +2159,7 @@ void Game::nonPlayerBehavior() {
 			for (Pie*& pie : vectorPie) {
 				if (vectorElite[i].getGlobalBounds().intersects(pie->getGlobalBounds())) {
 					vectorElite[i].setHp(-pie->getAtkPower());
+					if (pie->maxHitNumber == 1) player.accuracyCounter++;
 					spriteUpdateTimer = 0;
 					vectorElite[i].setColor(sf::Color::Red);
 					if (pie->hitCounter < pie->maxHitNumber) {
@@ -2036,13 +2173,55 @@ void Game::nonPlayerBehavior() {
 			vectorElite[i].deathAnimationTimer += f_ElapsedTime;
 			vectorElite[i].setTexture(deathTexture1);
 			if (vectorElite[i].deathAnimationTimer >= 0.3f) { vectorElite[i].setTexture(deathTexture2); }
-			if (vectorElite[i].deathAnimationTimer >= 0.5f) { 
-				vectorElite.erase(vectorElite.begin() + i); 
+			if (vectorElite[i].deathAnimationTimer >= 0.5f) {
+				vectorElite.erase(vectorElite.begin() + i);
+				scoreCounter += 100 * player.noHitMultiplier * player.accuracyMultiplier;
 				deadEnnemies++;
 			}
 		}
 	}
-	boss.behavior(f_ElapsedTime, player, vectorProjectile, window);
+	// BOSS
+	if (boss.spawned) {
+		bossEye.setPosition(boss.getPosition().x,
+			window.getSize().y / 3 - (bossEye.getLocalBounds().height * bossEye.getScale().y) / 2);
+
+		bossEye2.setPosition(boss.getPosition().x,
+			window.getSize().y / 1.5 - (bossEye2.getLocalBounds().height * bossEye2.getScale().y) / 2);
+
+		for (Pie*& pie : vectorPie) {
+			if (boss.getGlobalBounds().intersects(pie->getGlobalBounds())) {
+				boss.setHp(-pie->getAtkPower());
+				spriteUpdateTimer = 0;
+				boss.setColor(LIGHT_YELLOW);
+				if (pie->hitCounter < pie->maxHitNumber) {
+					pie->hitCounter++;
+				}
+				else { pie->setState(false); }
+			}
+			if (bossEye.getGlobalBounds().intersects(pie->getGlobalBounds())) {
+				boss.setHp(-pie->getAtkPower() * 2);  //CRIT DAMAGE SUR L'OEIL
+				spriteUpdateTimer = 0;
+				bossEye.setColor(LIGHT_RED);
+				if (pie->hitCounter < pie->maxHitNumber) {
+					pie->hitCounter++;
+				}
+				else { pie->setState(false); }
+			}
+			if (bossEye2.getGlobalBounds().intersects(pie->getGlobalBounds())) {
+				boss.setHp(-pie->getAtkPower() * 2);  //CRIT DAMAGE SUR L'OEIL
+				spriteUpdateTimer = 0;
+				bossEye2.setColor(LIGHT_RED);
+				if (pie->hitCounter < pie->maxHitNumber) {
+					pie->hitCounter++;
+				}
+				else { pie->setState(false); }
+			}
+		}
+
+		if (!boss.behavior(f_ElapsedTime, player, vectorProjectile, window)) {
+			//DECLENCHER WIN ICI ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		}
+	}
 }
 
 void Game::nonPlayerDraw() {
@@ -2063,16 +2242,25 @@ void Game::nonPlayerDraw() {
 	}
 	for (Projectile*& projectile : vectorProjectile) {
 		projectileDraw.setScale(projectile->getScale());
-		if (projectile->getId() == "shooter")
-			projectileDraw.setTexture(shooterProjectile);
-		if (projectile->getId() == "elite")
-			projectileDraw.setTexture(eliteProjectile);
-		if (projectile->getId() == "boss")
-			projectileDraw.setTexture(bossProjectile);
-		if (projectile->getId() == "bossSpecial")
-			projectileDraw.setTexture(bossSpecialProjectile);
-		projectileDraw.setPosition(projectile->getPosition());
-		window.draw(projectileDraw);
+		projectileDrawRound.setScale(projectile->getScale());
+
+		if (projectile->getId() == "bossLeft" || projectile->getId() == "bossRight" || projectile->getId() == "bossUp" || projectile->getId() == "bossDown") {
+			projectileDrawRound.setTexture(bossSecondProjectile);
+			projectileDrawRound.setPosition(projectile->getPosition());
+			window.draw(projectileDrawRound);
+		}
+		else {
+			if (projectile->getId() == "shooter")
+				projectileDraw.setTexture(shooterProjectile);
+			if (projectile->getId() == "elite")
+				projectileDraw.setTexture(eliteProjectile);
+			if (projectile->getId() == "boss")
+				projectileDraw.setTexture(bossProjectile);
+			if (projectile->getId() == "bossSpecial")
+				projectileDraw.setTexture(bossSpecialProjectile);
+			projectileDraw.setPosition(projectile->getPosition());
+			window.draw(projectileDraw);
+		}
 	}
 	for (Sugar*& sugar : vectorSugar) {
 		sugarDraw.setScale(sugar->getScale());
@@ -2093,7 +2281,11 @@ void Game::nonPlayerDraw() {
 	if (player.getX2()) { window.draw(x2Draw); }
 	if (player.getOneUp()) { window.draw(oneUpDraw); }
 
-	// window.draw(boss);
+	if (boss.getAlive() && boss.spawned) {
+		window.draw(boss);
+		window.draw(bossEye);
+		window.draw(bossEye2);
+	}
 }
 
 void Game::run() {
@@ -2629,6 +2821,13 @@ void Game::pollEvents() {
 
 void Game::update() {
 	// MECHANICS
+	/*if (playerDeath()) {                                 //////////// ARRETER TOUT  QUAND LE PERSO MEURT
+		backgroundActive = false;
+		levelOneOn = false;
+		levelTwoOn = false;
+		levelThreeOn = false;
+		gameOverScreenOn = true;
+	}*/
 	if (levelOneOn) {
 		if (backgroundActive) {
 			if (levelProgression < levelOneDuration) {
@@ -2637,6 +2836,8 @@ void Game::update() {
 				// On augmente la taille de la barre de progression de façon relative à l'avancement dans le niveau 
 				// (en gros du pourcentage fini de la musique).
 				clownWalkAnimationTime += f_ElapsedTime;
+				bossAnimationTime += f_ElapsedTime;
+				bossEyeAnimationTime += f_ElapsedTime;
 
 				scoreCalculation();
 				sugarCalculation();
@@ -2650,6 +2851,7 @@ void Game::update() {
 					player.hurtTimer += f_ElapsedTime;
 				}
 				spriteUpdateTimer += f_ElapsedTime;
+				player.noHitTimer += f_ElapsedTime;
 				ennemiesSpawnCooldownDuration += f_ElapsedTime;
 				if (ennemiesSpawnCooldownDuration > ennemiesSpawnCooldown) {
 					ennemiesSpawnCooldownDuration = 0.f;
@@ -2666,6 +2868,7 @@ void Game::update() {
 				playerDeath();
 				nonPlayerBehavior();
 				clownWalkAnimation();
+				bossAnimation();
 
 				backgroundMovementLevel1();
 			}
@@ -2722,6 +2925,8 @@ void Game::update() {
 			if (levelProgression < levelTwoDuration) {
 				levelProgression += f_ElapsedTime;
 				clownWalkAnimationTime += f_ElapsedTime;
+				bossAnimationTime += f_ElapsedTime;
+				bossEyeAnimationTime += f_ElapsedTime;
 
 				scoreCalculation();
 				sugarCalculation();
@@ -2735,12 +2940,14 @@ void Game::update() {
 					player.hurtTimer += f_ElapsedTime;
 				}
 				spriteUpdateTimer += f_ElapsedTime;
+				player.noHitTimer += f_ElapsedTime;
 				playerInput();
 				updateStatsSpritesCooldown();
 				playerCollisions();
 				playerDeath();
 				nonPlayerBehavior();
 				clownWalkAnimation();
+				bossAnimation();
 
 				backgroundMovementLevel2();
 			}
@@ -2755,6 +2962,8 @@ void Game::update() {
 			if (levelProgression < levelOneDuration) {
 				levelProgression += f_ElapsedTime;
 				clownWalkAnimationTime += f_ElapsedTime;
+				bossAnimationTime += f_ElapsedTime;
+				bossEyeAnimationTime += f_ElapsedTime;
 
 				scoreCalculation();
 				sugarCalculation();
@@ -2768,12 +2977,14 @@ void Game::update() {
 					player.hurtTimer += f_ElapsedTime;
 				}
 				spriteUpdateTimer += f_ElapsedTime;
+				player.noHitTimer += f_ElapsedTime;
 				playerInput();
 				updateStatsSpritesCooldown();
 				playerCollisions();
 				playerDeath();
 				nonPlayerBehavior();
 				clownWalkAnimation();
+				bossAnimation();
 
 				backgroundMovementLevel3();
 			}
@@ -2973,6 +3184,10 @@ void Game::render() {
 			window.draw(gameplayPausePlusSoundTextMusic);
 			window.draw(gameplayPauseMinusSoundTextMusic);
 		}
+	}
+	if (gameOverScreenOn) {
+		window.clear(sf::Color::Black);
+		window.draw(gameplayPauseContent);
 	}
 
 	window.draw(FPSText);

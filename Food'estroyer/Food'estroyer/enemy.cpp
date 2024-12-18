@@ -46,6 +46,13 @@ Shooter::Shooter(float x, float y, char s, sf::RenderWindow& window, sf::Texture
 	atkPower = 15 * atkPowerPerSize;
 	this->setTexture(texture);
 }
+//Shooter::Shooter(float x, float y, char s, sf::RenderWindow& window, sf::Texture& texture, Player& player) : Enemy(x, y, s, window, texture) {
+//	this->setPosition(sf::Vector2f(window.getSize().x + (getLocalBounds().width * getScale().x), player.getPosition().y + player.getRadius() - (getLocalBounds().height * getScale().y) / 2));
+//	hp = 150 * hpPerSize;
+//	sugarValue = int(100 * sugarValuePerSize);
+//	atkPower = 15 * atkPowerPerSize;
+//	this->setTexture(texture);
+//}
 Elite::Elite(float x, float y, char s, sf::RenderWindow& window, sf::Texture& texture) : Enemy(x, y, s, window, texture) {
 	hp = 200 * hpPerSize;
 	sugarValue = int(150 * sugarValuePerSize);
@@ -78,9 +85,9 @@ void Enemy::dropSugar(std::vector<Sugar*>& vectorSugar, Enemy& enemy) {
 	}
 }
 
-void Normal::behavior(float timeElapsed) {
-	if (hp <= 0) { alive = false; }
-	move(moveSpeedX * timeElapsed, 0);
+void Normal::behavior(float timeElapsed, std::vector<Normal>& vectorNormal, sf::RenderWindow &window) {
+	if (hp <= 0 || getPosition().x < -(getLocalBounds().width * getScale().x)) { alive = false; }
+	move(moveSpeedX * 1.25 * timeElapsed, 0);
 }
 
 void Shooter::behavior(
@@ -173,6 +180,26 @@ void Shooter::behavior(
 	}
 }
 
+//void  Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooters, std::vector<Projectile*>& vectorProjectile, sf::RenderWindow& window) {
+//	if (hp <= 0 || getPosition().x < -(getLocalBounds().width * getScale().x)) { alive = false; }
+//	move(moveSpeedX * 0.5 * timeElapsed, 0);
+//	if (shootCooldown >= 3.f) {
+//		Projectile* projectile = new Projectile;
+//		projectile->setId(getId());
+//		projectile->setAtkPower(atkPower);
+//		switch (getSize()) {
+//		case 's': projectile->setScale(0.05f, 0.05f); break;
+//		case 'm': projectile->setScale(0.10f, 0.10f); break;
+//		case 'l': projectile->setScale(0.15f, 0.15f); break;
+//		}
+//		projectile->setPosition(getPosition().x - (getLocalBounds().width * getScale().x) / 2,
+//			getPosition().y + (getLocalBounds().height * getScale().y) / 2 - (projectile->getLocalBounds().height * projectile->getScale().y) / 2);
+//		vectorProjectile.push_back(projectile);
+//		shootCooldown = 0;
+//	}
+//	else { shootCooldown += timeElapsed; }
+//}
+
 void Elite::behavior(float timeElapsed, Player &player, std::vector<Projectile*>& vectorProjectile, sf::RenderWindow& window)
 {
 	if (hp <= 0) { alive = false; }
@@ -256,31 +283,53 @@ bool Sugar::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Su
 
 bool Projectile::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Projectile*>& vectorProjectiles, Player &player) {
 	if (state) {
-		if (getId() == "bossSpecial") {
-			if (getPosition().y > player.getPosition().y + player.getRadius() * 1.5f && getPosition().x + (getLocalBounds().width * getScale().x) > player.getPosition().x)
-				speedY = -player.getSpeed() * 0.75f; //la tete chercheuse garde son efficacité peu importe la vitesse du joueur
-			else if (getPosition().y < player.getPosition().y + player.getRadius() * 0.5f && getPosition().x + (getLocalBounds().width * getScale().x) > player.getPosition().x)
-				speedY = player.getSpeed() * 0.75f;
-			else { speedY = 0; }
-		}
 		move(speedX * timeElapsed, speedY * timeElapsed);
 
-		if (getPosition().x < 0 - 100.f/*(projectiles[i]->getLocalBounds().width * projectiles[i]->getScale().x)*/)
-			state = false;
+		if (getId() == "bossLeft") {
+			if (getPosition().x > startPosition.x + window.getSize().y / 2) {
+				state = false;
+			}
+		}
+		else if (getId() == "bossUp") {
+			if (getPosition().y > startPosition.y + window.getSize().y / 2) {
+				state = false;
+			}
+		}
+		else if (getId() == "bossDown") {
+			if (getPosition().y < startPosition.y - window.getSize().y / 2) {
+				state = false;
+			}
+		}
+		else {
+			if (getId() == "bossSpecial") {
+				if (getPosition().y > player.getPosition().y + player.getRadius() * 1.5f && getPosition().x + (getLocalBounds().width * getScale().x) > player.getPosition().x)
+					speedY = -player.getSpeed() * 0.75f; //la tete chercheuse garde son efficacité peu importe la vitesse du joueur
+				else if (getPosition().y < player.getPosition().y + player.getRadius() * 0.5f && getPosition().x + (getLocalBounds().width * getScale().x) > player.getPosition().x)
+					speedY = player.getSpeed() * 0.75f;
+				else { speedY = 0; }
+			}
+			move(speedX * timeElapsed, speedY * timeElapsed);
+
+			if (getPosition().x < -(getLocalBounds().width * getScale().x))
+				state = false;
+		}
 		return true;
 	}
 	else { return false; }
 }
 
 bool Boss::behavior(float timeElapsed, Player& player, std::vector<Projectile*>& vectorProjectile, sf::RenderWindow& window) {
+	if (hp <= 0) { hp = 0; alive = false; }
 	if (alive) {
 
 		if (getPosition().x - (getLocalBounds().width * getScale().x) / 2 > window.getSize().x / 2) {
 			move(moveSpeedX * timeElapsed, moveSpeedY * timeElapsed);
 		}
 		else {
+			switchCooldown += timeElapsed;
+			if (switchCooldown >= 16) switchCooldown = 0; //ALTERNER ENTRE LES DEUX TYPES D'ATTAQUES
 			// ATTAQUE NORMALE : EFFET ESSUIE GLACE
-			if (shootCooldown >= 0.35) {
+			if (shootCooldown >= 0.3 && switchCooldown < 10) {
 				updatingSpeedY += updatingSpeedYSetter;
 				if (updatingSpeedY >= 400 || updatingSpeedY <= -400) {
 					;
@@ -308,6 +357,53 @@ bool Boss::behavior(float timeElapsed, Player& player, std::vector<Projectile*>&
 				shootCooldown = 0;
 			}
 			else { shootCooldown += timeElapsed; }
+
+			if (secondCooldown > 0.5 && switchCooldown > 11) { // ATTAQUE NORMALE ALT : CROIX SUR POSITION JOUEUR
+				//PROJECTILE DE GAUCHE
+				Projectile* projectile1 = new(Projectile);
+				projectile1->setId("bossLeft");
+				projectile1->setAtkPower(getAtkPower());
+				projectile1->setScale(0.15f, 0.15f);
+				projectile1->setPosition(player.getPosition().x - (window.getSize().y / 2), player.getPosition().y + player.getRadius() - (projectile1->getLocalBounds().height * projectile1->getScale().y) / 2);
+				projectile1->startPosition = projectile1->getPosition();
+				projectile1->setSpeedX(-projectileSpeedX);
+				vectorProjectile.push_back(projectile1);
+
+				//PROJECTILE DE DROITE
+				Projectile* projectile2 = new(Projectile);
+				projectile2->setId("bossRight"); //utile uniquement pr le window.draw
+				projectile2->setAtkPower(getAtkPower());
+				projectile2->setScale(0.15f, 0.15f);
+				projectile2->setPosition(player.getPosition().x + (window.getSize().y / 2), player.getPosition().y + player.getRadius() - (projectile2->getLocalBounds().height * projectile2->getScale().y) / 2);
+				projectile2->startPosition = projectile2->getPosition();
+				projectile2->setSpeedX(projectileSpeedX);
+				vectorProjectile.push_back(projectile2);
+
+				//PROJECTILE DU HAUT
+				Projectile* projectile3 = new(Projectile);
+				projectile3->setId("bossUp");
+				projectile3->setAtkPower(getAtkPower());
+				projectile3->setScale(0.15f, 0.15f);
+				projectile3->setPosition(player.getPosition().x/* + player.getRadius() - (projectile3->getLocalBounds().width * projectile3->getScale().x) / 2*/, player.getPosition().y - (window.getSize().y / 2));
+				projectile3->startPosition = projectile3->getPosition();
+				projectile3->setSpeedX(0);
+				projectile3->setSpeedY(-projectileSpeedX);
+				vectorProjectile.push_back(projectile3);
+
+				//PROJECTILE DU BAS
+				Projectile* projectile4 = new(Projectile);
+				projectile4->setId("bossDown");
+				projectile4->setAtkPower(getAtkPower());
+				projectile4->setScale(0.15f, 0.15f);
+				projectile4->setPosition(player.getPosition().x/* + player.getRadius() - (projectile4->getLocalBounds().width * projectile4->getScale().x) / 2*/, player.getPosition().y + (window.getSize().y / 2));
+				projectile4->startPosition = projectile4->getPosition();
+				projectile4->setSpeedX(0);
+				projectile4->setSpeedY(projectileSpeedX);
+				vectorProjectile.push_back(projectile4);
+
+				secondCooldown = 0;
+			}
+			else { secondCooldown += timeElapsed; }
 
 			// ATTAQUE SPECIALE : TETE CHERCHEUSE
 			if (specialCooldown >= 2.7) {

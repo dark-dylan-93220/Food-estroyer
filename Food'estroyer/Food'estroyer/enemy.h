@@ -66,6 +66,8 @@ private:
 	float speedX = -600;
 	float speedY = 0;
 public:
+	sf::Vector2f startPosition = { 0, 0 };
+
 	Projectile();
 
 	std::string getId() const { return id; }
@@ -90,7 +92,7 @@ private:
 public:
 	Normal(float x, float y, char s, sf::RenderWindow& window, sf::Texture& texture);
 
-	void behavior(float timeElapsed);
+	void behavior(float timeElapsed, std::vector<Normal>& vectorNormal, sf::RenderWindow& window);
 
 	std::string getId() const { return id; }
 };
@@ -143,10 +145,13 @@ private:
 	std::string id = "boss";
 	float projectileSpeedX = -800;
 	float updatingSpeedY = 0;
-	float updatingSpeedYSetter = 137;
+	float updatingSpeedYSetter = 79;
 	float shootCooldown = 0;
+	float secondCooldown = 0;
 	float specialCooldown = 0;
+	float switchCooldown = 0;
 public:
+	bool spawned = false;
 
 	Boss();
 

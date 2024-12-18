@@ -29,6 +29,7 @@ private:
 	bool startUpScreenOn = true;
 	bool settingsScreenOn = false;
 	bool playScreenOn = false;
+	bool gameOverScreenOn = false;
 	// Time gestion
 	int currentFramerateLimit = 60;
 	sf::Clock Clock;
@@ -73,11 +74,12 @@ private:
 	void playerCollisions();
 	void playerHPSetter();
 	void playerBonusSetter();
-	void playerDeath();
+	bool playerDeath();
 	void updateStatsSpritesCooldown();
 	void nonPlayerBehavior();
 	void nonPlayerDraw();
 	void clownWalkAnimation();
+	void bossAnimation();
 	// Parralax backgrounds gestion
 	void backgroundMovementLevel1();
 	void backgroundMovementLevel2();

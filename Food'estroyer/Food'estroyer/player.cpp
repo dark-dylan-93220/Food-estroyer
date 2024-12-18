@@ -50,7 +50,7 @@ void Player::specialAtk(std::vector<Pie*>& vectorPie, sf::RenderWindow& window) 
 	if (specialAtkType == "base") {
 		Pie* specialPie = new Pie;
 		specialPie->specialType = specialAtkType;
-		specialPie->maxHitNumber = 20;
+		specialPie->maxHitNumber = 10;
 		specialPie->setAtkPower(atkPower * 1.5f);
 		specialPie->setRadius(getPieSize() * 5 * window.getSize().x);
 		specialPie->setSpeedX(getPieSpeedX());
@@ -107,8 +107,10 @@ bool Bonus::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Bo
 bool Pie::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Pie*>& vectorPie) {
 	if (state) {
 		move(speedX * timeElapsed, speedY * timeElapsed);
-		if (getPosition().x > window.getSize().x + getRadius() * 2)
+		if (getPosition().x > window.getSize().x + getRadius() * 2) {
 			state = false;
+			missed = true;
+		}
 		return true;
 	}
 	else { return false; }
