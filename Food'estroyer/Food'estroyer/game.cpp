@@ -1979,6 +1979,7 @@ void Game::playerCollisions() {
 					}
 					else {
 						player.damagePlayer(normal.getAtkPower()); player.hurtCount++; playerCurrentSprite.setColor(LIGHT_RED);
+						oofSound.play();
 						player.noHitTimer = 0;
 						damageTakenPlayer += (int)normal.getAtkPower();
 					}
@@ -1991,6 +1992,7 @@ void Game::playerCollisions() {
 					}
 					else {
 						player.damagePlayer(shooter.getAtkPower()); player.hurtCount++; playerCurrentSprite.setColor(LIGHT_RED);
+						oofSound.play();
 						player.noHitTimer = 0;
 						damageTakenPlayer += (int)shooter.getAtkPower();
 					}
@@ -2003,6 +2005,7 @@ void Game::playerCollisions() {
 					}
 					else {
 						player.damagePlayer(elite.getAtkPower()); player.hurtCount++; playerCurrentSprite.setColor(LIGHT_RED);
+						oofSound.play();
 						player.noHitTimer = 0;
 						damageTakenPlayer += (int)elite.getAtkPower();
 					}
@@ -2014,6 +2017,7 @@ void Game::playerCollisions() {
 				}
 				else {
 					player.damagePlayer(boss.getAtkPower()); player.hurtCount++; playerCurrentSprite.setColor(LIGHT_RED);
+					oofSound.play();
 					player.noHitTimer = 0;
 					damageTakenPlayer += (int)boss.getAtkPower();
 				}
@@ -2938,6 +2942,9 @@ void Game::pollEvents() {
 				if (showPauseMenu) {
 					if (gameplayPauseExitBtn.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 						player.resetVariables();
+						bgLvl1Music.stop();
+						bgLvl2Music.stop();
+						bgLvl3Music.stop();
 						levelOneOn = false;
 						levelTwoOn = false;
 						levelThreeOn = false;

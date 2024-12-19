@@ -327,7 +327,7 @@ bool Boss::behavior(float timeElapsed, Player& player, std::vector<Projectile*>&
 	if (alive) {
 
 		if (getPosition().x - (getLocalBounds().width * getScale().x) / 2 > window.getSize().x / 1.9) {
-			move(moveSpeedX * timeElapsed, moveSpeedY * timeElapsed);
+			move(moveSpeedX * 0.24 * timeElapsed, moveSpeedY * timeElapsed);
 			spawning = true;
 		}
 		else {

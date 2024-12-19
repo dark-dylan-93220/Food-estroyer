@@ -63,9 +63,9 @@ public:
 	bool raining = false;
 	int rainCount = 0;
 	int atkLvl = 1;
-	int atkLvlUpCost = 300;
+	int atkLvlUpCost = 500;
 	int maxHpLvl = 1;
-	int maxHpLvlUpCost = 500;
+	int maxHpLvlUpCost = 700;
 	int speedLvl = 1;
 	int speedLvlUpCost = 1000;
 	bool tripleBought = false;
