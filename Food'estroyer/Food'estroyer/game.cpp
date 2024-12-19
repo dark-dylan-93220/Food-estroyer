@@ -2049,6 +2049,7 @@ void Game::playerCollisions() {
 			{
 				player.setSugarCount(sugar->getValue());
 				player.healPlayer(player.getPlayerMaxHP() * sugar->healValue);
+				if (player.getPlayerHP() > player.getPlayerMaxHP()) player.setPlayerHP(player.getPlayerMaxHP());
 				sugarCrunchSound.play();
 				sugar->setState(false);
 			}
