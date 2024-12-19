@@ -48,7 +48,7 @@ private:
 	float specialTimer = 0;
 	float specialCooldown = 0; // on commence avec l'attaque spéciale chargée
 	std::string specialAtkType = "base";
-	int sugarCount = 100000;
+	int sugarCount = 0;
 	float bonusTimer = 0;
 	float bonusCooldown = 0;
 	bool shield = false; //le shield couvre les dégats des projectiles mais pas ceux d'une collision au cac (il annule le premier dégat mais n'active pas le timer d'invincibilité)
@@ -105,6 +105,47 @@ public:
 	bool getX2() const                     { return x2; }
 	bool getOneUp() const                  { return oneUp; }
 	// Setters
+	void resetVariables() {
+		sugarCount = 0;
+		alive = true;
+		hp = 100;
+		sugarCount = 0;
+		shield = false;
+		x2 = false;
+		oneUp = false;
+		raining = false;
+		tripleBought = false;
+		rainBought = false;
+		maxHp = 100;
+		speed = 400;
+		atkPower = 10;
+		pieSpeedX = 1000;
+		pieSize = 0.01f;
+		shootTimer = 0;
+		shootCooldown = 0.2f;
+		specialTimer = 0;
+		specialCooldown = 0;
+		specialAtkType = "base";
+		sugarCount = 0;
+		bonusTimer = 0;
+		bonusCooldown = 0;
+		hurtCount = 0;
+		hurtTimer = 0;
+		rainCount = 0;
+		atkLvl = 1;
+		atkLvlUpCost = 300;
+		maxHpLvl = 1;
+		maxHpLvlUpCost = 500;
+		speedLvl = 1;
+		speedLvlUpCost = 1000;
+		tripleCost = 2000;
+		rainCost = 3000;
+		noHitTimer = 0;
+		noHitCooldown = 1.f;
+		noHitMultiplier = 1;
+		accuracyCounter = 0;
+		accuracyMultiplier = 1;
+	}
 	void setPlayerLife(bool newState)                   { alive = false; }
 	void setPlayerHP(float newHP)                       { hp = newHP; }
 	void setPlayerMaxHP(float newMaxHP)                 { maxHp += newMaxHP; }

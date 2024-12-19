@@ -30,16 +30,20 @@ private:
 	bool settingsScreenOn = false;
 	bool playScreenOn = false;
 	bool gameOverScreenOn = false;
+	bool levelSelectionScreenOn = false;
 	// Time gestion
 	int currentFramerateLimit = 60;
 	sf::Clock Clock;
 	float f_ElapsedTime;
 	std::chrono::steady_clock::time_point startingTimePoint, currentTimePoint;
 	float spriteUpdateTimer = 0;
-	const float levelOneDuration = 20.f; // 2:00
-	const float levelTwoDuration = 124.f; // 2:04
+	const float levelOneDuration = 120.f;   // 2:00
+	const float levelTwoDuration = 124.f;   // 2:04
 	const float levelThreeDuration = 122.f; // 2:02
 	float levelProgression = 0.f;   // augmente au fur et à mesure de l'avancement dans le niveau
+	bool levelOneUnlocked = true;
+	bool levelTwoUnlocked = false;
+	bool levelThreeUnlocked = false;
 	// Language
 	std::string language = "EN";
 	// Layers
@@ -50,7 +54,7 @@ private:
 	bool showPauseMenu = false;
 	// Ennemies
 	std::vector<bool> positionsOccupied;
-	int numberOfStartingEnnemies = 7;
+	int numberOfStartingEnnemies = 5;
 	// Testing
 	int deathCounter = 0;
 
@@ -69,6 +73,10 @@ private:
 	// Set the game up
 	void setShooterPositions();
 	void setEnemySpawn(int numberOfEnnemies, bool bonus = false);
+	void setupLevelSelectionScreen();
+	// Helps to end the game
+	void clearAllVectors();
+	void endScreenInit();
 	// In game collisions & controls
 	void playerInput();
 	void playerCollisions();

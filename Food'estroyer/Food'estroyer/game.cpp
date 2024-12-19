@@ -18,6 +18,8 @@ namespace {
 	bool levelOneCompleted = false;
 	bool levelTwoCompleted = false;
 	bool levelThreeCompleted = false;
+	bool bossFightStarted = false;
+	bool bossFightCompleted = false;
 	int deadEnnemies = 0;
 	int damageTakenPlayer = 0;
 	// CURSORS
@@ -95,14 +97,16 @@ namespace {
 	sf::Text levelEndScreenTitle;
 	sf::Text levelEndScreenNextButton;
 	sf::Text levelEndScreenQuitButton;
-	// --- FIN CHANGEMENTS DYLAN --- //
+	sf::Text levelSelectionScreenOne;
+	sf::Text levelSelectionScreenTwo;
+	sf::Text levelSelectionScreenThree;
+	sf::Text levelSelectionScreenTitle;
 	// MUSICS
 	sf::Music bgStartUpScreenMusic;
-	sf::Music bgShopMusic;
-	sf::Music bgShopMusic2;
 	sf::Music bgLvl1Music;
 	sf::Music bgLvl2Music;
 	sf::Music bgLvl3Music;
+	sf::Music bgBossfightMusic;
 	// SOUNDS
 	sf::SoundBuffer sugarCrunchBuffer;
 	sf::Sound sugarCrunchSound;
@@ -227,7 +231,7 @@ namespace {
 	sf::Texture gameplayUIPauseSoundPlus;
 	sf::Texture gameplayUIPauseSoundMinus;
 	// SHAPES
-	sf::RectangleShape screenShadowWhenBlured;
+	sf::RectangleShape darkerLayer;
 	sf::RectangleShape menuPauseTopBar;
 	sf::RectangleShape menuPauseTopBarResolution;
 	sf::RectangleShape menuPauseTopBarFPS;
@@ -386,11 +390,7 @@ void Game::loadStartUpScreen() {
 	FPSFont.loadFromFile("Assets/Fonts/FPS.TTF");
 	puppy.loadFromFile("Assets/Fonts/FriskyPuppy.ttf");
 	// MUSICS
-	bgStartUpScreenMusic.openFromFile("Assets/Songs/Music/startMenuLoop2.mp3");
-	bgShopMusic.openFromFile("Assets/Songs/Music/shopLoop.mp3");
-	bgShopMusic2.openFromFile("Assets/Songs/Music/shopLoop2.mp3");
-	bgStartUpScreenMusic.setVolume(50);
-	bgShopMusic.setVolume(50);
+	bgStartUpScreenMusic.openFromFile("Assets/Songs/Music/startMenuLoop.mp3");
 	bgStartUpScreenMusic.setLoop(true);
 	// IMAGES
 	pieCursorImg.loadFromFile("Assets/Images/pieCursor.png");
@@ -504,9 +504,9 @@ void Game::loadTextPositions() {
 void Game::loadSettings() {
 	// SHAPES
 	bgStartUpScreenSprite.setScale(sf::Vector2f((window.getSize().x / bgStartUpScreenSprite.getLocalBounds().width), (window.getSize().y / bgStartUpScreenSprite.getLocalBounds().height)));
-	screenShadowWhenBlured.setSize(sf::Vector2f(window.getSize()));
-	screenShadowWhenBlured.setPosition(0.f, 0.f);
-	screenShadowWhenBlured.setFillColor(sf::Color(64, 64, 64, 125));
+	darkerLayer.setSize(sf::Vector2f(window.getSize()));
+	darkerLayer.setPosition(0.f, 0.f);
+	darkerLayer.setFillColor(sf::Color(64, 64, 64, 125));
 	menuPauseTopBar.setSize(sf::Vector2f((window.getSize().x * 0.66f), (window.getSize().y * 0.1f)));
 	menuPauseTopBar.setPosition(sf::Vector2f((window.getSize().x * 0.5f) - (menuPauseTopBar.getLocalBounds().width * 0.5f), (window.getSize().y * 0.1f)));
 	menuPauseTopBar.setFillColor(sf::Color(200, 200, 200, 200));
@@ -668,10 +668,12 @@ void Game::loadLevelAssets() { // Only loaded once
 	score.loadFromFile("Assets/Fonts/score.TTF");
 	scoreBold.loadFromFile("Assets/Fonts/scoreBold.TTF");
 	// MUSICS
+	bgBossfightMusic.openFromFile("Assets/Songs/Music/bossFightMusic.mp3");
+	bgBossfightMusic.setLoop(true);
 	bgLvl1Music.openFromFile("Assets/Songs/Music/bgMusicLevel1.mp3");
 	bgLvl2Music.openFromFile("Assets/Songs/Music/bgMusicLevel2.mp3");
 	bgLvl3Music.openFromFile("Assets/Songs/Music/bgMusicLevel3.mp3");
-	bgShopMusic2.setVolume(50);
+	bgBossfightMusic.setVolume(50);
 	bgLvl1Music.setVolume(50);
 	bgLvl2Music.setVolume(50);
 	bgLvl3Music.setVolume(50);
@@ -1007,6 +1009,45 @@ void Game::loadGameplayAssets() {
 	// Should be loading the ennemies here, each time we launch a level.
 	setEnemySpawn(numberOfStartingEnnemies, true);
 	setShooterPositions();
+}
+
+void Game::setupLevelSelectionScreen() {
+	shooterPositions.clear(); // Pour éviter les bugs au cas où (avant l'appel de loadGameplayAssets())
+	loadGameplayAssets();     // Bien vérifier que le truc n'est executé qu'une seule fois
+	loadSettings();           // Pour avoir accès à une shape sans tout bouger
+	levelSelectionScreenTitle = gameplayPauseTitleText;
+	if (language == "EN")
+		levelSelectionScreenTitle.setString("Level selection");
+	else if (language == "FR")
+		levelSelectionScreenTitle.setString("Selection du niveau");
+	levelSelectionScreenTitle.setPosition(sf::Vector2f(window.getSize().x / 2 - levelSelectionScreenTitle.getLocalBounds().width / 2, gameplayPauseContent.getPosition().y + window.getSize().x * 0.01f));
+	levelSelectionScreenOne   = gameplayPauseExitText;
+	levelSelectionScreenTwo   = gameplayPauseExitText;
+	levelSelectionScreenThree = gameplayPauseExitText;
+	levelSelectionScreenOne.setCharacterSize(35);
+	levelSelectionScreenTwo.setCharacterSize(35);
+	levelSelectionScreenThree.setCharacterSize(35);
+	if (language == "FR") {
+		levelSelectionScreenOne.setString("Niveau 1");
+		levelSelectionScreenTwo.setString("Niveau 2");
+		levelSelectionScreenThree.setString("Niveau 3");
+	}
+	else if (language == "EN") {
+		levelSelectionScreenOne.setString("Level 1");
+		levelSelectionScreenTwo.setString("Level 2");
+		levelSelectionScreenThree.setString("Level 3");
+	}
+	levelSelectionScreenOne.setPosition(sf::Vector2f(window.getSize().x / 2 - levelSelectionScreenOne.getLocalBounds().width / 2, gameplayPauseContent.getPosition().y + (float)gameplayPauseContent.getGlobalBounds().height / 3.25f));
+	levelSelectionScreenTwo.setPosition(sf::Vector2f(window.getSize().x / 2 - levelSelectionScreenTwo.getLocalBounds().width / 2, gameplayPauseContent.getPosition().y + (float)gameplayPauseContent.getGlobalBounds().height / 1.75f));
+	levelSelectionScreenThree.setPosition(sf::Vector2f(window.getSize().x / 2 - levelSelectionScreenThree.getLocalBounds().width / 2, gameplayPauseContent.getPosition().y + gameplayPauseContent.getGlobalBounds().height - window.getSize().x * 0.05f));
+	if (levelTwoUnlocked)
+		levelSelectionScreenTwo.setFillColor(sf::Color::White);
+	else
+		levelSelectionScreenTwo.setFillColor(LIGHT_GRAY);
+	if (levelThreeUnlocked)
+		levelSelectionScreenThree.setFillColor(sf::Color::White);
+	else
+		levelSelectionScreenThree.setFillColor(LIGHT_GRAY);
 }
 
 void Game::loadLevel1() {
@@ -1530,6 +1571,78 @@ void Game::setEnemySpawn(int numberOfEnnemies, bool isBonusSpawning) {
 		Bonus* bonus = new Bonus(bonusXSpawn[randomBonusXPos], -50.f, bonusNames[randomBonusName], player);
 		vectorBonus.push_back(bonus);
 	}
+}
+
+void Game::endScreenInit() {
+	std::string totalScore;
+	if (language == "FR")
+		totalScore = "Score final : " + std::to_string((int)scoreCounter);
+	else if (language == "EN")
+		totalScore = "Final score : " + std::to_string((int)scoreCounter);
+	std::string totalKills = std::to_string(deadEnnemies);
+	std::string damageTaken = std::to_string(damageTakenPlayer);
+	levelEndScreenTitle = gameplayPauseTitleText;
+	if (language == "EN")
+		levelEndScreenTitle.setString("Level completed");
+	else if (language == "FR")
+		levelEndScreenTitle.setString("Niveau terminé");
+	levelEndScreenTitle.setPosition(sf::Vector2f(window.getSize().x / 2 - levelEndScreenTitle.getLocalBounds().width / 2, levelEndScreenTitle.getPosition().y));
+	levelEndScreenNextButton = gameplayPauseGoBackText;
+	if (language == "EN")
+		levelEndScreenNextButton.setString("Next");
+	else if (language == "FR")
+		levelEndScreenNextButton.setString("Suivant");
+	levelEndScreenNextButton.setPosition(sf::Vector2f(gameplayPauseContent.getPosition().x + gameplayPauseContent.getLocalBounds().width - levelEndScreenNextButton.getLocalBounds().width - window.getSize().x * 0.03f, levelEndScreenNextButton.getPosition().y));
+	levelEndScreenQuitButton = gameplayPauseExitText;
+	if (language == "EN")
+		levelEndScreenQuitButton.setString("Quit");
+	else if (language == "FR")
+		levelEndScreenQuitButton.setString("Quitter");
+	levelEndScreenQuitButton.setPosition(sf::Vector2f(gameplayPauseContent.getPosition().x + window.getSize().x * 0.03f, levelEndScreenQuitButton.getPosition().y));
+	levelEndScreenTotalScore = levelEndScreenQuitButton;
+	levelEndScreenTotalScore.setString(totalScore);
+	levelEndScreenTotalScore.setPosition(sf::Vector2f(window.getSize().x / 2 - levelEndScreenTotalScore.getLocalBounds().width / 2, levelEndScreenQuitButton.getPosition().y - 70.f));
+	levelEndScreenTotalEnnemiesKilled = levelEndScreenTotalScore;
+	if (language == "EN")
+		levelEndScreenTotalEnnemiesKilled.setString("Enemies killed : " + totalKills);
+	else if (language == "FR")
+		levelEndScreenTotalEnnemiesKilled.setString("Ennemis tués : " + totalKills);
+	levelEndScreenTotalEnnemiesKilled.setPosition(sf::Vector2f(window.getSize().x / 2 - levelEndScreenTotalEnnemiesKilled.getLocalBounds().width / 2, levelEndScreenTotalScore.getPosition().y - 70.f));
+	levelEndScreenTotalDamageTaken = levelEndScreenTotalEnnemiesKilled;
+	if (language == "EN")
+		levelEndScreenTotalDamageTaken.setString("Damage taken : " + damageTaken);
+	else if (language == "FR")
+		levelEndScreenTotalDamageTaken.setString("Dégats pris : " + damageTaken);
+	levelEndScreenTotalDamageTaken.setPosition(sf::Vector2f(window.getSize().x / 2 - levelEndScreenTotalDamageTaken.getLocalBounds().width / 2, levelEndScreenTotalEnnemiesKilled.getPosition().y - 70.f));
+}
+
+void Game::clearAllVectors() {
+	for (auto bonus : vectorBonus) {
+		delete bonus;
+	}
+	vectorBonus.clear();
+	for (auto pie : vectorPie) {
+		delete pie;
+	}
+	vectorPie.clear();
+	for (auto sugar : vectorSugar) {
+		delete sugar;
+	}
+	vectorSugar.clear();
+	for (auto projectile : vectorProjectile) {
+		delete projectile;
+	}
+	vectorProjectile.clear();
+	vectorNormal.clear();
+	vectorShooter.clear();
+	vectorElite.clear();
+	shooterPositions.clear();
+	for (int i = 0; i < 15; ++i) {
+		positionsOccupied[i] = false;
+	}
+	damageTakenPlayer = 0;
+	deadEnnemies = 0;
+	scoreCounter = 0;
 }
 
 void Game::FPSCalculation() {
@@ -2434,7 +2547,37 @@ void Game::pollEvents() {
 			else
 				pauseLanguageFRText.setFillColor(sf::Color::White);
 		}
-		if (playScreenOn) {
+		if (levelSelectionScreenOn) {
+			if (levelSelectionScreenOne.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+				levelSelectionScreenOne.setFillColor(sf::Color::Green);
+			else
+				levelSelectionScreenOne.setFillColor(sf::Color::White);
+			if (levelTwoUnlocked) {
+				if (levelSelectionScreenTwo.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					levelSelectionScreenTwo.setFillColor(sf::Color::Green);
+				else
+					levelSelectionScreenTwo.setFillColor(sf::Color::White);
+			}
+			else {
+				if (levelSelectionScreenTwo.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					levelSelectionScreenTwo.setFillColor(sf::Color::Red);
+				else
+					levelSelectionScreenTwo.setFillColor(LIGHT_GRAY);
+			}
+			if (levelThreeUnlocked) {
+				if (levelSelectionScreenThree.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					levelSelectionScreenThree.setFillColor(sf::Color::Green);
+				else
+					levelSelectionScreenThree.setFillColor(sf::Color::White);
+			}
+			else {
+				if (levelSelectionScreenThree.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					levelSelectionScreenThree.setFillColor(sf::Color::Red);
+				else
+					levelSelectionScreenThree.setFillColor(LIGHT_GRAY);
+			}
+		}
+		if (playScreenOn &&!levelSelectionScreenOn) {
 			if (showPauseMenu) {
 				if (gameplayPauseExitBtn.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
 					gameplayPauseExitText.setFillColor(LIGHT_RED);
@@ -2460,6 +2603,16 @@ void Game::pollEvents() {
 					gameplayPauseMinusSoundTextMusic.setFillColor(sf::Color::White);
 				else
 					gameplayPauseMinusSoundTextMusic.setFillColor(sf::Color(DARK_THEME));
+			}
+			if (levelOneCompleted || levelTwoCompleted || levelThreeCompleted) {
+				if (levelEndScreenNextButton.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					levelEndScreenNextButton.setFillColor(sf::Color::Green);
+				else
+					levelEndScreenNextButton.setFillColor(sf::Color::White);
+				if (levelEndScreenQuitButton.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					levelEndScreenQuitButton.setFillColor(LIGHT_RED);
+				else
+					levelEndScreenQuitButton.setFillColor(sf::Color::White);
 			}
 			if (gameplayUIStatAtkText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
 				gameplayUIStatAtkText.setFillColor(LIGHT_YELLOW);
@@ -2625,22 +2778,24 @@ void Game::pollEvents() {
 				if (playText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 					playScreenOn = true;
 					startUpScreenOn = false;
-					levelOneOn = true;
-					backgroundActive = true;
-					bgStartUpScreenMusic.stop();
+					bgStartUpScreenMusic.pause();
 					bgLvl1Music.setLoop(false);
 					bgLvl2Music.setLoop(false);
 					bgLvl3Music.setLoop(false);
-					bgLvl1Music.play();
-					loadGameplayAssets();
-					loadLevel1();
+					levelSelectionScreenOn = true;
+					setupLevelSelectionScreen();
+					// levelOneOn = true;
+					// backgroundActive = true;
+					// bgLvl1Music.play();
+					// loadGameplayAssets();
+					// loadLevel1();
 				}
 				// Quitter
 				if (quitText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 					m_isRunning = false;
 				}
 			}
-			if (playScreenOn) {
+			if (playScreenOn && !levelSelectionScreenOn) {
 				if (showPauseMenu) {
 					if (gameplayPauseExitBtn.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 						levelOneOn = false;
@@ -2659,6 +2814,7 @@ void Game::pollEvents() {
 						for (int i = 0; i < 15; ++i)
 							positionsOccupied[i] = false;
 						startUpScreenOn = true;
+						bgBossfightMusic.stop();
 						bgStartUpScreenMusic.play();
 					}
 					if (gameplayPauseGoBackBtn.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
@@ -2668,8 +2824,12 @@ void Game::pollEvents() {
 							bgLvl1Music.play();
 						if (levelTwoOn)
 							bgLvl2Music.play();
-						if (levelThreeOn)
-							bgLvl3Music.play();
+						if (levelThreeOn) {
+							if (!bossFightStarted)
+								bgLvl3Music.play();
+							else
+								bgBossfightMusic.play();
+						}
 					}
 					if (gameplayPausePlusSoundTextSFX.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
 					{
@@ -2701,6 +2861,7 @@ void Game::pollEvents() {
 							}
 							if (levelThreeOn) {
 								bgLvl3Music.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
+								bgBossfightMusic.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
 							}
 						}
 					}
@@ -2716,8 +2877,50 @@ void Game::pollEvents() {
 							}
 							if (levelThreeOn) {
 								bgLvl3Music.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
+								bgBossfightMusic.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
 							}
 						}
+					}
+				}
+				if (levelOneCompleted || levelTwoCompleted || levelThreeCompleted) {
+					if (levelEndScreenNextButton.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						clearAllVectors();
+						player.resetVariables();
+						backgroundActive = true;
+						levelProgression = 0.f;
+						scoreCounter = 0;
+						if (levelOneOn) {
+							loadGameplayAssets();
+							loadLevel2();
+							bgLvl1Music.stop();
+							bgLvl2Music.play();
+							levelOneOn = false;
+							levelTwoOn = true;
+							loadTextPositions();
+							return;
+						}
+						else if (levelTwoOn) {
+							loadGameplayAssets();
+							loadLevel3();
+							bgLvl2Music.stop();
+							bgLvl3Music.play();
+							levelThreeOn = true;
+							levelTwoOn = false;
+							return;
+						}
+						else if (levelThreeOn) {
+							bgLvl3Music.stop();
+							bgStartUpScreenMusic.play();
+							startUpScreenOn = true;
+							levelThreeOn = false;
+							return;
+						}
+					}
+					if (levelEndScreenQuitButton.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						levelOneOn = false; levelTwoOn = false; levelThreeOn = false;
+						bgLvl1Music.stop(); bgLvl2Music.stop(); bgLvl3Music.stop();
+						startUpScreenOn = true;
+						bgStartUpScreenMusic.play();
 					}
 				}
 				if (gameplayUIStatAtkText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
@@ -2766,6 +2969,36 @@ void Game::pollEvents() {
 					else if (player.rainBought) { player.setSpecialAtkType("rain"); player.resetSpecialTimer(0); }
 				}
 			}
+			if (levelSelectionScreenOn) {
+				if (levelSelectionScreenOne.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					clearAllVectors();
+					loadGameplayAssets();
+					loadLevel1();
+					levelOneOn = true;
+					levelSelectionScreenOn = false;
+					bgLvl1Music.play();
+				}
+				if (levelSelectionScreenTwo.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					if (levelTwoUnlocked) {
+						clearAllVectors();
+						loadGameplayAssets();
+						loadLevel2();
+						levelTwoOn = true;
+						levelSelectionScreenOn = false;
+						bgLvl2Music.play();
+					}
+				}
+				if (levelSelectionScreenThree.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					if (levelThreeUnlocked) {
+						clearAllVectors();
+						loadGameplayAssets();
+						loadLevel3();
+						levelThreeOn = true;
+						levelSelectionScreenOn = false;
+						bgLvl3Music.play();
+					}
+				}
+			}
 		}
 		// For dragging
 		mouseLastDownX = event.mouseButton.x;
@@ -2786,8 +3019,16 @@ void Game::pollEvents() {
 			else if (startUpScreenOn) {
 				m_isRunning = false;
 			}
-			else if (playScreenOn) {
+			else if (playScreenOn && !levelSelectionScreenOn) {
 				loadTextPositions();
+				if (bossFightStarted) {
+					bgBossfightMusic.pause();
+				}
+			}
+			else if (levelSelectionScreenOn) {
+				levelSelectionScreenOn = false;
+				startUpScreenOn = true;
+				bgStartUpScreenMusic.play();
 			}
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::K)) {
@@ -2821,7 +3062,7 @@ void Game::pollEvents() {
 
 void Game::update() {
 	// MECHANICS
-	/*if (playerDeath()) {                                 //////////// ARRETER TOUT  QUAND LE PERSO MEURT
+	/*if (playerDeath()) { //////////// ARRETER TOUT  QUAND LE PERSO MEURT
 		backgroundActive = false;
 		levelOneOn = false;
 		levelTwoOn = false;
@@ -2833,8 +3074,6 @@ void Game::update() {
 			if (levelProgression < levelOneDuration) {
 				levelProgression += f_ElapsedTime;
 				levelProgressionBarFG.setScale(sf::Vector2f((levelProgression / levelOneDuration), 1.f));
-				// On augmente la taille de la barre de progression de façon relative à l'avancement dans le niveau 
-				// (en gros du pourcentage fini de la musique).
 				clownWalkAnimationTime += f_ElapsedTime;
 				bossAnimationTime += f_ElapsedTime;
 				bossEyeAnimationTime += f_ElapsedTime;
@@ -2873,50 +3112,11 @@ void Game::update() {
 				backgroundMovementLevel1();
 			}
 			else {
-				// Afficher l'écran de fin de niveau (avec les stats et tout) ici
-				loadTextPositions();
+				levelTwoUnlocked = true;
 				levelOneCompleted = true;
+				loadTextPositions();
 				backgroundActive = false;
-				std::string totalScore;
-				if(language == "FR")
-					totalScore = "Score final : " + std::to_string((int)scoreCounter);
-				else if(language == "EN")
-					totalScore = "Final score : " + std::to_string((int)scoreCounter);
-				std::string totalKills = std::to_string(deadEnnemies);
-				std::string damageTaken = std::to_string(damageTakenPlayer);
-				levelEndScreenTitle = gameplayPauseTitleText;
-				if (language == "EN")
-					levelEndScreenTitle.setString("Level completed");
-				else if (language == "FR")
-					levelEndScreenTitle.setString("Niveau terminé");
-				levelEndScreenTitle.setPosition(sf::Vector2f(window.getSize().x / 2 - levelEndScreenTitle.getLocalBounds().width / 2, levelEndScreenTitle.getPosition().y));
-				levelEndScreenNextButton = gameplayPauseGoBackText;
-				if (language == "EN")
-					levelEndScreenNextButton.setString("Next");
-				else if (language == "FR")
-					levelEndScreenNextButton.setString("Suivant");
-				levelEndScreenNextButton.setPosition(sf::Vector2f(gameplayPauseContent.getPosition().x + gameplayPauseContent.getLocalBounds().width - levelEndScreenNextButton.getLocalBounds().width - window.getSize().x * 0.03f, levelEndScreenNextButton.getPosition().y));
-				levelEndScreenQuitButton = gameplayPauseExitText;
-				if (language == "EN")
-					levelEndScreenQuitButton.setString("Quit");
-				else if (language == "FR")
-					levelEndScreenQuitButton.setString("Quitter");
-				levelEndScreenQuitButton.setPosition(sf::Vector2f(gameplayPauseContent.getPosition().x + window.getSize().x * 0.03f, levelEndScreenQuitButton.getPosition().y));
-				levelEndScreenTotalScore = levelEndScreenQuitButton;
-				levelEndScreenTotalScore.setString(totalScore);
-				levelEndScreenTotalScore.setPosition(sf::Vector2f(window.getSize().x / 2 - levelEndScreenTotalScore.getLocalBounds().width / 2, levelEndScreenQuitButton.getPosition().y - 70.f));
-				levelEndScreenTotalEnnemiesKilled = levelEndScreenTotalScore;
-				if(language == "EN")
-					levelEndScreenTotalEnnemiesKilled.setString("Enemies killed : " + totalKills);
-				else if(language == "FR")
-					levelEndScreenTotalEnnemiesKilled.setString("Ennemis tués : " + totalKills);
-				levelEndScreenTotalEnnemiesKilled.setPosition(sf::Vector2f(window.getSize().x / 2 - levelEndScreenTotalEnnemiesKilled.getLocalBounds().width / 2, levelEndScreenTotalScore.getPosition().y - 70.f));
-				levelEndScreenTotalDamageTaken = levelEndScreenTotalEnnemiesKilled;
-				if(language == "EN")
-					levelEndScreenTotalDamageTaken.setString("Damage taken : " + damageTaken);
-				else if(language == "FR")
-					levelEndScreenTotalDamageTaken.setString("Dégats pris : " + damageTaken);
-				levelEndScreenTotalDamageTaken.setPosition(sf::Vector2f(window.getSize().x / 2 - levelEndScreenTotalDamageTaken.getLocalBounds().width / 2, levelEndScreenTotalEnnemiesKilled.getPosition().y - 70.f));
+				endScreenInit();
 			}
 		}
 	}
@@ -2924,6 +3124,7 @@ void Game::update() {
 		if (backgroundActive) {
 			if (levelProgression < levelTwoDuration) {
 				levelProgression += f_ElapsedTime;
+				levelProgressionBarFG.setScale(sf::Vector2f((levelProgression / levelTwoDuration), 1.f));
 				clownWalkAnimationTime += f_ElapsedTime;
 				bossAnimationTime += f_ElapsedTime;
 				bossEyeAnimationTime += f_ElapsedTime;
@@ -2941,6 +3142,16 @@ void Game::update() {
 				}
 				spriteUpdateTimer += f_ElapsedTime;
 				player.noHitTimer += f_ElapsedTime;
+				ennemiesSpawnCooldownDuration += f_ElapsedTime;
+				if (ennemiesSpawnCooldownDuration > ennemiesSpawnCooldown) {
+					ennemiesSpawnCooldownDuration = 0.f;
+					if (levelTwoDuration / levelProgression < 0.5f) { // Un bonus spawn à la moitié du niveau
+						setEnemySpawn(1, true);
+					}
+					else {
+						setEnemySpawn(1);
+					}
+				}
 				playerInput();
 				updateStatsSpritesCooldown();
 				playerCollisions();
@@ -2952,19 +3163,73 @@ void Game::update() {
 				backgroundMovementLevel2();
 			}
 			else {
-				// Afficher l'écran de fin de niveau (avec les stats et tout) ici
-				playerInput();
+				levelThreeUnlocked = true;
+				levelTwoCompleted = true;
+				loadTextPositions();
+				backgroundActive = false;
+				endScreenInit();
 			}
 		}
 	}
 	if (levelThreeOn) {
 		if (backgroundActive) {
-			if (levelProgression < levelOneDuration) {
+			// Phase normale du niveau 3 (avec le timer)
+			if (levelProgression < levelThreeDuration) {
 				levelProgression += f_ElapsedTime;
+				levelProgressionBarFG.setScale(sf::Vector2f((levelProgression / levelThreeDuration), 1.f));
 				clownWalkAnimationTime += f_ElapsedTime;
 				bossAnimationTime += f_ElapsedTime;
 				bossEyeAnimationTime += f_ElapsedTime;
 
+				scoreCalculation();
+				sugarCalculation();
+				statCalculation();
+				playerHPSetter();
+				playerBonusSetter();
+				player.setShootTimer(f_ElapsedTime);
+				player.setSpecialTimer(f_ElapsedTime);
+				player.setBonusTimer(f_ElapsedTime); // (il est reset quand le joueur touche un bonus donc pas besoin de condition)
+				if (player.hurtCount > 0) {
+					player.hurtTimer += f_ElapsedTime;
+				}
+				spriteUpdateTimer += f_ElapsedTime;
+				player.noHitTimer += f_ElapsedTime;
+				ennemiesSpawnCooldownDuration += f_ElapsedTime;
+				if (ennemiesSpawnCooldownDuration > ennemiesSpawnCooldown) {
+					ennemiesSpawnCooldownDuration = 0.f;
+					if (levelThreeDuration / levelProgression < 0.5f) { // Un bonus spawn à la moitié du niveau
+						setEnemySpawn(1, true);
+					}
+					else {
+						setEnemySpawn(1);
+					}
+				}
+				playerInput();
+				updateStatsSpritesCooldown();
+				playerCollisions();
+				playerDeath();
+				nonPlayerBehavior();
+				clownWalkAnimation();
+				bossAnimation();
+
+				backgroundMovementLevel3();
+			}
+			// Préparation du bossfight
+			else if(!bossFightStarted) {
+				bgLvl3Music.stop();
+				clearAllVectors();
+				setShooterPositions(); // Pour éviter les bugs dans les appels de fonctions dans nonPlayerBehavior(), même s'il n y aura pas de shooters
+				levelProgressionBarFG.setFillColor(sf::Color::Transparent);
+				levelProgressionBarBG.setOutlineThickness(0);
+				boss.spawned = true;
+				bossFightStarted = true;
+				bgBossfightMusic.play();
+			}
+			// Bossfight!
+			else if (bossFightStarted) {
+				clownWalkAnimationTime += f_ElapsedTime;
+				bossAnimationTime += f_ElapsedTime;
+				bossEyeAnimationTime += f_ElapsedTime;
 				scoreCalculation();
 				sugarCalculation();
 				statCalculation();
@@ -2986,11 +3251,17 @@ void Game::update() {
 				clownWalkAnimation();
 				bossAnimation();
 
+				if (boss.getAlive() == false)
+					bossFightCompleted = true;
+
 				backgroundMovementLevel3();
 			}
-			else {
-				// Transition vers le boss fight ici
-				playerInput();
+			else if(bossFightCompleted) {
+				player.resetVariables();
+				levelThreeCompleted = true;
+				loadTextPositions();
+				backgroundActive = false;
+				endScreenInit();
 			}
 		}
 	}
@@ -3001,7 +3272,7 @@ void Game::render() {
 
 	if (settingsScreenOn) {
 		window.draw(bgStartUpScreenSprite);
-		window.draw(screenShadowWhenBlured);
+		window.draw(darkerLayer);
 		// TopBar
 		window.draw(menuPauseTopBar);
 		window.draw(menuPauseTopBarResolution);
@@ -3045,6 +3316,16 @@ void Game::render() {
 		window.draw(quitText);
 		window.draw(copyright);
 		window.draw(settingsIconSprite);
+	}
+
+	if (levelSelectionScreenOn) {
+		window.draw(bgStartUpScreenSprite);
+		window.draw(darkerLayer);
+		window.draw(gameplayPauseContent);
+		window.draw(levelSelectionScreenTitle);
+		window.draw(levelSelectionScreenOne);
+		window.draw(levelSelectionScreenTwo);
+		window.draw(levelSelectionScreenThree);
 	}
 
 	if (playScreenOn) {
@@ -3126,6 +3407,15 @@ void Game::render() {
 			window.draw(gameplayUISetSpecialRain);
 			window.draw(levelProgressionBarBG);
 			window.draw(levelProgressionBarFG);
+			if (levelTwoCompleted) {
+				window.draw(gameplayPauseContent);
+				window.draw(levelEndScreenTitle);
+				window.draw(levelEndScreenTotalScore);
+				window.draw(levelEndScreenTotalDamageTaken);
+				window.draw(levelEndScreenTotalEnnemiesKilled);
+				window.draw(levelEndScreenNextButton);
+				window.draw(levelEndScreenQuitButton);
+			}
 		}
 		if (levelThreeOn) {
 			// --- FOND PARRALAXE --- //
@@ -3162,9 +3452,18 @@ void Game::render() {
 			window.draw(gameplayUISetSpecialRain);
 			window.draw(levelProgressionBarBG);
 			window.draw(levelProgressionBarFG);
+			if (levelThreeCompleted) {
+				window.draw(gameplayPauseContent);
+				window.draw(levelEndScreenTitle);
+				window.draw(levelEndScreenTotalScore);
+				window.draw(levelEndScreenTotalDamageTaken);
+				window.draw(levelEndScreenTotalEnnemiesKilled);
+				window.draw(levelEndScreenNextButton);
+				window.draw(levelEndScreenQuitButton);
+			}
 		}
 		if (showPauseMenu) {
-			window.draw(screenShadowWhenBlured);
+			window.draw(darkerLayer);
 			window.draw(gameplayPauseContent);
 			window.draw(gameplayPauseGoBackBtn);
 			window.draw(gameplayPauseExitBtn);
@@ -3185,6 +3484,7 @@ void Game::render() {
 			window.draw(gameplayPauseMinusSoundTextMusic);
 		}
 	}
+
 	if (gameOverScreenOn) {
 		window.clear(sf::Color::Black);
 		window.draw(gameplayPauseContent);
