@@ -6,6 +6,8 @@ namespace {
 	// DATA STL (STandard Library)
 	int mouseLastDownX, mouseLastDownY;
 	float scoreCounter;
+	float bonusDropTimer;
+	float factorSugarScaling;
 	bool isMouseDragging;
 	bool isFullscreen = true;
 	std::vector<sf::VideoMode> modes = sf::VideoMode::getFullscreenModes(); // Gets the native resolutions of the machine this program is running on
@@ -13,7 +15,7 @@ namespace {
 	float bossAnimationTime = 0.f;
 	float bossEyeAnimationTime = 0.f;
 	float gameOverAnimation = 0;
-	float ennemiesSpawnCooldown = 0.8f;
+	float ennemiesSpawnCooldown = 1.2f;
 	float ennemiesSpawnCooldownDuration = 0.f;
 	bool levelOneCompleted = false;
 	bool levelTwoCompleted = false;
@@ -169,6 +171,7 @@ namespace {
 	sf::Texture shieldIconeTexture;
 	sf::Texture x2IconeTexture;
 	sf::Texture oneUpIconeTexture;
+	sf::Sprite bonusIconeTemplate; //POUR LA BOUCLE DE COLLISIONS DES POINTEURS DE BONUS
 	// ENEMIES
 	sf::Texture deathTexture1;
 	sf::Texture deathTexture2;
@@ -960,6 +963,7 @@ void Game::loadLevelAssets() { // Only loaded once
 	gameplayUIScoreText.setFillColor(sf::Color::Black);
 	sugarIcone.setScale(0.05f, 0.05f);
 	sugarIcone.setTexture(sugarTexture);
+	bonusIconeTemplate.setTexture(shieldIconeTexture); /////////////
 	gameplayUISugarText.setFont(score);
 	gameplayUISugarText.setCharacterSize((unsigned int)((float)sugarIcone.getLocalBounds().height * (float)sugarIcone.getScale().y));
 	gameplayUISugarText.setLetterSpacing(1.1f);
@@ -2029,14 +2033,24 @@ void Game::playerCollisions() {
 			}
 		}
 		for (Sugar*& sugar : vectorSugar) {
-			if (playerCurrentSprite.getGlobalBounds().contains(sugar->getPosition())) {  ////hurt box = sprite du clown pour ramasser les sucres plus facilement
+			//PROBLEME DE TAILLE DE POINTEUR, ON FAIT DONC PAR RAPPORT A LA TEXTURE * UN SCALING FIXE. PAREIL POUR LA BOUCLE DES BONUS EN DESSOUS
+			if (playerCurrentSprite.getGlobalBounds().contains(sugar->getPosition().x, sugar->getPosition().y) ||
+				playerCurrentSprite.getGlobalBounds().contains(sugar->getPosition().x, sugar->getPosition().y + sugarIcone.getLocalBounds().height * 0.08f) ||
+				playerCurrentSprite.getGlobalBounds().contains(sugar->getPosition().x + sugarIcone.getLocalBounds().width * 0.08f, sugar->getPosition().y + sugarIcone.getLocalBounds().height * 0.08f) ||
+				playerCurrentSprite.getGlobalBounds().contains(sugar->getPosition().x + sugarIcone.getLocalBounds().width * 0.08f, sugar->getPosition().y))
+			{
 				player.setSugarCount(sugar->getValue());
+				player.healPlayer(player.getPlayerMaxHP() * sugar->healValue);
 				sugarCrunchSound.play();
 				sugar->setState(false);
 			}
 		}
 		for (Bonus*& bonus : vectorBonus) {
-			if (playerCurrentSprite.getGlobalBounds().contains(bonus->getPosition())) {  ////hurt box = sprite du clown pour ramasser les bonus plus facilement
+			if (playerCurrentSprite.getGlobalBounds().contains(bonus->getPosition().x, bonus->getPosition().y) ||
+				playerCurrentSprite.getGlobalBounds().contains(bonus->getPosition().x, bonus->getPosition().y + bonusIconeTemplate.getLocalBounds().height * 0.05f) ||
+				playerCurrentSprite.getGlobalBounds().contains(bonus->getPosition().x + bonusIconeTemplate.getLocalBounds().width * 0.05f, bonus->getPosition().y + bonusIconeTemplate.getLocalBounds().height * 0.05f) ||
+				playerCurrentSprite.getGlobalBounds().contains(bonus->getPosition().x + bonusIconeTemplate.getLocalBounds().width * 0.05f, bonus->getPosition().y))
+			{
 
 				player.setBonusCooldown(bonus->getCooldown());                     //actuellement, ramasser un 2e bonus refresh le timer du 1er
 				if (bonus->getId() == "shield") { player.setShield(true); }
@@ -2199,7 +2213,6 @@ bool Game::playerDeath() {
 		if (player.getOneUp()) {
 			player.setOneUp(false);
 			player.setPlayerHP(50);
-			std::cout << "revived" << std::endl;
 		}
 		else { player.setPlayerLife(false); }
 
@@ -3265,6 +3278,7 @@ void Game::update() {
 				clownWalkAnimationTime += f_ElapsedTime;
 				bossAnimationTime += f_ElapsedTime;
 				bossEyeAnimationTime += f_ElapsedTime;
+				bonusDropTimer += f_ElapsedTime;
 
 				scoreCalculation();
 				sugarCalculation();
@@ -3282,8 +3296,9 @@ void Game::update() {
 				ennemiesSpawnCooldownDuration += f_ElapsedTime;
 				if (ennemiesSpawnCooldownDuration > ennemiesSpawnCooldown) {
 					ennemiesSpawnCooldownDuration = 0.f;
-					if (levelOneDuration / levelProgression < 0.5f) { // Un bonus spawn à la moitié du niveau
+					if (bonusDropTimer > 20.f) {
 						setEnemySpawn(1, true);
+						bonusDropTimer = 0.f;
 					}
 					else {
 						setEnemySpawn(1);
@@ -3308,6 +3323,7 @@ void Game::update() {
 		}
 	}
 	if (levelTwoOn) {
+		ennemiesSpawnCooldown = 1.f;
 		if (backgroundActive) {
 			if (levelProgression < levelTwoDuration) {
 				levelProgression += f_ElapsedTime;
@@ -3315,6 +3331,7 @@ void Game::update() {
 				clownWalkAnimationTime += f_ElapsedTime;
 				bossAnimationTime += f_ElapsedTime;
 				bossEyeAnimationTime += f_ElapsedTime;
+				bonusDropTimer += f_ElapsedTime;
 
 				scoreCalculation();
 				sugarCalculation();
@@ -3332,8 +3349,9 @@ void Game::update() {
 				ennemiesSpawnCooldownDuration += f_ElapsedTime;
 				if (ennemiesSpawnCooldownDuration > ennemiesSpawnCooldown) {
 					ennemiesSpawnCooldownDuration = 0.f;
-					if (levelTwoDuration / levelProgression < 0.5f) { // Un bonus spawn à la moitié du niveau
+					if (bonusDropTimer > 20.f) {
 						setEnemySpawn(1, true);
+						bonusDropTimer = 0.f;
 					}
 					else {
 						setEnemySpawn(1);
@@ -3358,6 +3376,7 @@ void Game::update() {
 		}
 	}
 	if (levelThreeOn) {
+		ennemiesSpawnCooldown = 0.8f;
 		if (backgroundActive) {
 			// Phase normale du niveau 3 (avec le timer)
 			if (levelProgression < levelThreeDuration) {
@@ -3366,6 +3385,7 @@ void Game::update() {
 				clownWalkAnimationTime += f_ElapsedTime;
 				bossAnimationTime += f_ElapsedTime;
 				bossEyeAnimationTime += f_ElapsedTime;
+				bonusDropTimer += f_ElapsedTime;
 
 				scoreCalculation();
 				sugarCalculation();
@@ -3383,8 +3403,9 @@ void Game::update() {
 				ennemiesSpawnCooldownDuration += f_ElapsedTime;
 				if (ennemiesSpawnCooldownDuration > ennemiesSpawnCooldown) {
 					ennemiesSpawnCooldownDuration = 0.f;
-					if (levelThreeDuration / levelProgression < 0.5f) { // Un bonus spawn à la moitié du niveau
+					if (bonusDropTimer > 20.f) {
 						setEnemySpawn(1, true);
+						bonusDropTimer = 0.f;
 					}
 					else {
 						setEnemySpawn(1);
@@ -3443,7 +3464,6 @@ void Game::update() {
 				backgroundMovementLevel3();
 			}
 			else {
-				std::cout << "HEY" << std::endl;
 				bossFightCompleted = true;
 				bossFightStarted = false;
 				levelProgression = levelThreeDuration + 1;

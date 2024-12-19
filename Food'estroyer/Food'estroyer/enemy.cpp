@@ -38,6 +38,7 @@ Normal::Normal(float x, float y, char s, sf::RenderWindow& window, sf::Texture& 
 	sugarValue = int(/*50*/200 * sugarValuePerSize);                                                        //ICI : VALEUR EN SUCRES DES MONSTRES
 	atkPower = 30 * atkPowerPerSize; 
 	this->setTexture(texture);
+	idForSugar = "normal";
 }
 //COMPORTEMENT DE BASE
 //Shooter::Shooter(float x, float y, char s, sf::RenderWindow& window, sf::Texture& texture) : Enemy(x, y, s, window, texture) {
@@ -46,6 +47,7 @@ Normal::Normal(float x, float y, char s, sf::RenderWindow& window, sf::Texture& 
 //	sugarValue = int(100 * sugarValuePerSize);
 //	atkPower = 15 * atkPowerPerSize;
 //	this->setTexture(texture);
+//  idForSugar = "shooter";
 //}
 
 //NOUVEAU COMPORTEMENT
@@ -55,18 +57,21 @@ Shooter::Shooter(float x, float y, char s, sf::RenderWindow& window, sf::Texture
 	sugarValue = int(/*100*/50 * sugarValuePerSize);
 	atkPower = 15 * atkPowerPerSize;
 	this->setTexture(texture);
+	idForSugar = "shooter";
 }
 Elite::Elite(float x, float y, char s, sf::RenderWindow& window, sf::Texture& texture) : Enemy(x, y, s, window, texture) {
 	hp = /*200*/50 * hpPerSize;
 	sugarValue = int(/*150*/100 * sugarValuePerSize);
 	atkPower = 20 * atkPowerPerSize;
 	this->setTexture(texture);
+	idForSugar = "elite";
 }
 Boss::Boss() {
 	hp = 10000;
 	atkPower = 20;
 	sugarValue = 5000;
 	moveSpeedY = 0;
+	idForSugar = "boss";
 }
 Projectile::Projectile() {
 	if (id == "boss") speedY = 100.f /*/ 1080.f*/;
@@ -80,10 +85,13 @@ void Enemy::dropSugar(std::vector<Sugar*>& vectorSugar, Enemy& enemy) {
 		sugar->setPosition(enemy.getPosition().x - (enemy.getLocalBounds().width * enemy.getScale().x) / 2,
 			enemy.getPosition().y + (enemy.getLocalBounds().height * enemy.getScale().y) / 2 - (sugar->getLocalBounds().height * sugar->getScale().y) / 2);
 		switch (getSize()) {
-		case 's': sugar->setScale(0.05f, 0.05f); break;
-		case 'm': sugar->setScale(0.08f, 0.08f); break;
-		case 'l': sugar->setScale(0.11f, 0.11f); break;
+		case 's': sugar->setScale(0.05f, 0.05f); sugar->healValuePerSize = -0.02; break;
+		case 'm': sugar->setScale(0.08f, 0.08f); sugar->healValuePerSize = 0; break;
+		case 'l': sugar->setScale(0.11f, 0.11f); sugar->healValuePerSize = 0.02; break;
 		}
+		if (idForSugar == "normal") sugar->healValuePerType = 0.05;
+		else { sugar->healValuePerType = 0.03; }
+		sugar->healValue = sugar->healValuePerType + sugar->healValuePerSize;
 		vectorSugar.push_back(sugar);
 	}
 }

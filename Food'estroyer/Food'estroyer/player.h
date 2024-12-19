@@ -107,18 +107,11 @@ public:
 	bool getOneUp() const                  { return oneUp; }
 	// Setters
 	void resetVariables() {
-		sugarCount = 0;
+		
 		alive = true;
 		hp = 100;
-		sugarCount = 0;
-		shield = false;
-		x2 = false;
-		oneUp = false;
-		raining = false;
-		tripleBought = false;
-		rainBought = false;
 		maxHp = 100;
-		speed = 400;
+		speed = 400; 
 		atkPower = 10;
 		pieSpeedX = 1000;
 		pieSize = 0.01f;
@@ -130,27 +123,35 @@ public:
 		sugarCount = 0;
 		bonusTimer = 0;
 		bonusCooldown = 0;
+		shield = false;
+		x2 = false;
+		oneUp = false;
 		hurtCount = 0;
 		hurtTimer = 0;
+		raining = false;
 		rainCount = 0;
 		atkLvl = 1;
-		atkLvlUpCost = 300;
+		atkLvlUpCost = 500;
 		maxHpLvl = 1;
-		maxHpLvlUpCost = 500;
+		maxHpLvlUpCost = 700;
 		speedLvl = 1;
 		speedLvlUpCost = 1000;
+		tripleBought = false;
 		tripleCost = 2000;
+		rainBought = false;
 		rainCost = 3000;
 		noHitTimer = 0;
-		noHitCooldown = 1.f;
+		noHitCooldown = 5.f;
 		noHitMultiplier = 1;
 		accuracyCounter = 0;
+		accuracyBonusSetter = 5;
 		accuracyMultiplier = 1;
 	}
 	void setPlayerLife(bool newState)                   { alive = false; }
 	void setPlayerHP(float newHP)                       { hp = newHP; }
 	void setPlayerMaxHP(float newMaxHP)                 { maxHp += newMaxHP; }
 	void damagePlayer(float degats)                     { hp -= degats; }
+	void healPlayer(float heal)                         { hp += heal; }
 	void setPlayerSpeed(float bonusSpeed)               { speed += bonusSpeed; }
 	void setPlayerSpeedBackToNormal(int bonusSpeed)     { speed /= (0.01f * bonusSpeed); }// Opération inverse
 	void setAtkPower(float atkMultiplier)               { atkPower *= atkMultiplier; } // Genre 1.2x, 1.55x etc...

@@ -11,6 +11,11 @@ private:
 	bool state = true;
 	int quantity = 0;
 public:
+	float healValue = 0;
+	float healValuePerSize = 0;
+	float healValuePerType = 0;
+	std::string id = "nothing";
+	
 	char getSize() const { return size; }
 	bool getState() const { return state; }
 	int getValue() const { return quantity; }
@@ -37,6 +42,7 @@ protected:
 	float atkPowerPerSize = 1;
 	int sugarValue = 0;
 	float sugarValuePerSize = 0;
+	std::string idForSugar = "nothing";
 
 	Enemy(float x, float y, char s, sf::RenderWindow& window, sf::Texture& texture); // Constrcuteur pour les normaux, shooters et élites
 	Enemy(); // Constructeur pour le boss
