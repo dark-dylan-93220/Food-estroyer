@@ -109,7 +109,8 @@ bool Pie::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Pie*
 		move(speedX * timeElapsed, speedY * timeElapsed);
 		if (getPosition().x > window.getSize().x + getRadius() * 2) {
 			state = false;
-			missed = true;
+			if (specialType == "no")
+				missed = true;
 		}
 		return true;
 	}

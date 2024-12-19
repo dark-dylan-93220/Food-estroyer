@@ -14,7 +14,7 @@ protected:
 
 public:
 
-	std::string specialType = "not initialised"; //jsplus à quoi il sert. initialisé uniquement si on utilise "base" ou "triple"
+	std::string specialType = "no";
 	int hitCounter = 0;
 	int maxHitNumber = 1;
 	bool missed = false;
@@ -73,9 +73,10 @@ public:
 	bool rainBought = false;
 	int rainCost = 3000;
 	float noHitTimer = 0;
-	float noHitCooldown = 1.f;
+	float noHitCooldown = 5.f;
 	float noHitMultiplier = 1;
 	float accuracyCounter = 0;
+	float accuracyBonusSetter = 5;
 	float accuracyMultiplier = 1;
 
 	Player();

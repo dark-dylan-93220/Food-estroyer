@@ -22,6 +22,8 @@ namespace {
 	bool bossFightCompleted = false;
 	int deadEnnemies = 0;
 	int damageTakenPlayer = 0;
+	bool showNoHitBonus = false;
+	bool showNoMissBonus = false;
 	// CURSORS
 	sf::Cursor pie;
 	// COLORS
@@ -91,12 +93,17 @@ namespace {
 	sf::Text gameplayUISetSpecialBase;
 	sf::Text gameplayUISetSpecialTriple;
 	sf::Text gameplayUISetSpecialRain;
+	sf::Text gameplayUINoHitBonus;
+	sf::Text gameplayUINoMissBonus;
 	sf::Text levelEndScreenTotalScore;
 	sf::Text levelEndScreenTotalEnnemiesKilled;
 	sf::Text levelEndScreenTotalDamageTaken;
 	sf::Text levelEndScreenTitle;
 	sf::Text levelEndScreenNextButton;
 	sf::Text levelEndScreenQuitButton;
+	sf::Text gameOverText;
+	sf::Text retryText;
+	sf::Text giveUpText;
 	sf::Text levelSelectionScreenOne;
 	sf::Text levelSelectionScreenTwo;
 	sf::Text levelSelectionScreenThree;
@@ -923,7 +930,7 @@ void Game::loadLevelAssets() { // Only loaded once
 	gameplayUISetSpecialBase.setFont(score);
 	gameplayUISetSpecialBase.setCharacterSize(30);
 	gameplayUISetSpecialBase.setLetterSpacing(1.1f);
-	gameplayUISetSpecialBase.setFillColor(sf::Color::White);
+	gameplayUISetSpecialBase.setFillColor(sf::Color::Red); //BASE EST TJ EQUIPED PAR DEFAUT DONC RED
 	gameplayUISetSpecialBase.setString("not initialised");
 	gameplayUISetSpecialTriple.setFont(score);
 	gameplayUISetSpecialTriple.setCharacterSize(30);
@@ -935,6 +942,16 @@ void Game::loadLevelAssets() { // Only loaded once
 	gameplayUISetSpecialRain.setLetterSpacing(1.1f);
 	gameplayUISetSpecialRain.setFillColor(sf::Color::White);
 	gameplayUISetSpecialRain.setString("not initialised");
+	gameplayUINoHitBonus.setFont(score);
+	gameplayUINoHitBonus.setCharacterSize(30);
+	gameplayUINoHitBonus.setLetterSpacing(1.1f);
+	gameplayUINoHitBonus.setFillColor(sf::Color::Black);
+	gameplayUINoHitBonus.setString("NO HIT : +50%");
+	gameplayUINoMissBonus.setFont(score);
+	gameplayUINoMissBonus.setCharacterSize(30);
+	gameplayUINoMissBonus.setLetterSpacing(1.1f);
+	gameplayUINoMissBonus.setFillColor(sf::Color::Black);
+	gameplayUINoMissBonus.setString("NO MISS : +50%");
 }// Called once
 
 // Loaded multiple times
@@ -996,6 +1013,8 @@ void Game::loadGameplayAssets() {
 	gameplayUILifeBarCurrentSprite.setScale(sf::Vector2f((window.getSize().x * 0.20f) / (gameplayUILifeBarCurrentSprite.getLocalBounds().width), (window.getSize().x * 0.04356f) / (gameplayUILifeBarCurrentSprite.getLocalBounds().height)));
 	gameplayUILifeBarCurrentSprite.setPosition(sf::Vector2f(0, 0));
 	gameplayUIScoreText.setPosition(sf::Vector2f(window.getSize().x - gameplayUIScoreText.getGlobalBounds().width - window.getSize().x * 0.01f, 0));
+	gameplayUINoHitBonus.setPosition(gameplayUIScoreText.getPosition().x + gameplayUIScoreText.getGlobalBounds().width - gameplayUINoHitBonus.getGlobalBounds().width, gameplayUIScoreText.getPosition().y + gameplayUIScoreText.getCharacterSize());
+	gameplayUINoMissBonus.setPosition(gameplayUIScoreText.getPosition().x + gameplayUIScoreText.getGlobalBounds().width - gameplayUINoMissBonus.getGlobalBounds().width, gameplayUINoHitBonus.getPosition().y + gameplayUINoHitBonus.getCharacterSize());
 	sugarIcone.setPosition(window.getSize().x / 2 - sugarIcone.getGlobalBounds().width / 2 + gameplayUISugarText.getLocalBounds().width / 2, window.getSize().y - (sugarIcone.getLocalBounds().height * sugarIcone.getScale().y) * 1.8f);
 	boss.setTexture(bossTexture1);
 	boss.setPosition(window.getSize().x * 1.1, 0/*window.getSize().y / 2 - (boss.getLocalBounds().height * boss.getScale().y) / 2*/); //taille boss texture : 640x1080 donc le calcul égale à 0 en ajustant le scaling
@@ -1772,30 +1791,55 @@ void Game::statCalculation() {
 }
 
 void Game::playerInput() {
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
-		player.move(0, -player.getSpeed() * f_ElapsedTime);
-		if (player.getPosition().y <= 0)
-			player.setPosition(player.getPosition().x, 0);
-		playerCurrentSprite.setPosition(player.getPosition());
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-		player.move(0, player.getSpeed() * f_ElapsedTime);
-		if (player.getPosition().y + player.getRadius() * 2 >= window.getSize().y)
-			player.setPosition(player.getPosition().x, window.getSize().y - player.getRadius() * 2);
-		playerCurrentSprite.setPosition(player.getPosition());
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-		player.move(player.getSpeed() * f_ElapsedTime, 0);
-		if (player.getPosition().x >= window.getSize().x - player.getRadius() * 2)
-			player.setPosition(window.getSize().x - player.getRadius() * 2, player.getPosition().y);
-		playerCurrentSprite.setPosition(player.getPosition());
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
-		player.move(-player.getSpeed() * f_ElapsedTime, 0);
-		if (player.getPosition().x <= 0)
-			player.setPosition(0, player.getPosition().y);
-		playerCurrentSprite.setPosition(player.getPosition());
+	if (player.getPlayerLife()) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+			player.move(0, -player.getSpeed() * f_ElapsedTime);
+			if (player.getPosition().y <= 0)
+				player.setPosition(player.getPosition().x, 0);
+			playerCurrentSprite.setPosition(player.getPosition());
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+			player.move(0, player.getSpeed() * f_ElapsedTime);
+			if (player.getPosition().y + player.getRadius() * 2 >= window.getSize().y)
+				player.setPosition(player.getPosition().x, window.getSize().y - player.getRadius() * 2);
+			playerCurrentSprite.setPosition(player.getPosition());
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+			player.move(player.getSpeed() * f_ElapsedTime, 0);
+			if (player.getPosition().x >= window.getSize().x - player.getRadius() * 2)
+				player.setPosition(window.getSize().x - player.getRadius() * 2, player.getPosition().y);
+			playerCurrentSprite.setPosition(player.getPosition());
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+			player.move(-player.getSpeed() * f_ElapsedTime, 0);
+			if (player.getPosition().x <= 0)
+				player.setPosition(0, player.getPosition().y);
+			playerCurrentSprite.setPosition(player.getPosition());
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+			if (backgroundActive) {
+				// Ici y'aura le shoot
+				if (player.getShootTimer() >= player.getShootCooldown()) {
+					player.throwPie(vectorPie, window);
+					player.resetShootTimer(0);
+				}
+				playerCurrentSprite.setTexture(playerAttack1);
+			}
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
+			if (backgroundActive) {
+				// SPECIAL ATTACK
+				if (player.getSpecialTimer() >= player.getSpecialCooldown()) {
+					player.specialAtk(vectorPie, window);
+					player.resetSpecialTimer(0);
+					if (player.getSpectialAtkType() == "rain") {
+						player.raining = true;
+						player.rainCount++;
+					}
+				}
+				playerCurrentSprite.setTexture(playerAttack1);
+			}
+		}
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 		if (backgroundActive) {
@@ -1807,30 +1851,6 @@ void Game::playerInput() {
 				bgLvl2Music.pause();
 			else if (levelThreeOn)
 				bgLvl3Music.pause();
-		}
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-		if (backgroundActive) {
-			// Ici y'aura le shoot
-			if (player.getShootTimer() >= player.getShootCooldown()) {
-				player.throwPie(vectorPie, window);
-				player.resetShootTimer(0);
-			}
-			playerCurrentSprite.setTexture(playerAttack1);
-		}
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
-		if (backgroundActive) {
-			// SPECIAL ATTACK
-			if (player.getSpecialTimer() >= player.getSpecialCooldown()) {
-				player.specialAtk(vectorPie, window);
-				player.resetSpecialTimer(0);
-				if (player.getSpectialAtkType() == "rain") {
-					player.raining = true;
-					player.rainCount++;
-				}
-			}
-			playerCurrentSprite.setTexture(playerAttack1);
 		}
 	}
 	shieldSprite.setPosition(playerCurrentSprite.getPosition());
@@ -1849,92 +1869,93 @@ void Game::playerInput() {
 }
 
 void Game::playerCollisions() {
-
-	if (player.hurtTimer >= 0.5) {   // COOLDOWN D'INVINCIBILITE APRES DEGATS RECUS
-		player.hurtTimer = 0;
-		player.hurtCount = 0;
-	}
-	if (player.hurtCount == 0) {        //INVINCIBLE PENDANT UNE COURTE DUREE APRES AVOIR PRIT DES DEGATS
-		for (Projectile*& projectile : vectorProjectile) {
-			if (player.getGlobalBounds().contains(projectile->getPosition())) {     ///// hurt box plus petite (cercle) pour les projectiles
+	if (player.getPlayerLife()) {
+		if (player.hurtTimer >= 0.5) {   // COOLDOWN D'INVINCIBILITE APRES DEGATS RECUS
+			player.hurtTimer = 0;
+			player.hurtCount = 0;
+		}
+		if (player.hurtCount == 0) {        //INVINCIBLE PENDANT UNE COURTE DUREE APRES AVOIR PRIT DES DEGATS
+			for (Projectile*& projectile : vectorProjectile) {
+				if (player.getGlobalBounds().contains(projectile->getPosition())) {     ///// hurt box plus petite (cercle) pour les projectiles
+					if (player.getShield()) {
+						player.setShield(false);
+						player.hurtCount++;
+					}
+					else {
+						player.damagePlayer(projectile->getAtkPower());
+						oofSound.play();
+						player.hurtCount++;
+						playerCurrentSprite.setColor(LIGHT_RED);
+						player.noHitTimer = 0;
+						damageTakenPlayer += (int)projectile->getAtkPower();
+					}
+					projectile->setState(false);
+				}
+			}
+			for (Normal& normal : vectorNormal) {
+				if (player.getGlobalBounds().intersects(normal.getGlobalBounds())) {
+					if (player.getShield()) {
+						player.setShield(false);
+					}
+					else {
+						player.damagePlayer(normal.getAtkPower()); player.hurtCount++; playerCurrentSprite.setColor(LIGHT_RED);
+						player.noHitTimer = 0;
+						damageTakenPlayer += (int)normal.getAtkPower();
+					}
+				}
+			}
+			for (Shooter& shooter : vectorShooter) {
+				if (player.getGlobalBounds().intersects(shooter.getGlobalBounds())) {
+					if (player.getShield()) {
+						player.setShield(false);
+					}
+					else {
+						player.damagePlayer(shooter.getAtkPower()); player.hurtCount++; playerCurrentSprite.setColor(LIGHT_RED);
+						player.noHitTimer = 0;
+						damageTakenPlayer += (int)shooter.getAtkPower();
+					}
+				}
+			}
+			for (Elite& elite : vectorElite) {
+				if (player.getGlobalBounds().intersects(elite.getGlobalBounds())) {
+					if (player.getShield()) {
+						player.setShield(false);
+					}
+					else {
+						player.damagePlayer(elite.getAtkPower()); player.hurtCount++; playerCurrentSprite.setColor(LIGHT_RED);
+						player.noHitTimer = 0;
+						damageTakenPlayer += (int)elite.getAtkPower();
+					}
+				}
+			}
+			if (player.getGlobalBounds().intersects(boss.getGlobalBounds())) {
 				if (player.getShield()) {
 					player.setShield(false);
-					player.hurtCount++;
 				}
 				else {
-					player.damagePlayer(projectile->getAtkPower());
-					oofSound.play();
-					player.hurtCount++;
-					playerCurrentSprite.setColor(LIGHT_RED);
+					player.damagePlayer(boss.getAtkPower()); player.hurtCount++; playerCurrentSprite.setColor(LIGHT_RED);
 					player.noHitTimer = 0;
-					damageTakenPlayer += (int)projectile->getAtkPower();
-				}
-				projectile->setState(false);
-			}
-		}
-		for (Normal& normal : vectorNormal) {
-			if (player.getGlobalBounds().intersects(normal.getGlobalBounds())) {
-				if (player.getShield()) {
-					player.setShield(false);
-				}
-				else { 
-					player.damagePlayer(normal.getAtkPower()); player.hurtCount++; playerCurrentSprite.setColor(LIGHT_RED);
-					player.noHitTimer = 0;
-					damageTakenPlayer += (int)normal.getAtkPower();
+					damageTakenPlayer += (int)boss.getAtkPower();
 				}
 			}
 		}
-		for (Shooter& shooter : vectorShooter) {
-			if (player.getGlobalBounds().intersects(shooter.getGlobalBounds())) {
-				if (player.getShield()) {
-					player.setShield(false);
-				}
-				else { 
-					player.damagePlayer(shooter.getAtkPower()); player.hurtCount++; playerCurrentSprite.setColor(LIGHT_RED);
-					player.noHitTimer = 0;
-					damageTakenPlayer += (int)shooter.getAtkPower(); 
-				}
+		for (Sugar*& sugar : vectorSugar) {
+			if (playerCurrentSprite.getGlobalBounds().contains(sugar->getPosition())) {  ////hurt box = sprite du clown pour ramasser les sucres plus facilement
+				player.setSugarCount(sugar->getValue());
+				sugarCrunchSound.play();
+				sugar->setState(false);
 			}
 		}
-		for (Elite& elite : vectorElite) {
-			if (player.getGlobalBounds().intersects(elite.getGlobalBounds())) {
-				if (player.getShield()) {
-					player.setShield(false);
-				}
-				else { 
-					player.damagePlayer(elite.getAtkPower()); player.hurtCount++; playerCurrentSprite.setColor(LIGHT_RED);
-					player.noHitTimer = 0;
-					damageTakenPlayer += (int)elite.getAtkPower(); 
-				}
-			}
-		}
-		if (player.getGlobalBounds().intersects(boss.getGlobalBounds())) {
-			if (player.getShield()) {
-				player.setShield(false);
-			}
-			else { 
-				player.damagePlayer(boss.getAtkPower()); player.hurtCount++; playerCurrentSprite.setColor(LIGHT_RED);
-				player.noHitTimer = 0;
-				damageTakenPlayer += (int)boss.getAtkPower();
-			}
-		}
-	}
-	for (Sugar*& sugar : vectorSugar) {
-		if (playerCurrentSprite.getGlobalBounds().contains(sugar->getPosition())) {  ////hurt box = sprite du clown pour ramasser les sucres plus facilement
-			player.setSugarCount(sugar->getValue());
-			sugarCrunchSound.play();
-			sugar->setState(false);
-		}
-	}
-	for (Bonus*& bonus : vectorBonus) {
-		if (playerCurrentSprite.getGlobalBounds().contains(bonus->getPosition())) {  ////hurt box = sprite du clown pour ramasser les bonus plus facilement
+		for (Bonus*& bonus : vectorBonus) {
+			if (playerCurrentSprite.getGlobalBounds().contains(bonus->getPosition())) {  ////hurt box = sprite du clown pour ramasser les bonus plus facilement
 
-			player.setBonusCooldown(bonus->getCooldown());                     //actuellement, ramasser un 2e bonus refresh le timer du 1er
-			if (bonus->getId() == "shield") { player.setShield(true); }
-			if (bonus->getId() == "x2") { player.setX2(true); }
-			if (bonus->getId() == "oneUp") { player.setOneUp(true); }
-			player.resetBonusTimer(0);
-			bonus->setState(false);
+				player.setBonusCooldown(bonus->getCooldown());                     //actuellement, ramasser un 2e bonus refresh le timer du 1er
+				if (bonus->getId() == "shield") { player.setShield(true); }
+				if (bonus->getId() == "x2") { player.setX2(true); }
+				if (bonus->getId() == "oneUp") { player.setOneUp(true); }
+				player.resetBonusTimer(0);
+				bonus->setState(false);
+			}
 		}
 	}
 }
@@ -2052,13 +2073,15 @@ void Game::playerBonusSetter() {
 	//SCORE MULTIPLIER
 	if (player.noHitTimer > player.noHitCooldown) {
 		player.noHitMultiplier = 1.5;
+		showNoHitBonus = true;
 	}
-	else { player.noHitMultiplier = 1; }
+	else { player.noHitMultiplier = 1; showNoHitBonus = false; }
 
-	if (player.accuracyCounter >= 5) {
+	if (player.accuracyCounter >= player.accuracyBonusSetter) {
 		player.accuracyMultiplier = 1.5;
+		showNoMissBonus = true;
 	}
-	else { player.accuracyMultiplier = 1; }
+	else { player.accuracyMultiplier = 1; showNoMissBonus = false; }
 
 	//ACTUAL BONUS
 	shieldDraw.setSize(sf::Vector2f(30, 30));
@@ -2093,47 +2116,45 @@ bool Game::playerDeath() {
 
 	}
 	if (!player.getPlayerLife()) {
+		playerCurrentSprite.setColor(sf::Color::White);
 		deathCounter++;
 		if (deathCounter == 1) {
 			std::cout << "game over" << std::endl;
 			playerDeathSound.play();
 		}
 		gameOverAnimation += f_ElapsedTime;
-		//for (int i = 0; i < 3; i += 0.4) {
-		//	for (int j = 0.4; j += 0.4;) {                                ////////////////////////////////////REPRENDRE  ICI
+		
 
-		//	}
-		//}
-		/*if (gameOverAnimation > 0 && gameOverAnimation <= 0.2)
+		if (gameOverAnimation > 0 && gameOverAnimation <= 0.2)
 			playerCurrentSprite.setTexture(playerDeath1);
-		if (gameOverAnimation > 0.6 && gameOverAnimation <= 0.4)
+		if (gameOverAnimation > 0.2 && gameOverAnimation <= 0.4)
 			playerCurrentSprite.setTexture(playerDeath2);
-		if (gameOverAnimation > 0.9 && gameOverAnimation <= 0.6)
+		if (gameOverAnimation > 0.4 && gameOverAnimation <= 0.9)
 			playerCurrentSprite.setTexture(playerDeath3);
-		if (gameOverAnimation > 0.12 && gameOverAnimation <= 0.8)
+		if (gameOverAnimation > 0.9 && gameOverAnimation <= 1.2)
 			playerCurrentSprite.setTexture(playerDeath4);
-		if (gameOverAnimation > 0.15 && gameOverAnimation <= 0.10)
+		if (gameOverAnimation > 1.2 && gameOverAnimation <= 1.5)
 			playerCurrentSprite.setTexture(playerDeath5);
-		if (gameOverAnimation > 0.10 && gameOverAnimation <= 0.12)
+		if (gameOverAnimation > 1.5 && gameOverAnimation <= 1.8)
 			playerCurrentSprite.setTexture(playerDeath6);
-		if (gameOverAnimation > 0.12 && gameOverAnimation <= 0.14)
+		if (gameOverAnimation > 1.8 && gameOverAnimation <= 2.1)
 			playerCurrentSprite.setTexture(playerDeath3);
-		if (gameOverAnimation > 0.14 && gameOverAnimation <= 0.16)
+		if (gameOverAnimation > 2.1 && gameOverAnimation <= 2.3)
 			playerCurrentSprite.setTexture(playerDeath4);
-		if (gameOverAnimation > 0.16 && gameOverAnimation <= 0.18)
+		if (gameOverAnimation > 2.3 && gameOverAnimation <= 2.6)
 			playerCurrentSprite.setTexture(playerDeath5);
-		if (gameOverAnimation > 0.18 && gameOverAnimation <= 0.20)
+		/*if (gameOverAnimation > 2.6 && gameOverAnimation <= 2.9)
 			playerCurrentSprite.setTexture(playerDeath6);
-		if (gameOverAnimation > 0.20 && gameOverAnimation <= 0.22)
+		if (gameOverAnimation > 2.9 && gameOverAnimation <= 3.2)
 			playerCurrentSprite.setTexture(playerDeath3);
-		if (gameOverAnimation > 0.22 && gameOverAnimation <= 0.24)
+		if (gameOverAnimation > 3.2 && gameOverAnimation <= 3.5)
 			playerCurrentSprite.setTexture(playerDeath4);
-		if (gameOverAnimation > 0.24 && gameOverAnimation <= 0.26)
-			playerCurrentSprite.setTexture(playerDeath5);
-		if (gameOverAnimation > 0.26)
+		if (gameOverAnimation > 3.5 && gameOverAnimation <= 3.8)
+			playerCurrentSprite.setTexture(playerDeath5);*/
+		if (gameOverAnimation > 2.6)
 			playerCurrentSprite.setTexture(playerDeath6);
 		if (gameOverAnimation > 3)
-			return true;*/
+			return true;
 	}
 	return false;
 }
@@ -2141,11 +2162,8 @@ bool Game::playerDeath() {
 void Game::updateStatsSpritesCooldown() {
 	// UPDATE PLAYER SPECIAL COOLDOWN
 	if (player.getSpectialAtkType() == "base") { player.setSpecialCooldown(1); gameplayUISetSpecialBase.setFillColor(sf::Color::Red); }
-	else { gameplayUISetSpecialBase.setFillColor(sf::Color::White); }
 	if (player.getSpectialAtkType() == "triple") { player.setSpecialCooldown(1); gameplayUISetSpecialTriple.setFillColor(sf::Color::Red); }
-	else { gameplayUISetSpecialTriple.setFillColor(sf::Color::White); }
 	if (player.getSpectialAtkType() == "rain") { player.setSpecialCooldown(1); gameplayUISetSpecialRain.setFillColor(sf::Color::Red); }
-	else { gameplayUISetSpecialRain.setFillColor(sf::Color::White); }
 
 	// RESET SPRITE DU JOUEUR APRES UN HIT
 	if (player.hurtTimer >= 0.5) {
@@ -2294,7 +2312,7 @@ void Game::nonPlayerBehavior() {
 		}
 	}
 	// BOSS
-	if (boss.spawned) {
+	if (boss.spawned && boss.getAlive()) {
 		bossEye.setPosition(boss.getPosition().x,
 			window.getSize().y / 3 - (bossEye.getLocalBounds().height * bossEye.getScale().y) / 2);
 
@@ -2949,6 +2967,8 @@ void Game::pollEvents() {
 				}
 				if (gameplayUISetSpecialBase.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 					player.setSpecialAtkType("base"); player.resetSpecialTimer(0);
+					gameplayUISetSpecialTriple.setFillColor(sf::Color::White);
+					gameplayUISetSpecialRain.setFillColor(sf::Color::White);
 				}
 				if (gameplayUISetSpecialTriple.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 					if (!player.tripleBought && player.getSugarCount() >= player.tripleCost) {
@@ -2957,7 +2977,11 @@ void Game::pollEvents() {
 						player.setSpecialAtkType("triple");
 						player.resetSpecialTimer(0);
 					}
-					else if (player.tripleBought) { player.setSpecialAtkType("triple"); player.resetSpecialTimer(0); }
+					else if (player.tripleBought) {
+						player.setSpecialAtkType("triple"); player.resetSpecialTimer(0);
+						gameplayUISetSpecialBase.setFillColor(sf::Color::White);
+						gameplayUISetSpecialRain.setFillColor(sf::Color::White);
+					}
 				}
 				if (gameplayUISetSpecialRain.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 					if (!player.rainBought && player.getSugarCount() >= player.rainCost) {
@@ -2966,7 +2990,39 @@ void Game::pollEvents() {
 						player.setSpecialAtkType("rain");
 						player.resetSpecialTimer(0);
 					}
-					else if (player.rainBought) { player.setSpecialAtkType("rain"); player.resetSpecialTimer(0); }
+					else if (player.rainBought) {
+						player.setSpecialAtkType("rain"); player.resetSpecialTimer(0);
+						gameplayUISetSpecialBase.setFillColor(sf::Color::White);
+						gameplayUISetSpecialTriple.setFillColor(sf::Color::White);
+					}
+				}
+			}
+			if (gameOverScreenOn) {
+				vectorNormal.clear();
+				vectorShooter.clear();
+				vectorElite.clear();
+				vectorBonus.clear();
+				vectorProjectile.clear();
+				vectorPie.clear();
+				vectorSugar.clear();
+				shooterPositions.clear();
+				for (int i = 0; i < 15; ++i)
+					positionsOccupied[i] = false;
+				if (retryText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					backgroundActive = true;
+					gameOverScreenOn = false;
+					player.setPlayerLife(true);
+					player.setPlayerHP(100);
+				}
+				if (giveUpText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					levelOneOn = false;
+					levelTwoOn = false;
+					levelThreeOn = false;
+					showPauseMenu = false;
+					backgroundActive = false;
+					gameOverScreenOn = false;
+					startUpScreenOn = true;
+					bgStartUpScreenMusic.play();
 				}
 			}
 			if (levelSelectionScreenOn) {
@@ -3062,13 +3118,6 @@ void Game::pollEvents() {
 
 void Game::update() {
 	// MECHANICS
-	/*if (playerDeath()) { //////////// ARRETER TOUT  QUAND LE PERSO MEURT
-		backgroundActive = false;
-		levelOneOn = false;
-		levelTwoOn = false;
-		levelThreeOn = false;
-		gameOverScreenOn = true;
-	}*/
 	if (levelOneOn) {
 		if (backgroundActive) {
 			if (levelProgression < levelOneDuration) {
@@ -3104,7 +3153,6 @@ void Game::update() {
 				playerInput();
 				updateStatsSpritesCooldown();
 				playerCollisions();
-				playerDeath();
 				nonPlayerBehavior();
 				clownWalkAnimation();
 				bossAnimation();
@@ -3155,7 +3203,6 @@ void Game::update() {
 				playerInput();
 				updateStatsSpritesCooldown();
 				playerCollisions();
-				playerDeath();
 				nonPlayerBehavior();
 				clownWalkAnimation();
 				bossAnimation();
@@ -3207,7 +3254,6 @@ void Game::update() {
 				playerInput();
 				updateStatsSpritesCooldown();
 				playerCollisions();
-				playerDeath();
 				nonPlayerBehavior();
 				clownWalkAnimation();
 				bossAnimation();
@@ -3264,6 +3310,45 @@ void Game::update() {
 				endScreenInit();
 			}
 		}
+	}
+	if (playerDeath() && backgroundActive) { gameOverScreenOn = true; }
+
+	if (gameOverScreenOn) {
+		gameOverText.setFont(puppy);
+		gameOverText.setCharacterSize(100);
+		gameOverText.setLetterSpacing(1.1f);
+		gameOverText.setFillColor(sf::Color::Red);
+		gameOverText.setOutlineColor(sf::Color::Black);
+		gameOverText.setOutlineThickness(1.f);
+		gameOverText.setPosition((window.getSize().x - gameOverText.getLocalBounds().width) / 2,
+			gameplayPauseContent.getPosition().y + gameplayPauseContent.getSize().y / 3 - gameOverText.getCharacterSize() / 2);
+		retryText.setFont(puppy);
+		retryText.setCharacterSize(50);
+		retryText.setLetterSpacing(1.1f);
+		retryText.setFillColor(sf::Color::White);
+		retryText.setOutlineColor(sf::Color::Black);
+		retryText.setOutlineThickness(1.f);
+		retryText.setPosition((window.getSize().x - retryText.getLocalBounds().width) / 2,
+			gameOverText.getPosition().y + gameOverText.getCharacterSize() + window.getSize().y * 0.1);
+		giveUpText.setFont(puppy);
+		giveUpText.setCharacterSize(50);
+		giveUpText.setLetterSpacing(1.1f);
+		giveUpText.setFillColor(sf::Color::White);
+		giveUpText.setOutlineColor(sf::Color::Black);
+		giveUpText.setOutlineThickness(1.f);
+		giveUpText.setPosition((window.getSize().x - giveUpText.getLocalBounds().width) / 2, retryText.getPosition().y + retryText.getCharacterSize() * 2);
+
+		if (language == "EN") {
+			gameOverText.setString("GAME OVER");
+			retryText.setString("TRY AGAIN");
+			giveUpText.setString("GIVE UP");
+		}
+		else if (language == "FR") {
+			gameOverText.setString("FIN DE PARTIE");
+			retryText.setString("RECOMMENCER");
+			giveUpText.setString("ABANDONNER");
+		}
+		backgroundActive = false;
 	}
 }
 
@@ -3350,6 +3435,8 @@ void Game::render() {
 				window.draw(shieldSprite);
 			window.draw(gameplayUILifeBarCurrentSprite);
 			window.draw(gameplayUIScoreText);
+			if (showNoHitBonus) window.draw(gameplayUINoHitBonus);
+			if (showNoMissBonus) window.draw(gameplayUINoMissBonus);
 			window.draw(sugarIcone);
 			window.draw(gameplayUISugarText);
 			window.draw(gameplayUIStatAtkText);
@@ -3397,6 +3484,8 @@ void Game::render() {
 				window.draw(shieldSprite);
 			window.draw(gameplayUILifeBarCurrentSprite);
 			window.draw(gameplayUIScoreText);
+			if (showNoHitBonus) window.draw(gameplayUINoHitBonus);
+			if (showNoMissBonus) window.draw(gameplayUINoMissBonus);
 			window.draw(sugarIcone);
 			window.draw(gameplayUISugarText);
 			window.draw(gameplayUIStatAtkText);
@@ -3442,6 +3531,8 @@ void Game::render() {
 				window.draw(shieldSprite);
 			window.draw(gameplayUILifeBarCurrentSprite);
 			window.draw(gameplayUIScoreText);
+			if (showNoHitBonus) window.draw(gameplayUINoHitBonus);
+			if (showNoMissBonus) window.draw(gameplayUINoMissBonus);
 			window.draw(sugarIcone);
 			window.draw(gameplayUISugarText);
 			window.draw(gameplayUIStatAtkText);
@@ -3486,8 +3577,11 @@ void Game::render() {
 	}
 
 	if (gameOverScreenOn) {
-		window.clear(sf::Color::Black);
+		window.draw(darkerLayer);
 		window.draw(gameplayPauseContent);
+		window.draw(gameOverText);
+		window.draw(retryText);
+		window.draw(giveUpText);
 	}
 
 	window.draw(FPSText);
