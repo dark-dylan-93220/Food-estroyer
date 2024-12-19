@@ -2423,7 +2423,10 @@ void Game::nonPlayerBehavior() {
 				if (pie->hitCounter < pie->maxHitNumber) {
 					pie->hitCounter++;
 				}
-				else { pie->setState(false); }
+				else { 
+					pie->setState(false);
+					scoreCounter += 100 * player.noHitMultiplier * player.accuracyMultiplier;
+				}
 			}
 			if (bossEye2.getGlobalBounds().intersects(pie->getGlobalBounds())) {
 				boss.setHp(-pie->getAtkPower() * 2);  //CRIT DAMAGE SUR L'OEIL
@@ -2432,7 +2435,10 @@ void Game::nonPlayerBehavior() {
 				if (pie->hitCounter < pie->maxHitNumber) {
 					pie->hitCounter++;
 				}
-				else { pie->setState(false); }
+				else { 
+					pie->setState(false);
+					scoreCounter += 100 * player.noHitMultiplier * player.accuracyMultiplier;
+				}
 			}
 		}
 
@@ -2443,6 +2449,9 @@ void Game::nonPlayerBehavior() {
 			levelThreeCompleted = true;
 			loadTextPositions();
 			backgroundActive = false;
+			bossFightStarted = false;
+			bossFightCompleted = true;
+			levelProgression = levelThreeDuration + 1;
 			endScreenInit();
 		}
 	}
@@ -2505,7 +2514,7 @@ void Game::nonPlayerDraw() {
 	if (player.getX2()) { window.draw(x2Draw); }
 	if (player.getOneUp()) { window.draw(oneUpDraw); }
 
-	if (boss.getAlive() && boss.spawned) {
+	if (boss.getAlive() && boss.spawned && levelThreeOn) {
 		window.draw(boss);
 		window.draw(bossEye);
 		window.draw(bossEye2);
@@ -3399,6 +3408,8 @@ void Game::update() {
 			}
 			// Bossfight!
 			else if (bossFightStarted) {
+				if (!boss.getAlive())
+					bossFightStarted = false;
 				clownWalkAnimationTime += f_ElapsedTime;
 				bossAnimationTime += f_ElapsedTime;
 				bossEyeAnimationTime += f_ElapsedTime;
@@ -3424,6 +3435,12 @@ void Game::update() {
 				bossAnimation();
 
 				backgroundMovementLevel3();
+			}
+			else {
+				std::cout << "HEY" << std::endl;
+				bossFightCompleted = true;
+				bossFightStarted = false;
+				levelProgression = levelThreeDuration + 1;
 			}
 		}
 	}
@@ -3669,7 +3686,7 @@ void Game::render() {
 			window.draw(gameplayUISetSpecialRain);
 			window.draw(levelProgressionBarBG);
 			window.draw(levelProgressionBarFG);
-			if (levelThreeCompleted && levelProgression > levelThreeDuration) {
+			if (levelThreeCompleted && levelProgression > levelThreeDuration && bossFightCompleted) {
 				window.draw(gameplayPauseContent);
 				window.draw(levelEndScreenTitle);
 				window.draw(levelEndScreenTotalScore);
