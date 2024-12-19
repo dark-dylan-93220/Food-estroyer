@@ -35,27 +35,30 @@ Enemy::Enemy() {}
 
 Normal::Normal(float x, float y, char s, sf::RenderWindow& window, sf::Texture& texture) : Enemy(x, y, s, window, texture) {
 	hp = 100 * hpPerSize;
-	sugarValue = int(50 * sugarValuePerSize);                                                        //ICI : VALEUR EN SUCRES DES MONSTRES
-	atkPower = 30 * atkPowerPerSize; // Les normaux sont facilements esquivables donc il font beaucoup de dégats si on les touches
+	sugarValue = int(/*50*/200 * sugarValuePerSize);                                                        //ICI : VALEUR EN SUCRES DES MONSTRES
+	atkPower = 30 * atkPowerPerSize; 
 	this->setTexture(texture);
 }
-Shooter::Shooter(float x, float y, char s, sf::RenderWindow& window, sf::Texture& texture) : Enemy(x, y, s, window, texture) {
-	this->setPosition(sf::Vector2f(window.getSize().x + 100.f, -100.f));
-	hp = 150 * hpPerSize;
-	sugarValue = int(100 * sugarValuePerSize);
-	atkPower = 15 * atkPowerPerSize;
-	this->setTexture(texture);
-}
-//Shooter::Shooter(float x, float y, char s, sf::RenderWindow& window, sf::Texture& texture, Player& player) : Enemy(x, y, s, window, texture) {
-//	this->setPosition(sf::Vector2f(window.getSize().x + (getLocalBounds().width * getScale().x), player.getPosition().y + player.getRadius() - (getLocalBounds().height * getScale().y) / 2));
+//COMPORTEMENT DE BASE
+//Shooter::Shooter(float x, float y, char s, sf::RenderWindow& window, sf::Texture& texture) : Enemy(x, y, s, window, texture) {
+//	this->setPosition(sf::Vector2f(window.getSize().x + 100.f, -100.f));
 //	hp = 150 * hpPerSize;
 //	sugarValue = int(100 * sugarValuePerSize);
 //	atkPower = 15 * atkPowerPerSize;
 //	this->setTexture(texture);
 //}
+
+//NOUVEAU COMPORTEMENT
+Shooter::Shooter(float x, float y, char s, sf::RenderWindow& window, sf::Texture& texture, Player& player) : Enemy(x, y, s, window, texture) {
+	//this->setPosition(sf::Vector2f(window.getSize().x + (getLocalBounds().width * getScale().x), player.getPosition().y + player.getRadius() - (getLocalBounds().height * getScale().y) / 2));
+	hp = 150 * hpPerSize;
+	sugarValue = int(/*100*/50 * sugarValuePerSize);
+	atkPower = 15 * atkPowerPerSize;
+	this->setTexture(texture);
+}
 Elite::Elite(float x, float y, char s, sf::RenderWindow& window, sf::Texture& texture) : Enemy(x, y, s, window, texture) {
-	hp = 200 * hpPerSize;
-	sugarValue = int(150 * sugarValuePerSize);
+	hp = /*200*/50 * hpPerSize;
+	sugarValue = int(/*150*/100 * sugarValuePerSize);
 	atkPower = 20 * atkPowerPerSize;
 	this->setTexture(texture);
 }
@@ -66,7 +69,7 @@ Boss::Boss() {
 	moveSpeedY = 0;
 }
 Projectile::Projectile() {
-	if (id == "boss") speedY = 100;
+	if (id == "boss") speedY = 100.f /*/ 1080.f*/;
 }
 
 void Enemy::dropSugar(std::vector<Sugar*>& vectorSugar, Enemy& enemy) {
@@ -87,118 +90,118 @@ void Enemy::dropSugar(std::vector<Sugar*>& vectorSugar, Enemy& enemy) {
 
 void Normal::behavior(float timeElapsed, std::vector<Normal>& vectorNormal, sf::RenderWindow &window) {
 	if (hp <= 0 || getPosition().x < -(getLocalBounds().width * getScale().x)) { alive = false; }
-	move(moveSpeedX * 1.25 * timeElapsed, 0);
+	move(moveSpeedX * timeElapsed, 0);
 }
 
-void Shooter::behavior(
-	float timeElapsed, 
-	std::vector<Shooter>& vectorShooter, std::vector<sf::Vector2f>& shooterPositions, 
-	std::vector<Projectile*>& vectorProjectile, std::vector<bool>& positionsOccupied, sf::RenderWindow& window) {
-
-	if (hp <= 0) { alive = false; }
-
-	int counter(0);
-	possiblePositions = shooterPositions;
-	while (!positionFound || waitingForPosition) {
-		for (int i = 0; i < 15; ++i) {
-			if (positionsOccupied[i] == true) {
-				counter++;
-			}
-		}
-		if (counter == 15) {
-			positionChoice = { 9999.f,9999.f };
-			positionFound = true;
-			waitingForPosition = false;
-			counter = 0;
-		}
-		randomPositionChoice = rand() % shooterPositions.size();
-		if (positionsOccupied[randomPositionChoice] == false) {
-			positionFound = true;
-			waitingForPosition = false;
-			positionsOccupied[randomPositionChoice] = true;
-			positionChoice = possiblePositions[randomPositionChoice];
-		}
-	}
-	// REDUCE SPEED IF SHOOTER IS APPROACHING POSITION
-	if (positionFound == true && waitingForPosition == false) {
-		if (positionChoice.x > getPosition().x) {
-			if (positionChoice.x - getPosition().x <= 20)
-				moveDirX = 1;
-			else { moveDirX = 3; }
-		}
-		if (positionChoice.x < getPosition().x) {
-			if (getPosition().x - positionChoice.x <= 20)
-				moveDirX = 1;
-			else { moveDirX = 3; }
-		}
-		if (positionChoice.y > getPosition().y) {
-			if (positionChoice.y - getPosition().y <= 20)
-				moveDirY = 1;
-			else { moveDirY = 3; }
-		}
-		if (positionChoice.y < getPosition().y) {
-			if (getPosition().y - positionChoice.y <= 20)
-				moveDirY = 1;
-			else { moveDirY = 3; }
-		}
-
-		if (positionChoice.x < getPosition().x) moveDirX = -moveDirX;
-		if (positionChoice.x > getPosition().x) moveDirX = moveDirX;
-		if (positionChoice.y < getPosition().y) moveDirY = -moveDirY;
-		if (positionChoice.y > getPosition().y) moveDirY = moveDirY;
-		if (getPosition().x - positionChoice.x > 3.f && !positionReached)
-			move((moveDirX * 100) * timeElapsed, 0);
-		if (positionChoice.y - getPosition().y > 3.f && !positionReached)
-			move(0, (moveDirY * 100) * timeElapsed);
-		if (!(getPosition().x - positionChoice.x > 3.f) && !(positionChoice.y - getPosition().y > 3.f))
-		{
-			//Center shooter position in relation to his size
-			positionReached = true;
-			if (positionReached) {
-				if (getPosition().x - targetPosition.x > 3.f)
-					move((moveDirX * 10) * timeElapsed, 0);
-				if (targetPosition.y - getPosition().y > 3.f)
-					move(0, (moveDirY * 10) * timeElapsed);
-			}
-			// Shoots here
-			if (shootCooldown >= 1.5f) { // ici : varier le nombre de boucle pour que les ennemis shoot +ou- vite - A remplacer par une durée de temps variable
-				Projectile* projectile = new Projectile;
-				projectile->setId(getId());
-				projectile->setAtkPower(atkPower);
-				switch (getSize()) {
-				case 's': projectile->setScale(0.05f, 0.05f); break;
-				case 'm': projectile->setScale(0.10f, 0.10f); break;
-				case 'l': projectile->setScale(0.15f, 0.15f); break;
-				}
-				projectile->setPosition(getPosition().x - (getLocalBounds().width * getScale().x) / 2,
-					getPosition().y + (getLocalBounds().height * getScale().y) / 2 - (projectile->getLocalBounds().height * projectile->getScale().y) / 2);
-				vectorProjectile.push_back(projectile);
-				shootCooldown = 0;
-			}
-			else { shootCooldown += timeElapsed; }
-		}
-	}
-}
-
-//void  Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooters, std::vector<Projectile*>& vectorProjectile, sf::RenderWindow& window) {
-//	if (hp <= 0 || getPosition().x < -(getLocalBounds().width * getScale().x)) { alive = false; }
-//	move(moveSpeedX * 0.5 * timeElapsed, 0);
-//	if (shootCooldown >= 3.f) {
-//		Projectile* projectile = new Projectile;
-//		projectile->setId(getId());
-//		projectile->setAtkPower(atkPower);
-//		switch (getSize()) {
-//		case 's': projectile->setScale(0.05f, 0.05f); break;
-//		case 'm': projectile->setScale(0.10f, 0.10f); break;
-//		case 'l': projectile->setScale(0.15f, 0.15f); break;
+//COMPORTEMENT DE BASE
+//void Shooter::behavior(float timeElapsed,  std::vector<Shooter>& vectorShooter, std::vector<sf::Vector2f>& shooterPositions, 
+//	std::vector<Projectile*>& vectorProjectile, std::vector<bool>& positionsOccupied, sf::RenderWindow& window) {
+//
+//	if (hp <= 0) { alive = false; }
+//
+//	int counter(0);
+//	possiblePositions = shooterPositions;
+//	while (!positionFound || waitingForPosition) {
+//		for (int i = 0; i < 15; ++i) {
+//			if (positionsOccupied[i] == true) {
+//				counter++;
+//			}
 //		}
-//		projectile->setPosition(getPosition().x - (getLocalBounds().width * getScale().x) / 2,
-//			getPosition().y + (getLocalBounds().height * getScale().y) / 2 - (projectile->getLocalBounds().height * projectile->getScale().y) / 2);
-//		vectorProjectile.push_back(projectile);
-//		shootCooldown = 0;
+//		if (counter == 15) {
+//			positionChoice = { 9999.f,9999.f };
+//			positionFound = true;
+//			waitingForPosition = false;
+//			counter = 0;
+//		}
+//		randomPositionChoice = rand() % shooterPositions.size();
+//		if (positionsOccupied[randomPositionChoice] == false) {
+//			positionFound = true;
+//			waitingForPosition = false;
+//			positionsOccupied[randomPositionChoice] = true;
+//			positionChoice = possiblePositions[randomPositionChoice];
+//		}
 //	}
-//	else { shootCooldown += timeElapsed; }
+//	// REDUCE SPEED IF SHOOTER IS APPROACHING POSITION
+//	if (positionFound == true && waitingForPosition == false) {
+//		if (positionChoice.x > getPosition().x) {
+//			if (positionChoice.x - getPosition().x <= 20)
+//				moveDirX = 1;
+//			else { moveDirX = 3; }
+//		}
+//		if (positionChoice.x < getPosition().x) {
+//			if (getPosition().x - positionChoice.x <= 20)
+//				moveDirX = 1;
+//			else { moveDirX = 3; }
+//		}
+//		if (positionChoice.y > getPosition().y) {
+//			if (positionChoice.y - getPosition().y <= 20)
+//				moveDirY = 1;
+//			else { moveDirY = 3; }
+//		}
+//		if (positionChoice.y < getPosition().y) {
+//			if (getPosition().y - positionChoice.y <= 20)
+//				moveDirY = 1;
+//			else { moveDirY = 3; }
+//		}
+//
+//		if (positionChoice.x < getPosition().x) moveDirX = -moveDirX;
+//		if (positionChoice.x > getPosition().x) moveDirX = moveDirX;
+//		if (positionChoice.y < getPosition().y) moveDirY = -moveDirY;
+//		if (positionChoice.y > getPosition().y) moveDirY = moveDirY;
+//		if (getPosition().x - positionChoice.x > 3.f && !positionReached)
+//			move((moveDirX * 100) * timeElapsed, 0);
+//		if (positionChoice.y - getPosition().y > 3.f && !positionReached)
+//			move(0, (moveDirY * 100) * timeElapsed);
+//		if (!(getPosition().x - positionChoice.x > 3.f) && !(positionChoice.y - getPosition().y > 3.f))
+//		{
+//			//Center shooter position in relation to his size
+//			positionReached = true;
+//			if (positionReached) {
+//				if (getPosition().x - targetPosition.x > 3.f)
+//					move((moveDirX * 10) * timeElapsed, 0);
+//				if (targetPosition.y - getPosition().y > 3.f)
+//					move(0, (moveDirY * 10) * timeElapsed);
+//			}
+//			// Shoots here
+//			if (shootCooldown >= 1.5f) { // ici : varier le nombre de boucle pour que les ennemis shoot +ou- vite - A remplacer par une durée de temps variable
+//				Projectile* projectile = new Projectile;
+//				projectile->setId(getId());
+//				projectile->setAtkPower(atkPower);
+//				switch (getSize()) {
+//				case 's': projectile->setScale(0.05f, 0.05f); break;
+//				case 'm': projectile->setScale(0.10f, 0.10f); break;
+//				case 'l': projectile->setScale(0.15f, 0.15f); break;
+//				}
+//				projectile->setPosition(getPosition().x - (getLocalBounds().width * getScale().x) / 2,
+//					getPosition().y + (getLocalBounds().height * getScale().y) / 2 - (projectile->getLocalBounds().height * projectile->getScale().y) / 2);
+//				vectorProjectile.push_back(projectile);
+//				shootCooldown = 0;
+//			}
+//			else { shootCooldown += timeElapsed; }
+//		}
+//	}
 //}
+
+//NOUVEAU COMPORTEMENT
+void  Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooters, std::vector<Projectile*>& vectorProjectile, sf::RenderWindow& window) {
+	if (hp <= 0 || getPosition().x < -(getLocalBounds().width * getScale().x)) { alive = false; }
+	move(moveSpeedX * 0.25 * timeElapsed, 0);
+	if (shootCooldown >= 3.f) {
+		Projectile* projectile = new Projectile;
+		projectile->setId(getId());
+		projectile->setAtkPower(atkPower);
+		switch (getSize()) {
+		case 's': projectile->setScale(0.08f, 0.08f); break;
+		case 'm': projectile->setScale(0.12f, 0.12f); break;
+		case 'l': projectile->setScale(0.15f, 0.15f); break;
+		}
+		projectile->setPosition(getPosition().x - (getLocalBounds().width * getScale().x) / 2,
+			getPosition().y + (getLocalBounds().height * getScale().y) / 2 - (projectile->getLocalBounds().height * projectile->getScale().y) / 2);
+		vectorProjectile.push_back(projectile);
+		shootCooldown = 0;
+	}
+	else { shootCooldown += timeElapsed; }
+}
 
 void Elite::behavior(float timeElapsed, Player &player, std::vector<Projectile*>& vectorProjectile, sf::RenderWindow& window)
 {
@@ -254,13 +257,13 @@ void Elite::behavior(float timeElapsed, Player &player, std::vector<Projectile*>
 		}
 	}
 	//TIRER
-	if (shootCooldown >= 1.f) {
+	if (shootCooldown >= /*1.f*/2.f) {
 		Projectile* projectile = new Projectile;
 		projectile->setId(getId());
 		projectile->setAtkPower(atkPower);
 		switch (getSize()) {
-		case 's': projectile->setScale(0.05f, 0.05f); break;
-		case 'm': projectile->setScale(0.10f, 0.10f); break;
+		case 's': projectile->setScale(0.08f, 0.08f); break;
+		case 'm': projectile->setScale(0.12f, 0.12f); break;
 		case 'l': projectile->setScale(0.15f, 0.15f); break;
 		}
 		projectile->setPosition(getPosition().x - (getLocalBounds().width * getScale().x) / 2,
@@ -283,31 +286,32 @@ bool Sugar::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Su
 
 bool Projectile::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Projectile*>& vectorProjectiles, Player &player) {
 	if (state) {
-		move(speedX * timeElapsed, speedY * timeElapsed);
+		if (getId() != "bossSpecial") {
+			move(speedX /** window.getSize().x */ * timeElapsed, speedY /** window.getSize().y */ * timeElapsed);
 
-		if (getId() == "bossLeft") {
-			if (getPosition().x > startPosition.x + window.getSize().y / 2) {
-				state = false;
+			if (getId() == "bossLeft") {
+				if (getPosition().x > startPosition.x + window.getSize().y / 2) {
+					state = false;
+				}
 			}
-		}
-		else if (getId() == "bossUp") {
-			if (getPosition().y > startPosition.y + window.getSize().y / 2) {
-				state = false;
+			else if (getId() == "bossUp") {
+				if (getPosition().y > startPosition.y + window.getSize().y / 2) {
+					state = false;
+				}
 			}
-		}
-		else if (getId() == "bossDown") {
-			if (getPosition().y < startPosition.y - window.getSize().y / 2) {
-				state = false;
+			else if (getId() == "bossDown") {
+				if (getPosition().y < startPosition.y - window.getSize().y / 2) {
+					state = false;
+				}
 			}
 		}
 		else {
-			if (getId() == "bossSpecial") {
-				if (getPosition().y > player.getPosition().y + player.getRadius() * 1.5f && getPosition().x + (getLocalBounds().width * getScale().x) > player.getPosition().x)
-					speedY = -player.getSpeed() * 0.75f; //la tete chercheuse garde son efficacité peu importe la vitesse du joueur
-				else if (getPosition().y < player.getPosition().y + player.getRadius() * 0.5f && getPosition().x + (getLocalBounds().width * getScale().x) > player.getPosition().x)
-					speedY = player.getSpeed() * 0.75f;
-				else { speedY = 0; }
-			}
+			if (getPosition().y > player.getPosition().y + player.getRadius() * 1.5f && getPosition().x + (getLocalBounds().width * getScale().x) > player.getPosition().x)
+				speedY = -player.getSpeed() * 0.75f; //la tete chercheuse garde son efficacité peu importe la vitesse du joueur
+			else if (getPosition().y < player.getPosition().y + player.getRadius() * 0.5f && getPosition().x + (getLocalBounds().width * getScale().x) > player.getPosition().x)
+				speedY = player.getSpeed() * 0.75f;
+			else { speedY = 0; }
+			
 			move(speedX * timeElapsed, speedY * timeElapsed);
 
 			if (getPosition().x < -(getLocalBounds().width * getScale().x))
@@ -322,17 +326,18 @@ bool Boss::behavior(float timeElapsed, Player& player, std::vector<Projectile*>&
 	if (hp <= 0) { hp = 0; alive = false; }
 	if (alive) {
 
-		if (getPosition().x - (getLocalBounds().width * getScale().x) / 2 > window.getSize().x / 2) {
+		if (getPosition().x - (getLocalBounds().width * getScale().x) / 2 > window.getSize().x / 1.9) {
 			move(moveSpeedX * timeElapsed, moveSpeedY * timeElapsed);
+			spawning = true;
 		}
 		else {
+			spawning = false;
 			switchCooldown += timeElapsed;
-			if (switchCooldown >= 16) switchCooldown = 0; //ALTERNER ENTRE LES DEUX TYPES D'ATTAQUES
+			if (switchCooldown >= 17) switchCooldown = 0; //ALTERNER ENTRE LES DEUX TYPES D'ATTAQUES
 			// ATTAQUE NORMALE : EFFET ESSUIE GLACE
 			if (shootCooldown >= 0.3 && switchCooldown < 10) {
 				updatingSpeedY += updatingSpeedYSetter;
 				if (updatingSpeedY >= 400 || updatingSpeedY <= -400) {
-					;
 					updatingSpeedYSetter = -updatingSpeedYSetter;
 				}
 
@@ -358,7 +363,7 @@ bool Boss::behavior(float timeElapsed, Player& player, std::vector<Projectile*>&
 			}
 			else { shootCooldown += timeElapsed; }
 
-			if (secondCooldown > 0.5 && switchCooldown > 11) { // ATTAQUE NORMALE ALT : CROIX SUR POSITION JOUEUR
+			if (secondCooldown > 0.5 && switchCooldown >= 11 && switchCooldown < 16) { // ATTAQUE NORMALE ALT : CROIX SUR POSITION JOUEUR
 				//PROJECTILE DE GAUCHE
 				Projectile* projectile1 = new(Projectile);
 				projectile1->setId("bossLeft");
@@ -406,7 +411,7 @@ bool Boss::behavior(float timeElapsed, Player& player, std::vector<Projectile*>&
 			else { secondCooldown += timeElapsed; }
 
 			// ATTAQUE SPECIALE : TETE CHERCHEUSE
-			if (specialCooldown >= 2.7) {
+			if (specialCooldown >= 2.7 && switchCooldown < 10) {
 				Projectile* projectile = new(Projectile);
 				projectile->setId("bossSpecial");
 				projectile->setAtkPower(getAtkPower() * 2);

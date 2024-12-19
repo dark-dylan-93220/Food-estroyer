@@ -63,7 +63,7 @@ private:
 	std::string id;
 	float atkPower = 1;
 	bool state = true;
-	float speedX = -600;
+	float speedX = -350;
 	float speedY = 0;
 public:
 	sf::Vector2f startPosition = { 0, 0 };
@@ -114,9 +114,13 @@ public:
 	sf::Vector2f targetPosition = { getPosition().x - (getLocalBounds().width * getScale().x) / 2, getPosition().y - (getLocalBounds().height * getScale().y) / 2 };
 	std::vector<sf::Vector2f> possiblePositions;
 
-	Shooter(float x, float y, char s, sf::RenderWindow& window, sf::Texture& texture);
+	//COMPORTEMENT DE BASE
+	//Shooter(float x, float y, char s, sf::RenderWindow& window, sf::Texture& texture);
+	//NOUVEAU COMPORTEMENT
+	Shooter(float x, float y, char s, sf::RenderWindow& window, sf::Texture& texture, Player &player);
 
-	void behavior(float timeElapsed, std::vector<Shooter>& vectorShooters, std::vector<sf::Vector2f>& shooterPositions, std::vector<Projectile*>& vectorProjectile, std::vector<bool>& positionsOccupied, sf::RenderWindow& window);
+	//void behavior(float timeElapsed, std::vector<Shooter>& vectorShooters, std::vector<sf::Vector2f>& shooterPositions, std::vector<Projectile*>& vectorProjectile, std::vector<bool>& positionsOccupied, sf::RenderWindow& window);
+	void behavior(float timeElapsed, std::vector<Shooter>& vectorShooters, std::vector<Projectile*>& vectorProjectile, sf::RenderWindow& window);
 
 	void setId(int newId) { idNum = newId; }
 	std::string getId() const { return id; }
@@ -152,12 +156,20 @@ private:
 	float switchCooldown = 0;
 public:
 	bool spawned = false;
+	bool spawning = false;
 
 	Boss();
 
 	bool behavior(float timeElapsed, Player& player, std::vector<Projectile*>& vectorProjectile, sf::RenderWindow& window);
 
 	std::string getId() const { return id; }
+	void setupBoss() {
+		hp = 10000;
+		atkPower = 20;
+		sugarValue = 5000;
+		moveSpeedY = 0;
+		alive = true;
+	}
 };
 
 #endif

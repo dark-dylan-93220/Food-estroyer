@@ -186,6 +186,7 @@ namespace {
 	sf::Texture fries;
 	sf::Texture salad;
 	sf::Texture pepper;
+	sf::Texture candy;
 	// BOSS 
 	sf::Texture bossTexture1;
 	sf::Texture bossTexture2;
@@ -772,6 +773,7 @@ void Game::loadLevelAssets() { // Only loaded once
 	fries.loadFromFile("Assets/Images/Enemy/Modele/fries.png");
 	salad.loadFromFile("Assets/Images/Enemy/Modele/salad.png");
 	pepper.loadFromFile("Assets/Images/Enemy/Modele/pepper.png");
+	candy.loadFromFile("Assets/Images/Enemy/Modele/candy.png");
 	// BOSS
 	bossTexture1.loadFromFile("Assets/Images/Enemy/Boss/spaghettiBoss1.png");
 	bossTexture2.loadFromFile("Assets/Images/Enemy/Boss/spaghettiBoss2.png");
@@ -1641,8 +1643,11 @@ void Game::setEnemySpawn(int numberOfEnnemies, bool isBonusSpawning) {
 		randomSize = rand() % 3;
 		randomYPosition = rand() % 10;
 
-		Normal normal  (xSpawnPosition, randomHeights[randomYPosition], randomSizes[randomSize], window, *randomEnemySkins[rand() % 10]);
-		Shooter shooter(xSpawnPosition, randomHeights[randomYPosition], randomSizes[randomSize], window, *randomEnemySkins[rand() % 10]);
+		Normal normal  (xSpawnPosition, randomHeights[randomYPosition], randomSizes[randomSize], window, candy/**randomEnemySkins[rand() % 10]*/);
+		//COMPORTEMENT DE BASE
+		//Shooter shooter(xSpawnPosition, randomHeights[randomYPosition], randomSizes[randomSize], window, *randomEnemySkins[rand() % 10]);
+		//NOUVEAU COMPORTEMENT
+		Shooter shooter(xSpawnPosition, randomHeights[randomYPosition], randomSizes[randomSize], window, *randomEnemySkins[rand() % 10], player);
 		Elite elite    (xSpawnPosition, randomHeights[randomYPosition], randomSizes[randomSize], window, *randomEnemySkins[rand() % 10]);
 
 		switch (randomClass) {
@@ -1769,7 +1774,6 @@ void Game::bossAnimation() {
 		boss.setTexture(bossTexture3);
 		bossAnimationTime = 0;
 	}
-
 	if (bossEyeAnimationTime <= 3.f) {
 		bossEye.setTexture(bossEyeTexture1);
 		bossEye2.setTexture(bossEyeTexture1);
@@ -1791,7 +1795,6 @@ void Game::bossAnimation() {
 }
 
 void Game::scoreCalculation() {
-	//scoreCounter += (100.f * f_ElapsedTime);
 	if (scoreCounter < 10)
 		gameplayUIScoreText.setString("Score : 00000" + std::to_string((int)scoreCounter));
 	else if (scoreCounter < 100)
@@ -1891,28 +1894,30 @@ void Game::playerInput() {
 				player.setPosition(0, player.getPosition().y);
 			playerCurrentSprite.setPosition(player.getPosition());
 		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-			if (backgroundActive) {
-				// Ici y'aura le shoot
-				if (player.getShootTimer() >= player.getShootCooldown()) {
-					player.throwPie(vectorPie, window);
-					player.resetShootTimer(0);
-				}
-				playerCurrentSprite.setTexture(playerAttack1);
-			}
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
-			if (backgroundActive) {
-				// SPECIAL ATTACK
-				if (player.getSpecialTimer() >= player.getSpecialCooldown()) {
-					player.specialAtk(vectorPie, window);
-					player.resetSpecialTimer(0);
-					if (player.getSpectialAtkType() == "rain") {
-						player.raining = true;
-						player.rainCount++;
+		if (!boss.spawning) {                                                // EFFET DE CINEMATIQUE
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+				if (backgroundActive) {
+					// Ici y'aura le shoot
+					if (player.getShootTimer() >= player.getShootCooldown()) {
+						player.throwPie(vectorPie, window);
+						player.resetShootTimer(0);
 					}
+					playerCurrentSprite.setTexture(playerAttack1);
 				}
-				playerCurrentSprite.setTexture(playerAttack1);
+			}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
+				if (backgroundActive) {
+					// SPECIAL ATTACK
+					if (player.getSpecialTimer() >= player.getSpecialCooldown()) {
+						player.specialAtk(vectorPie, window);
+						player.resetSpecialTimer(0);
+						if (player.getSpectialAtkType() == "rain") {
+							player.raining = true;
+							player.rainCount++;
+						}
+					}
+					playerCurrentSprite.setTexture(playerAttack1);
+				}
 			}
 		}
 	}
@@ -2331,7 +2336,10 @@ void Game::nonPlayerBehavior() {
 	}
 	for (int i = 0; i < vectorShooter.size(); i++) {
 		if (vectorShooter[i].getAlive()) {
-			vectorShooter[i].behavior(f_ElapsedTime, vectorShooter, shooterPositions, vectorProjectile, positionsOccupied, window);
+			//COMPORTEMENT DE BASE
+			//vectorShooter[i].behavior(f_ElapsedTime, vectorShooter, shooterPositions, vectorProjectile, positionsOccupied, window);
+			//NOUVEAU COMPORTEMENT
+			vectorShooter[i].behavior(f_ElapsedTime, vectorShooter, vectorProjectile, window);
 			vectorShooter[i].dropSugar(vectorSugar, vectorShooter[i]);
 			for (Pie*& pie : vectorPie) {
 				if (vectorShooter[i].getGlobalBounds().intersects(pie->getGlobalBounds())) {
@@ -2425,7 +2433,13 @@ void Game::nonPlayerBehavior() {
 		}
 
 		if (!boss.behavior(f_ElapsedTime, player, vectorProjectile, window)) {
-			//DECLENCHER WIN ICI ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			
+			boss.setPosition(window.getSize().x * 1.1, boss.getPosition().y);
+			player.resetVariables();
+			levelThreeCompleted = true;
+			loadTextPositions();
+			backgroundActive = false;
+			endScreenInit();
 		}
 	}
 }
@@ -2681,6 +2695,16 @@ void Game::pollEvents() {
 			}
 		}
 		if (playScreenOn &&!levelSelectionScreenOn) {
+			if (gameOverScreenOn) {
+				if (retryText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					retryText.setFillColor(LIGHT_YELLOW);
+				else
+					retryText.setFillColor(sf::Color::White);
+				if (giveUpText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					giveUpText.setFillColor(LIGHT_YELLOW);
+				else
+					giveUpText.setFillColor(sf::Color::White);
+			}
 			if (showPauseMenu) {
 				if (gameplayPauseExitBtn.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
 					gameplayPauseExitText.setFillColor(LIGHT_RED);
@@ -2879,6 +2903,7 @@ void Game::pollEvents() {
 				}
 				// Jouer
 				if (playText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					levelProgression = 0;
 					playScreenOn = true;
 					startUpScreenOn = false;
 					bgStartUpScreenMusic.pause();
@@ -2887,11 +2912,6 @@ void Game::pollEvents() {
 					bgLvl3Music.setLoop(false);
 					levelSelectionScreenOn = true;
 					setupLevelSelectionScreen();
-					// levelOneOn = true;
-					// backgroundActive = true;
-					// bgLvl1Music.play();
-					// loadGameplayAssets();
-					// loadLevel1();
 				}
 				if (howToPlayText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 					howToPlayScreenOn = true;
@@ -2917,19 +2937,13 @@ void Game::pollEvents() {
 			if (playScreenOn && !levelSelectionScreenOn) {
 				if (showPauseMenu) {
 					if (gameplayPauseExitBtn.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						player.resetVariables();
 						levelOneOn = false;
 						levelTwoOn = false;
 						levelThreeOn = false;
 						backgroundActive = false;
 						showPauseMenu = false;
-						vectorNormal.clear();
-						vectorShooter.clear();
-						vectorElite.clear();
-						vectorBonus.clear();
-						vectorProjectile.clear();
-						vectorPie.clear();
-						vectorSugar.clear();
-						shooterPositions.clear();
+						clearAllVectors();
 						for (int i = 0; i < 15; ++i)
 							positionsOccupied[i] = false;
 						startUpScreenOn = true;
@@ -3099,21 +3113,29 @@ void Game::pollEvents() {
 				}
 			}
 			if (gameOverScreenOn) {
-				vectorNormal.clear();
-				vectorShooter.clear();
-				vectorElite.clear();
-				vectorBonus.clear();
-				vectorProjectile.clear();
-				vectorPie.clear();
-				vectorSugar.clear();
-				shooterPositions.clear();
-				for (int i = 0; i < 15; ++i)
-					positionsOccupied[i] = false;
 				if (retryText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 					backgroundActive = true;
 					gameOverScreenOn = false;
-					player.setPlayerLife(true);
-					player.setPlayerHP(100);
+					player.resetVariables();
+					clearAllVectors();
+					loadGameplayAssets();
+					setEnemySpawn(numberOfStartingEnnemies, true);
+					levelProgression = 0;
+					if (levelOneOn) {
+						bgLvl1Music.stop();
+						loadLevel1();
+						bgLvl1Music.play();
+					}
+					else if (levelTwoOn) {
+						bgLvl2Music.stop();
+						loadLevel2();
+						bgLvl2Music.play();
+					}
+					else if (levelThreeOn) {
+						bgLvl3Music.stop();
+						loadLevel3();
+						bgLvl3Music.play();
+					}
 				}
 				if (giveUpText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 					levelOneOn = false;
@@ -3123,15 +3145,20 @@ void Game::pollEvents() {
 					backgroundActive = false;
 					gameOverScreenOn = false;
 					startUpScreenOn = true;
+					clearAllVectors();
+					player.resetVariables();
+					setShooterPositions();
 					bgStartUpScreenMusic.play();
 				}
 			}
 			if (levelSelectionScreenOn) {
+				playerCurrentSprite.setColor(sf::Color::White);
 				if (levelSelectionScreenOne.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 					clearAllVectors();
 					loadGameplayAssets();
 					loadLevel1();
 					levelOneOn = true;
+					backgroundActive = true;
 					levelSelectionScreenOn = false;
 					bgLvl1Music.play();
 				}
@@ -3141,6 +3168,7 @@ void Game::pollEvents() {
 						loadGameplayAssets();
 						loadLevel2();
 						levelTwoOn = true;
+						backgroundActive = true;
 						levelSelectionScreenOn = false;
 						bgLvl2Music.play();
 					}
@@ -3150,7 +3178,12 @@ void Game::pollEvents() {
 						clearAllVectors();
 						loadGameplayAssets();
 						loadLevel3();
+						boss.setupBoss();
+						bossFightCompleted = false;
+						bossFightStarted = false;
+						bgBossfightMusic.stop();
 						levelThreeOn = true;
+						backgroundActive = true;
 						levelSelectionScreenOn = false;
 						bgLvl3Music.play();
 					}
@@ -3192,29 +3225,6 @@ void Game::pollEvents() {
 				levelSelectionScreenOn = false;
 				startUpScreenOn = true;
 				bgStartUpScreenMusic.play();
-			}
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::K)) {
-			if (levelOneOn) {
-				loadLevel2();
-				bgLvl1Music.stop();
-				bgLvl2Music.play();
-				levelOneOn = false;
-				levelTwoOn = true;
-			}
-			else if (levelTwoOn) {
-				loadLevel3();
-				bgLvl2Music.stop();
-				bgLvl3Music.play();
-				levelThreeOn = true;
-				levelTwoOn = false;
-			}
-			else if (levelThreeOn) {
-				loadLevel1();
-				bgLvl3Music.stop();
-				bgLvl1Music.play();
-				levelOneOn = true;
-				levelThreeOn = false;
 			}
 		}
 		break;
@@ -3374,6 +3384,8 @@ void Game::update() {
 				setShooterPositions(); // Pour éviter les bugs dans les appels de fonctions dans nonPlayerBehavior(), même s'il n y aura pas de shooters
 				levelProgressionBarFG.setFillColor(sf::Color::Transparent);
 				levelProgressionBarBG.setOutlineThickness(0);
+				boss.setupBoss();
+				boss.setTexture(bossTexture1);
 				boss.spawned = true;
 				bossFightStarted = true;
 				bgBossfightMusic.play();
@@ -3404,17 +3416,7 @@ void Game::update() {
 				clownWalkAnimation();
 				bossAnimation();
 
-				if (boss.getAlive() == false)
-					bossFightCompleted = true;
-
 				backgroundMovementLevel3();
-			}
-			else if(bossFightCompleted) {
-				player.resetVariables();
-				levelThreeCompleted = true;
-				loadTextPositions();
-				backgroundActive = false;
-				endScreenInit();
 			}
 		}
 	}
@@ -3432,7 +3434,6 @@ void Game::update() {
 		retryText.setFont(puppy);
 		retryText.setCharacterSize(50);
 		retryText.setLetterSpacing(1.1f);
-		retryText.setFillColor(sf::Color::White);
 		retryText.setOutlineColor(sf::Color::Black);
 		retryText.setOutlineThickness(1.f);
 		retryText.setPosition((window.getSize().x - retryText.getLocalBounds().width) / 2,
@@ -3440,7 +3441,6 @@ void Game::update() {
 		giveUpText.setFont(puppy);
 		giveUpText.setCharacterSize(50);
 		giveUpText.setLetterSpacing(1.1f);
-		giveUpText.setFillColor(sf::Color::White);
 		giveUpText.setOutlineColor(sf::Color::Black);
 		giveUpText.setOutlineThickness(1.f);
 		giveUpText.setPosition((window.getSize().x - giveUpText.getLocalBounds().width) / 2, retryText.getPosition().y + retryText.getCharacterSize() * 2);
@@ -3566,7 +3566,7 @@ void Game::render() {
 			window.draw(gameplayUISetSpecialRain);
 			window.draw(levelProgressionBarBG);
 			window.draw(levelProgressionBarFG);
-			if (levelOneCompleted) {
+			if (levelOneCompleted && levelProgression > levelOneDuration) {
 				window.draw(gameplayPauseContent);
 				window.draw(levelEndScreenTitle);
 				window.draw(levelEndScreenTotalScore);
@@ -3615,7 +3615,7 @@ void Game::render() {
 			window.draw(gameplayUISetSpecialRain);
 			window.draw(levelProgressionBarBG);
 			window.draw(levelProgressionBarFG);
-			if (levelTwoCompleted) {
+			if (levelTwoCompleted && levelProgression > levelTwoDuration) {
 				window.draw(gameplayPauseContent);
 				window.draw(levelEndScreenTitle);
 				window.draw(levelEndScreenTotalScore);
@@ -3662,7 +3662,7 @@ void Game::render() {
 			window.draw(gameplayUISetSpecialRain);
 			window.draw(levelProgressionBarBG);
 			window.draw(levelProgressionBarFG);
-			if (levelThreeCompleted) {
+			if (levelThreeCompleted && levelProgression > levelThreeDuration) {
 				window.draw(gameplayPauseContent);
 				window.draw(levelEndScreenTitle);
 				window.draw(levelEndScreenTotalScore);

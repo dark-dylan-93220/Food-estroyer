@@ -37,8 +37,8 @@ public:
 class Player : public sf::CircleShape {
 private:
 	bool alive = true;
-	float hp = 100;               
-	float maxHp = 100;             //COMMENCER A 100, AUGMENTER DE 10PV A CHAQUE LVL UP
+	float hp = 10000;               
+	float maxHp = 10000;             //COMMENCER A 100, AUGMENTER DE 10PV A CHAQUE LVL UP
 	float speed = 400;             //COMMENCER A 400, AUGMENTER DE 100 A CHAQUE LVL UP
 	float atkPower = 10;           //COMMENCER A 10, AUGMENTER DE 25% A CHAQUE LVL UP
 	float pieSpeedX = 1000;																			 ////////////// PIE SPEED HERE
@@ -48,7 +48,7 @@ private:
 	float specialTimer = 0;
 	float specialCooldown = 0; // on commence avec l'attaque spéciale chargée
 	std::string specialAtkType = "base";
-	int sugarCount = 0;
+	int sugarCount = 1000000;
 	float bonusTimer = 0;
 	float bonusCooldown = 0;
 	bool shield = false; //le shield couvre les dégats des projectiles mais pas ceux d'une collision au cac (il annule le premier dégat mais n'active pas le timer d'invincibilité)
@@ -109,7 +109,7 @@ public:
 	void resetVariables() {
 		sugarCount = 0;
 		alive = true;
-		hp = 100;
+		hp = 10000;
 		sugarCount = 0;
 		shield = false;
 		x2 = false;
@@ -164,6 +164,7 @@ public:
 	void setSpecialCooldown(float newCooldown)          { specialCooldown = newCooldown; }
 	void setSpecialAtkType(std::string newType)         { specialAtkType = newType; }
 	void setSugarCount(int sugarNumber)                 { sugarCount += sugarNumber; }
+	void resetSugar()                                   { sugarCount = 0; }
 	void setBonusTimer(float timeElapsed)               { bonusTimer += timeElapsed; }
 	void setBonusCooldown(float newCooldown)            { bonusCooldown = newCooldown; }
 	void resetBonusTimer(float time)                    { bonusTimer = time; }
