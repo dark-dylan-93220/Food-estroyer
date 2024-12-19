@@ -39,7 +39,7 @@ private:
 	bool alive = true;
 	float hp = 100;               
 	float maxHp = 100;             //COMMENCER A 100, AUGMENTER DE 10PV A CHAQUE LVL UP
-	float speed = 400;             //COMMENCER A 400, AUGMENTER DE 100 A CHAQUE LVL UP
+	float speed = 500;             //COMMENCER A 400, AUGMENTER DE 100 A CHAQUE LVL UP
 	float atkPower = 10;           //COMMENCER A 10, AUGMENTER DE 25% A CHAQUE LVL UP
 	float pieSpeedX = 1000;																			 ////////////// PIE SPEED HERE
 	float pieSize = 0.01f;
@@ -111,7 +111,7 @@ public:
 		alive = true;
 		hp = 100;
 		maxHp = 100;
-		speed = 400; 
+		speed = 500; 
 		atkPower = 10;
 		pieSpeedX = 1000;
 		pieSize = 0.01f;

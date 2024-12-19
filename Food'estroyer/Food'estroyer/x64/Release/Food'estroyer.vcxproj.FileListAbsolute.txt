@@ -1,0 +1,2 @@
+C:\Users\dhollemaert\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\x64\Release\Food'estroyer.exe.lastcodeanalysissucceeded
+C:\Users\dhollemaert\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\x64\Release\NativeCodeAnalysis.read.1.tlog

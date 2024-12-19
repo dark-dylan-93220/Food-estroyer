@@ -27,6 +27,8 @@ namespace {
 	bool showNoHitBonus = false;
 	bool showNoMissBonus = false;
 	int howToPlayActiveIndex = 0;
+	bool spawnCooldownPhaseOne = false;
+	bool spawnCooldownPhaseTwo = false;
 	// CURSORS
 	sf::Cursor pie;
 	// COLORS
@@ -132,6 +134,7 @@ namespace {
 		// BACKGROUNDS & ICONS
 	sf::Texture settingsIcon;
 	sf::Texture bgStartUpScreen;
+	sf::Texture bgStartUpScreenEnd;
 	sf::Texture levelOneParralax01;
 	sf::Texture levelOneParralax02;
 	sf::Texture levelOneParralax03;
@@ -291,6 +294,7 @@ namespace {
 	sf::RectangleShape levelProgressionBarFG;
 	// SPRITES
 	sf::Sprite bgStartUpScreenSprite;
+	sf::Sprite bgStartUpScreenEndSprite;
 	sf::Sprite settingsIconSprite;
 	// How to play
 	sf::Sprite howToPlayFrench1;
@@ -434,11 +438,15 @@ void Game::loadStartUpScreen() {
 	pieCursorImg.loadFromFile("Assets/Images/pieCursor.png");
 	// TEXTURES
 	bgStartUpScreen.loadFromFile("Assets/Images/bgStartUpScreen.jpg");
+	bgStartUpScreenEnd.loadFromFile("Assets/Images/bgStartUpScreen.png");
 	settingsIcon.loadFromFile("Assets/Images/settingsIcon.png");
 	// SPRITES
 	bgStartUpScreenSprite.setTexture(bgStartUpScreen);
 	bgStartUpScreenSprite.setScale(sf::Vector2f((window.getSize().x / bgStartUpScreenSprite.getLocalBounds().width), (window.getSize().y / bgStartUpScreenSprite.getLocalBounds().height)));
 	bgStartUpScreenSprite.setPosition(sf::Vector2f(0, 0));
+	bgStartUpScreenEndSprite.setTexture(bgStartUpScreenEnd);
+	bgStartUpScreenEndSprite.setScale(sf::Vector2f((window.getSize().x / bgStartUpScreenEndSprite.getLocalBounds().width), (window.getSize().y / bgStartUpScreenEndSprite.getLocalBounds().height)));
+	bgStartUpScreenEndSprite.setPosition(sf::Vector2f(0, 0));
 	settingsIconSprite.setTexture(settingsIcon);
 	settingsIconSprite.setPosition(sf::Vector2f(20.f, 20.f));
 	// TEXTS
@@ -2455,7 +2463,6 @@ void Game::nonPlayerBehavior() {
 		}
 
 		if (!boss.behavior(f_ElapsedTime, player, vectorProjectile, window)) {
-			
 			boss.setPosition(window.getSize().x * 1.1, boss.getPosition().y);
 			player.resetVariables();
 			levelThreeCompleted = true;
@@ -2931,7 +2938,6 @@ void Game::pollEvents() {
 					levelProgression = 0;
 					playScreenOn = true;
 					startUpScreenOn = false;
-					bgStartUpScreenMusic.pause();
 					bgLvl1Music.setLoop(false);
 					bgLvl2Music.setLoop(false);
 					bgLvl3Music.setLoop(false);
@@ -2941,7 +2947,6 @@ void Game::pollEvents() {
 				if (howToPlayText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 					howToPlayScreenOn = true;
 					startUpScreenOn = false;
-					bgStartUpScreenMusic.pause();
 					loadGameplayAssets();
 				}
 				// Quitter
@@ -3001,6 +3006,7 @@ void Game::pollEvents() {
 							oofSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
 							playerDeathSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
 							sugarCrunchSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
+							vineBoomSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
 						}
 					}
 					if (gameplayPauseMinusSoundTextSFX.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
@@ -3010,6 +3016,7 @@ void Game::pollEvents() {
 							oofSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
 							playerDeathSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
 							sugarCrunchSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
+							vineBoomSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
 						}
 					}
 					if (gameplayPausePlusSoundTextMusic.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
@@ -3073,6 +3080,8 @@ void Game::pollEvents() {
 						}
 						else if (levelThreeOn) {
 							bgLvl3Music.stop();
+							bgBossfightMusic.stop();
+							bossFightStarted = false;
 							bgStartUpScreenMusic.play();
 							startUpScreenOn = true;
 							levelThreeOn = false;
@@ -3080,8 +3089,8 @@ void Game::pollEvents() {
 						}
 					}
 					if (levelEndScreenQuitButton.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-						levelOneOn = false; levelTwoOn = false; levelThreeOn = false;
-						bgLvl1Music.stop(); bgLvl2Music.stop(); bgLvl3Music.stop();
+						levelOneOn = false; levelTwoOn = false; levelThreeOn = false; bossFightStarted = false;
+						bgLvl1Music.stop(); bgLvl2Music.stop(); bgLvl3Music.stop(); bgBossfightMusic.stop();
 						startUpScreenOn = true;
 						bgStartUpScreenMusic.play();
 					}
@@ -3195,6 +3204,7 @@ void Game::pollEvents() {
 					levelOneOn = true;
 					backgroundActive = true;
 					levelSelectionScreenOn = false;
+					bgStartUpScreenMusic.pause();
 					bgLvl1Music.play();
 				}
 				if (levelSelectionScreenTwo.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
@@ -3205,6 +3215,7 @@ void Game::pollEvents() {
 						levelTwoOn = true;
 						backgroundActive = true;
 						levelSelectionScreenOn = false;
+						bgStartUpScreenMusic.pause();
 						bgLvl2Music.play();
 					}
 				}
@@ -3220,6 +3231,7 @@ void Game::pollEvents() {
 						levelThreeOn = true;
 						backgroundActive = true;
 						levelSelectionScreenOn = false;
+						bgStartUpScreenMusic.pause();
 						bgLvl3Music.play();
 					}
 				}
@@ -3248,7 +3260,6 @@ void Game::pollEvents() {
 				howToPlayScreenOn = false;
 				startUpScreenOn = true;
 				howToPlayText.setFillColor(sf::Color::White);
-				bgStartUpScreenMusic.play();
 			}
 			else if (playScreenOn && !levelSelectionScreenOn) {
 				loadTextPositions();
@@ -3259,7 +3270,6 @@ void Game::pollEvents() {
 			else if (levelSelectionScreenOn) {
 				levelSelectionScreenOn = false;
 				startUpScreenOn = true;
-				bgStartUpScreenMusic.play();
 			}
 		}
 		break;
@@ -3291,6 +3301,16 @@ void Game::update() {
 				if (player.hurtCount > 0) {
 					player.hurtTimer += f_ElapsedTime;
 				}
+
+				if (levelProgression / levelOneDuration > 0.33f && !spawnCooldownPhaseOne) {
+					spawnCooldownPhaseOne = true;
+					ennemiesSpawnCooldown -= 0.1f;
+				}
+				if (levelProgression / levelOneDuration > 0.66f && !spawnCooldownPhaseTwo) {
+					spawnCooldownPhaseTwo = true;
+					ennemiesSpawnCooldown -= 0.1f;
+				}
+
 				spriteUpdateTimer += f_ElapsedTime;
 				player.noHitTimer += f_ElapsedTime;
 				ennemiesSpawnCooldownDuration += f_ElapsedTime;
@@ -3314,6 +3334,8 @@ void Game::update() {
 				backgroundMovementLevel1();
 			}
 			else {
+				spawnCooldownPhaseOne = false;
+				spawnCooldownPhaseTwo = false;
 				levelTwoUnlocked = true;
 				levelOneCompleted = true;
 				loadTextPositions();
@@ -3344,6 +3366,16 @@ void Game::update() {
 				if (player.hurtCount > 0) {
 					player.hurtTimer += f_ElapsedTime;
 				}
+
+				if (levelProgression / levelTwoDuration > 0.33f && !spawnCooldownPhaseOne) {
+					spawnCooldownPhaseOne = true;
+					ennemiesSpawnCooldown -= 0.1f;
+				}
+				if (levelProgression / levelTwoDuration > 0.66f && !spawnCooldownPhaseTwo) {
+					spawnCooldownPhaseTwo = true;
+					ennemiesSpawnCooldown -= 0.1f;
+				}
+
 				spriteUpdateTimer += f_ElapsedTime;
 				player.noHitTimer += f_ElapsedTime;
 				ennemiesSpawnCooldownDuration += f_ElapsedTime;
@@ -3367,6 +3399,8 @@ void Game::update() {
 				backgroundMovementLevel2();
 			}
 			else {
+				spawnCooldownPhaseOne = false;
+				spawnCooldownPhaseTwo = false;
 				levelThreeUnlocked = true;
 				levelTwoCompleted = true;
 				loadTextPositions();
@@ -3398,6 +3432,16 @@ void Game::update() {
 				if (player.hurtCount > 0) {
 					player.hurtTimer += f_ElapsedTime;
 				}
+
+				if (levelProgression / levelThreeDuration > 0.33f && !spawnCooldownPhaseOne) {
+					spawnCooldownPhaseOne = true;
+					ennemiesSpawnCooldown -= 0.1f;
+				}
+				if (levelProgression / levelThreeDuration > 0.66f && !spawnCooldownPhaseTwo) {
+					spawnCooldownPhaseTwo = true;
+					ennemiesSpawnCooldown -= 0.1f;
+				}
+
 				spriteUpdateTimer += f_ElapsedTime;
 				player.noHitTimer += f_ElapsedTime;
 				ennemiesSpawnCooldownDuration += f_ElapsedTime;
@@ -3422,6 +3466,8 @@ void Game::update() {
 			}
 			// Préparation du bossfight
 			else if(!bossFightStarted) {
+				spawnCooldownPhaseOne = false;
+				spawnCooldownPhaseTwo = false;
 				bgLvl3Music.stop();
 				clearAllVectors();
 				setShooterPositions(); // Pour éviter les bugs dans les appels de fonctions dans nonPlayerBehavior(), même s'il n y aura pas de shooters
@@ -3513,7 +3559,10 @@ void Game::render() {
 	window.clear(sf::Color::Black);
 
 	if (settingsScreenOn) {
-		window.draw(bgStartUpScreenSprite);
+		if (!bossFightCompleted)
+			window.draw(bgStartUpScreenSprite);
+		else
+			window.draw(bgStartUpScreenEndSprite);
 		window.draw(darkerLayer);
 		// TopBar
 		window.draw(menuPauseTopBar);
@@ -3552,7 +3601,10 @@ void Game::render() {
 	}
 
 	if (startUpScreenOn) {
-		window.draw(bgStartUpScreenSprite);
+		if (!bossFightCompleted)
+			window.draw(bgStartUpScreenSprite);
+		else
+			window.draw(bgStartUpScreenEndSprite);
 		window.draw(playText);
 		window.draw(howToPlayText);
 		window.draw(quitText);
@@ -3561,7 +3613,10 @@ void Game::render() {
 	}
 
 	if (levelSelectionScreenOn) {
-		window.draw(bgStartUpScreenSprite);
+		if (!bossFightCompleted)
+			window.draw(bgStartUpScreenSprite);
+		else
+			window.draw(bgStartUpScreenEndSprite);
 		window.draw(darkerLayer);
 		window.draw(gameplayPauseContent);
 		window.draw(levelSelectionScreenTitle);
@@ -3571,7 +3626,10 @@ void Game::render() {
 	}
 
 	if (howToPlayScreenOn) {
-		window.draw(bgStartUpScreenSprite);
+		if (!bossFightCompleted)
+			window.draw(bgStartUpScreenSprite);
+		else
+			window.draw(bgStartUpScreenEndSprite);
 		window.draw(darkerLayer);
 		window.draw(gameplayPauseContent);
 		if (language == "EN")
