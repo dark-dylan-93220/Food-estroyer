@@ -122,6 +122,8 @@ namespace {
 	sf::Sound oofSound;
 	sf::SoundBuffer playerDeathBuffer;
 	sf::Sound playerDeathSound;
+	sf::SoundBuffer vineBoomBuffer;
+	sf::Sound vineBoomSound;
 	// IMAGES
 	sf::Image pieCursorImg;
 	// TEXTURES
@@ -717,9 +719,12 @@ void Game::loadLevelAssets() { // Only loaded once
 	oofSound.setBuffer(oofBuffer);
 	playerDeathBuffer.loadFromFile("Assets/Sound Effects/death.wav");
 	playerDeathSound.setBuffer(playerDeathBuffer);
+	vineBoomBuffer.loadFromFile("Assets/Sound Effects/vine boom.mp3");
+	vineBoomSound.setBuffer(vineBoomBuffer);
 	oofSound.setVolume(50);
 	playerDeathSound.setVolume(50);
 	sugarCrunchSound.setVolume(50);
+	vineBoomSound.setVolume(50);
 	// TEXTURES
 	levelOneParralax01.loadFromFile("Assets/Images/Level1/level1Background01.png");
 	levelOneParralax02.loadFromFile("Assets/Images/Level1/level1Background02.png");
@@ -2203,7 +2208,9 @@ bool Game::playerDeath() {
 		playerCurrentSprite.setColor(sf::Color::White);
 		deathCounter++;
 		if (deathCounter == 1) {
-			std::cout << "game over" << std::endl;
+			bgLvl1Music.stop();
+			bgLvl2Music.stop();
+			bgLvl3Music.stop();
 			playerDeathSound.play();
 		}
 		gameOverAnimation += f_ElapsedTime;
@@ -2227,17 +2234,9 @@ bool Game::playerDeath() {
 			playerCurrentSprite.setTexture(playerDeath4);
 		if (gameOverAnimation > 2.3 && gameOverAnimation <= 2.6)
 			playerCurrentSprite.setTexture(playerDeath5);
-		/*if (gameOverAnimation > 2.6 && gameOverAnimation <= 2.9)
-			playerCurrentSprite.setTexture(playerDeath6);
-		if (gameOverAnimation > 2.9 && gameOverAnimation <= 3.2)
-			playerCurrentSprite.setTexture(playerDeath3);
-		if (gameOverAnimation > 3.2 && gameOverAnimation <= 3.5)
-			playerCurrentSprite.setTexture(playerDeath4);
-		if (gameOverAnimation > 3.5 && gameOverAnimation <= 3.8)
-			playerCurrentSprite.setTexture(playerDeath5);*/
 		if (gameOverAnimation > 2.6)
 			playerCurrentSprite.setTexture(playerDeath6);
-		if (gameOverAnimation > 3)
+		if (gameOverAnimation > 3) 
 			return true;
 	}
 	return false;
@@ -2245,9 +2244,9 @@ bool Game::playerDeath() {
 
 void Game::updateStatsSpritesCooldown() {
 	// UPDATE PLAYER SPECIAL COOLDOWN
-	if (player.getSpectialAtkType() == "base") { player.setSpecialCooldown(1); gameplayUISetSpecialBase.setFillColor(sf::Color::Red); }
-	if (player.getSpectialAtkType() == "triple") { player.setSpecialCooldown(1); gameplayUISetSpecialTriple.setFillColor(sf::Color::Red); }
-	if (player.getSpectialAtkType() == "rain") { player.setSpecialCooldown(1); gameplayUISetSpecialRain.setFillColor(sf::Color::Red); }
+	if (player.getSpectialAtkType() == "base") { player.setSpecialCooldown(5); gameplayUISetSpecialBase.setFillColor(sf::Color::Red); }
+	if (player.getSpectialAtkType() == "triple") { player.setSpecialCooldown(3); gameplayUISetSpecialTriple.setFillColor(sf::Color::Red); }
+	if (player.getSpectialAtkType() == "rain") { player.setSpecialCooldown(10); gameplayUISetSpecialRain.setFillColor(sf::Color::Red); }
 
 	// RESET SPRITE DU JOUEUR APRES UN HIT
 	if (player.hurtTimer >= 0.5) {
@@ -2950,6 +2949,8 @@ void Game::pollEvents() {
 			if (playScreenOn && !levelSelectionScreenOn) {
 				if (showPauseMenu) {
 					if (gameplayPauseExitBtn.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						gameOverAnimation = 0;
+						deathCounter = 0;
 						player.resetVariables();
 						bgLvl1Music.stop();
 						bgLvl2Music.stop();
@@ -3129,13 +3130,16 @@ void Game::pollEvents() {
 				}
 			}
 			if (gameOverScreenOn) {
+				bgStartUpScreenMusic.stop();
 				if (retryText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					gameOverAnimation = 0;
+					deathCounter = 0;
 					backgroundActive = true;
 					gameOverScreenOn = false;
 					player.resetVariables();
 					clearAllVectors();
 					loadGameplayAssets();
-					setEnemySpawn(numberOfStartingEnnemies, true);
+					setEnemySpawn(numberOfStartingEnnemies, false);
 					levelProgression = 0;
 					if (levelOneOn) {
 						bgLvl1Music.stop();
@@ -3154,6 +3158,8 @@ void Game::pollEvents() {
 					}
 				}
 				if (giveUpText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					gameOverAnimation = 0;
+					deathCounter = 0;
 					levelOneOn = false;
 					levelTwoOn = false;
 					levelThreeOn = false;
@@ -3444,7 +3450,7 @@ void Game::update() {
 			}
 		}
 	}
-	if (playerDeath() && backgroundActive) { gameOverScreenOn = true; }
+	if (playerDeath() && backgroundActive) { gameOverScreenOn = true; vineBoomSound.play(); }
 
 	if (gameOverScreenOn) {
 		gameOverText.setFont(puppy);

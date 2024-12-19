@@ -1,16 +1,21 @@
-﻿  game.cpp
-C:\Users\dhollemaert\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(1068,38): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
-C:\Users\dhollemaert\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(1071,105): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
-C:\Users\dhollemaert\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(1071,45): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
-C:\Users\dhollemaert\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(1073,107): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
-C:\Users\dhollemaert\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(1073,46): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
-C:\Users\dhollemaert\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(1646,64): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
-C:\Users\dhollemaert\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(1650,64): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
-C:\Users\dhollemaert\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(1651,64): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
-C:\Users\dhollemaert\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2407,29): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
-C:\Users\dhollemaert\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2447,40): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
-C:\Users\dhollemaert\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(3080,30): warning C4244: '*=' : conversion de 'float' en 'int', perte possible de données
-C:\Users\dhollemaert\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(3088,32): warning C4244: '*=' : conversion de 'float' en 'int', perte possible de données
-C:\Users\dhollemaert\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(3096,32): warning C4244: '*=' : conversion de 'float' en 'int', perte possible de données
-C:\Users\dhollemaert\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(3464,67): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
-  Food'estroyer.vcxproj -> C:\Users\dhollemaert\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\x64\Debug\Food'estroyer.exe
+﻿  enemy.cpp
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\enemy.cpp(188,25): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\enemy.cpp(330,27): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+  game.cpp
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(1073,38): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(1076,105): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(1076,45): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(1078,107): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(1078,46): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(1651,64): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(1655,64): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(1656,64): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2414,29): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(2454,40): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(3089,30): warning C4244: '*=' : conversion de 'float' en 'int', perte possible de données
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(3097,32): warning C4244: '*=' : conversion de 'float' en 'int', perte possible de données
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(3105,32): warning C4244: '*=' : conversion de 'float' en 'int', perte possible de données
+C:\Users\jrodrigues\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\game.cpp(3478,67): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+  player.cpp
+  Génération de code en cours...
+  Food'estroyer.vcxproj -> C:\Users\jrodrigues\Source\Repos\dark-dylan-93220\Food-estroyer\Food'estroyer\x64\Debug\Food'estroyer.exe

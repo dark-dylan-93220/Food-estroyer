@@ -40,11 +40,11 @@ private:
 	float spriteUpdateTimer = 0;
 	const float levelOneDuration = 120.f;   // 2:00
 	const float levelTwoDuration = 124.f;   // 2:04
-	const float levelThreeDuration = 2.f; // 2:02
+	const float levelThreeDuration = 122.f; // 2:02
 	float levelProgression = 0.f;   // augmente au fur et à mesure de l'avancement dans le niveau
 	bool levelOneUnlocked = true;
 	bool levelTwoUnlocked = false;
-	bool levelThreeUnlocked = true;
+	bool levelThreeUnlocked = false;
 	// Language
 	std::string language = "EN";
 	// Layers
