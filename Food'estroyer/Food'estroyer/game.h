@@ -31,6 +31,7 @@ private:
 	bool playScreenOn = false;
 	bool gameOverScreenOn = false;
 	bool levelSelectionScreenOn = false;
+	bool howToPlayScreenOn = false;
 	// Time gestion
 	int currentFramerateLimit = 60;
 	sf::Clock Clock;

@@ -24,6 +24,7 @@ namespace {
 	int damageTakenPlayer = 0;
 	bool showNoHitBonus = false;
 	bool showNoMissBonus = false;
+	int howToPlayActiveIndex = 0;
 	// CURSORS
 	sf::Cursor pie;
 	// COLORS
@@ -45,7 +46,7 @@ namespace {
 	sf::Text FPSText;
 	// Start-up screen
 	sf::Text playText;
-	sf::Text shopText;
+	sf::Text howToPlayText;
 	sf::Text quitText;
 	sf::Text copyright;
 	// Options screen
@@ -237,6 +238,17 @@ namespace {
 	sf::Texture gameplayUILifeBar21Inactive;
 	sf::Texture gameplayUIPauseSoundPlus;
 	sf::Texture gameplayUIPauseSoundMinus;
+	// HOW TO PLAY
+	sf::Texture howToPlayFR1;
+	sf::Texture howToPlayFR2;
+	sf::Texture howToPlayFR3;
+	sf::Texture howToPlayFR4;
+	sf::Texture howToPlayEN1;
+	sf::Texture howToPlayEN2;
+	sf::Texture howToPlayEN3;
+	sf::Texture howToPlayEN4;
+	sf::Texture howToPlayNext;
+	sf::Texture howToPlayPrevious;
 	// SHAPES
 	sf::RectangleShape darkerLayer;
 	sf::RectangleShape menuPauseTopBar;
@@ -274,6 +286,19 @@ namespace {
 	// SPRITES
 	sf::Sprite bgStartUpScreenSprite;
 	sf::Sprite settingsIconSprite;
+	// How to play
+	sf::Sprite howToPlayFrench1;
+	sf::Sprite howToPlayFrench2;
+	sf::Sprite howToPlayFrench3;
+	sf::Sprite howToPlayFrench4;
+	sf::Sprite howToPlayEnglish1;
+	sf::Sprite howToPlayEnglish2;
+	sf::Sprite howToPlayEnglish3;
+	sf::Sprite howToPlayEnglish4;
+	sf::Sprite howToPlayNextSlide;
+	sf::Sprite howToPlayPreviousSlide;
+	sf::Sprite howToPlayFrench[4];
+	sf::Sprite howToPlayEnglish[4];
 	// Level 1
 	sf::Sprite levelOneBackgroundStartSprite;
 	sf::Sprite levelOneParralax01Sprite;
@@ -421,11 +446,11 @@ void Game::loadStartUpScreen() {
 	playText.setFillColor(sf::Color::White);
 	playText.setOutlineThickness(1);
 	playText.setOutlineColor(sf::Color(DARK_THEME));
-	shopText.setFont(puppy);
-	shopText.setCharacterSize(40);
-	shopText.setFillColor(sf::Color::White);
-	shopText.setOutlineThickness(1);
-	shopText.setOutlineColor(sf::Color(DARK_THEME));
+	howToPlayText.setFont(puppy);
+	howToPlayText.setCharacterSize(40);
+	howToPlayText.setFillColor(sf::Color::White);
+	howToPlayText.setOutlineThickness(1);
+	howToPlayText.setOutlineColor(sf::Color(DARK_THEME));
 	quitText.setFont(puppy);
 	quitText.setCharacterSize(40);
 	quitText.setFillColor(sf::Color::White);
@@ -444,7 +469,7 @@ void Game::loadStartUpScreen() {
 void Game::changeLanguages() const {
 	if (language == "EN") {
 		playText.setString("Play");
-		shopText.setString("How to play");
+		howToPlayText.setString("How to play");
 		quitText.setString("Quit");
 		pauseTopBarResolutionText.setString("Resolution");
 		pauseTopBarColorThemeText.setString("Theme");
@@ -456,7 +481,7 @@ void Game::changeLanguages() const {
 	}
 	else if (language == "FR") {
 		playText.setString("Jouer");
-		shopText.setString("Tutos");
+		howToPlayText.setString("Tutos");
 		quitText.setString("Quitter");
 		pauseTopBarResolutionText.setString("Résolution");
 		pauseTopBarColorThemeText.setString("Thème");
@@ -470,7 +495,7 @@ void Game::changeLanguages() const {
 void Game::loadTextPositions() {
 	FPSText.setPosition(sf::Vector2f((window.getSize().x / 2) - (FPSText.getLocalBounds().width / 2), FPSText.getLocalBounds().height));
 	playText.setPosition(sf::Vector2f(((window.getSize().x / 2) - (playText.getLocalBounds().width / 2)), (window.getSize().y / 2) - 70.f));
-	shopText.setPosition(sf::Vector2f(((float)(window.getSize().x / 2.f) - (float)(shopText.getLocalBounds().width / 2.f)), (float)(window.getSize().y / 2.f)));
+	howToPlayText.setPosition(sf::Vector2f(((float)(window.getSize().x / 2.f) - (float)(howToPlayText.getLocalBounds().width / 2.f)), (float)(window.getSize().y / 2.f)));
 	quitText.setPosition(sf::Vector2f(((window.getSize().x / 2) - (quitText.getLocalBounds().width / 2)), (window.getSize().y / 2) + 70.f));
 	copyright.setPosition(sf::Vector2f(((window.getSize().x / 2) - (copyright.getLocalBounds().width / 2)), window.getSize().y - 45.f));
 	gameplayPauseTitleText.setPosition(sf::Vector2f(window.getSize().x / 2 - gameplayPauseTitleText.getLocalBounds().width / 2, gameplayPauseContent.getPosition().y + window.getSize().x * 0.01f));
@@ -804,7 +829,28 @@ void Game::loadLevelAssets() { // Only loaded once
 	gameplayUILifeBar19Inactive.loadFromFile("Assets/Images/GameplayUI/19-inactive.png");
 	gameplayUILifeBar20Inactive.loadFromFile("Assets/Images/GameplayUI/20-inactive.png");
 	gameplayUILifeBar21Inactive.loadFromFile("Assets/Images/GameplayUI/21-inactive.png");
+	// HOW TO PLAY TEXUTRES
+	howToPlayEN1.loadFromFile("Assets/Images/GameplayUI/HowToPlayMenu/EN/1.png");
+	howToPlayEN2.loadFromFile("Assets/Images/GameplayUI/HowToPlayMenu/EN/2.png");
+	howToPlayEN3.loadFromFile("Assets/Images/GameplayUI/HowToPlayMenu/EN/3.png");
+	howToPlayEN4.loadFromFile("Assets/Images/GameplayUI/HowToPlayMenu/EN/4.png");
+	howToPlayFR1.loadFromFile("Assets/Images/GameplayUI/HowToPlayMenu/FR/1.png");
+	howToPlayFR2.loadFromFile("Assets/Images/GameplayUI/HowToPlayMenu/FR/2.png");
+	howToPlayFR3.loadFromFile("Assets/Images/GameplayUI/HowToPlayMenu/FR/3.png");
+	howToPlayFR4.loadFromFile("Assets/Images/GameplayUI/HowToPlayMenu/FR/4.png");
+	howToPlayNext.loadFromFile("Assets/Images/GameplayUI/HowToPlayMenu/RightTriangle.png");
+	howToPlayPrevious.loadFromFile("Assets/Images/GameplayUI/HowToPlayMenu/LeftTriangle.png");
 	// SPRITES
+	howToPlayEnglish1.setTexture(howToPlayEN1);
+	howToPlayEnglish2.setTexture(howToPlayEN2);
+	howToPlayEnglish3.setTexture(howToPlayEN3);
+	howToPlayEnglish4.setTexture(howToPlayEN4);
+	howToPlayFrench1.setTexture(howToPlayFR1);
+	howToPlayFrench2.setTexture(howToPlayFR2);
+	howToPlayFrench3.setTexture(howToPlayFR3);
+	howToPlayFrench4.setTexture(howToPlayFR4);
+	howToPlayNextSlide.setTexture(howToPlayNext);
+	howToPlayPreviousSlide.setTexture(howToPlayPrevious);
 	levelOneParralax01Sprite.setTexture(levelOneParralax01);
 	levelOneParralax02Sprite.setTexture(levelOneParralax02);
 	levelOneParralax03Sprite.setTexture(levelOneParralax03);
@@ -1023,6 +1069,35 @@ void Game::loadGameplayAssets() {
 	bossEye.setScale(window.getSize().x * 0.05 / bossEye.getLocalBounds().width, window.getSize().y * 0.09 / bossEye.getLocalBounds().height);
 	bossEye2.setTexture(bossEyeTexture1);
 	bossEye2.setScale(window.getSize().x * 0.05 / bossEye2.getLocalBounds().width, window.getSize().y * 0.09 / bossEye2.getLocalBounds().height);
+	// HOW TO PLAY SECTION
+	howToPlayEnglish1.setScale((window.getSize().y * 0.40f) / howToPlayEnglish1.getLocalBounds().width, ((window.getSize().y * 0.40f) / howToPlayEnglish1.getLocalBounds().width));
+	howToPlayEnglish2.setScale((window.getSize().y * 0.40f) / howToPlayEnglish2.getLocalBounds().width, ((window.getSize().y * 0.40f) / howToPlayEnglish2.getLocalBounds().width));
+	howToPlayEnglish3.setScale((window.getSize().y * 0.40f) / howToPlayEnglish3.getLocalBounds().width, ((window.getSize().y * 0.40f) / howToPlayEnglish3.getLocalBounds().width));
+	howToPlayEnglish4.setScale((window.getSize().y * 0.40f) / howToPlayEnglish4.getLocalBounds().width, ((window.getSize().y * 0.40f) / howToPlayEnglish4.getLocalBounds().width));
+	howToPlayFrench1.setScale((window.getSize().y * 0.40f) / howToPlayFrench1.getLocalBounds().width, ((window.getSize().y * 0.40f) / howToPlayFrench1.getLocalBounds().width));
+	howToPlayFrench2.setScale((window.getSize().y * 0.40f) / howToPlayFrench2.getLocalBounds().width, ((window.getSize().y * 0.40f) / howToPlayFrench2.getLocalBounds().width));
+	howToPlayFrench3.setScale((window.getSize().y * 0.40f) / howToPlayFrench3.getLocalBounds().width, ((window.getSize().y * 0.40f) / howToPlayFrench3.getLocalBounds().width));
+	howToPlayFrench4.setScale((window.getSize().y * 0.40f) / howToPlayFrench4.getLocalBounds().width, ((window.getSize().y * 0.40f) / howToPlayFrench4.getLocalBounds().width));
+	howToPlayPreviousSlide.setScale(sf::Vector2f((window.getSize().x * 0.05f) / howToPlayPreviousSlide.getLocalBounds().width, (window.getSize().x * 0.05f) / howToPlayPreviousSlide.getLocalBounds().width));
+	howToPlayNextSlide.setScale(sf::Vector2f((window.getSize().x * 0.05f) / howToPlayNextSlide.getLocalBounds().width, (window.getSize().x * 0.05f) / howToPlayNextSlide.getLocalBounds().width));
+	howToPlayPreviousSlide.setPosition(sf::Vector2f(window.getSize().x / 2 - howToPlayPreviousSlide.getGlobalBounds().width / 2 - window.getSize().y * 0.30f, window.getSize().y / 2 - howToPlayPreviousSlide.getGlobalBounds().height / 2));
+	howToPlayNextSlide.setPosition(sf::Vector2f(window.getSize().x / 2 - howToPlayNextSlide.getGlobalBounds().width / 2 + window.getSize().y * 0.30f, window.getSize().y / 2 - howToPlayNextSlide.getGlobalBounds().height / 2));
+	howToPlayEnglish1.setPosition(sf::Vector2f(window.getSize().x / 2 - howToPlayEnglish1.getGlobalBounds().width / 2, window.getSize().y / 2 - howToPlayEnglish1.getGlobalBounds().height / 2));
+	howToPlayEnglish2.setPosition(howToPlayEnglish1.getPosition());
+	howToPlayEnglish3.setPosition(howToPlayEnglish1.getPosition());
+	howToPlayEnglish4.setPosition(howToPlayEnglish1.getPosition());
+	howToPlayFrench1.setPosition(howToPlayEnglish1.getPosition());
+	howToPlayFrench2.setPosition(howToPlayEnglish1.getPosition());
+	howToPlayFrench3.setPosition(howToPlayEnglish1.getPosition());
+	howToPlayFrench4.setPosition(howToPlayEnglish1.getPosition());
+	howToPlayFrench[0] = howToPlayFrench1;
+	howToPlayFrench[1] = howToPlayFrench2;
+	howToPlayFrench[2] = howToPlayFrench3;
+	howToPlayFrench[3] = howToPlayFrench4;
+	howToPlayEnglish[0] = howToPlayEnglish1;
+	howToPlayEnglish[1] = howToPlayEnglish2;
+	howToPlayEnglish[2] = howToPlayEnglish3;
+	howToPlayEnglish[3] = howToPlayEnglish4;
 	// TEXTS
 	gameplayUISugarText.setPosition(sugarIcone.getPosition().x - gameplayUISugarText.getGlobalBounds().width - window.getSize().x * 0.005f, sugarIcone.getPosition().y - gameplayUISugarText.getGlobalBounds().height * 0.2f);
 	// Should be loading the ennemies here, each time we launch a level.
@@ -2454,10 +2529,10 @@ void Game::pollEvents() {
 				playText.setFillColor(LIGHT_GREEN);
 			else
 				playText.setFillColor(sf::Color::White);
-			if (shopText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				shopText.setFillColor(LIGHT_YELLOW);
+			if (howToPlayText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+				howToPlayText.setFillColor(LIGHT_YELLOW);
 			else
-				shopText.setFillColor(sf::Color::White);
+				howToPlayText.setFillColor(sf::Color::White);
 			if (quitText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
 				quitText.setFillColor(LIGHT_RED);
 			else
@@ -2564,6 +2639,16 @@ void Game::pollEvents() {
 				pauseLanguageFRText.setFillColor(LIGHT_GRAY);
 			else
 				pauseLanguageFRText.setFillColor(sf::Color::White);
+		}
+		if (howToPlayScreenOn) {
+			if (howToPlayPreviousSlide.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+				howToPlayPreviousSlide.setColor(LIGHT_GRAY);
+			else
+				howToPlayPreviousSlide.setColor(sf::Color::White);
+			if (howToPlayNextSlide.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+				howToPlayNextSlide.setColor(LIGHT_GRAY);
+			else
+				howToPlayNextSlide.setColor(sf::Color::White);
 		}
 		if (levelSelectionScreenOn) {
 			if (levelSelectionScreenOne.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
@@ -2808,9 +2893,25 @@ void Game::pollEvents() {
 					// loadGameplayAssets();
 					// loadLevel1();
 				}
+				if (howToPlayText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					howToPlayScreenOn = true;
+					startUpScreenOn = false;
+					bgStartUpScreenMusic.pause();
+					loadGameplayAssets();
+				}
 				// Quitter
 				if (quitText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 					m_isRunning = false;
+				}
+			}
+			if (howToPlayScreenOn) {
+				if (howToPlayPreviousSlide.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					if (howToPlayActiveIndex == 0) howToPlayActiveIndex = 3;
+					else howToPlayActiveIndex--;
+				}
+				if (howToPlayNextSlide.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+					if (howToPlayActiveIndex == 3) howToPlayActiveIndex = 0;
+					else howToPlayActiveIndex++;
 				}
 			}
 			if (playScreenOn && !levelSelectionScreenOn) {
@@ -3074,6 +3175,12 @@ void Game::pollEvents() {
 			}
 			else if (startUpScreenOn) {
 				m_isRunning = false;
+			}
+			else if (howToPlayScreenOn) {
+				howToPlayScreenOn = false;
+				startUpScreenOn = true;
+				howToPlayText.setFillColor(sf::Color::White);
+				bgStartUpScreenMusic.play();
 			}
 			else if (playScreenOn && !levelSelectionScreenOn) {
 				loadTextPositions();
@@ -3397,7 +3504,7 @@ void Game::render() {
 	if (startUpScreenOn) {
 		window.draw(bgStartUpScreenSprite);
 		window.draw(playText);
-		window.draw(shopText);
+		window.draw(howToPlayText);
 		window.draw(quitText);
 		window.draw(copyright);
 		window.draw(settingsIconSprite);
@@ -3411,6 +3518,18 @@ void Game::render() {
 		window.draw(levelSelectionScreenOne);
 		window.draw(levelSelectionScreenTwo);
 		window.draw(levelSelectionScreenThree);
+	}
+
+	if (howToPlayScreenOn) {
+		window.draw(bgStartUpScreenSprite);
+		window.draw(darkerLayer);
+		window.draw(gameplayPauseContent);
+		if (language == "EN")
+			window.draw(howToPlayEnglish[howToPlayActiveIndex]);
+		else if (language == "FR")
+			window.draw(howToPlayFrench[howToPlayActiveIndex]);
+		window.draw(howToPlayPreviousSlide);
+		window.draw(howToPlayNextSlide);
 	}
 
 	if (playScreenOn) {
