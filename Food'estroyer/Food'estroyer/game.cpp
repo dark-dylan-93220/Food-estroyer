@@ -1653,9 +1653,9 @@ void Game::setEnemySpawn(int numberOfEnnemies, bool isBonusSpawning) {
 	int randomYPosition, randomSize, randomClass, randomBonusName, randomBonusXPos;
 	const float xSpawnPosition = window.getSize().x + 100.f;
 	const float randomHeights[9] = {
-		window.getSize().x * 0.10f, window.getSize().x * 0.20f, window.getSize().x * 0.30f, 
-		window.getSize().x * 0.40f, window.getSize().x * 0.50f, window.getSize().x * 0.60f,
-		window.getSize().x * 0.70f, window.getSize().x * 0.80f, window.getSize().x * 0.90f
+		window.getSize().y * 0.10f, window.getSize().y * 0.20f, window.getSize().y * 0.30f, 
+		window.getSize().y * 0.40f, window.getSize().y * 0.50f, window.getSize().y * 0.60f,
+		window.getSize().y * 0.70f, window.getSize().y * 0.80f, window.getSize().y * 0.90f
 	};
 	const char randomSizes[3] = { 's', 'm', 'l' };
 	const char* bonusNames[3] = { "shield", "x2", "oneUp" };
