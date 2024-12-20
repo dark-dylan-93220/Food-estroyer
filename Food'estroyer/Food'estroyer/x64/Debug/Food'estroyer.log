@@ -1,4 +1,4 @@
-﻿La génération a démarré 20/12/2024 23:02:46.
+﻿La génération a démarré 20/12/2024 23:15:32.
 La verbosité de la journalisation a la valeur Normal.     1>Projet "C:\Users\PC\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\Food'estroyer.vcxproj" sur le nœud 2 (Build cible(s)).
      1>PrepareForBuild:
          La sortie structurée est activée. La mise en forme du compilateur diagnostics reflète la hiérarchie des erreurs. Pour plus d’informations, consultez https://aka.ms/cpp/structured-output.
@@ -35,7 +35,6 @@ La verbosité de la journalisation a la valeur Normal.     1>Projet "C:\Users\PC
          x64\Debug\game.obj
          x64\Debug\main.obj
          x64\Debug\player.obj
-         LINK : C:\Users\PC\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\x64\Debug\Food'estroyer.exe introuvable ou non généré par la dernière édition de liens incrémentielle ; édition de liens complète en cours
          Food'estroyer.vcxproj -> C:\Users\PC\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\x64\Debug\Food'estroyer.exe
        FinalizeBuildStatus:
          Suppression du fichier "x64\Debug\Food'estroyer.tlog\unsuccessfulbuild".
@@ -68,4 +67,4 @@ La génération a réussi.
     18 Avertissement(s)
     0 Erreur(s)
 
-Temps écoulé 00:00:06.51
+Temps écoulé 00:00:07.25

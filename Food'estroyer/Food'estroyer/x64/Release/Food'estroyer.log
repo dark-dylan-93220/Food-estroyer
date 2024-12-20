@@ -1,8 +1,6 @@
-﻿La génération a démarré 20/12/2024 23:02:18.
-La verbosité de la journalisation a la valeur Normal.     1>Projet "C:\Users\PC\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\Food'estroyer.vcxproj" sur le nœud 2 (Rebuild cible(s)).
-     1>_PrepareForClean:
-         Suppression du fichier "x64\Release\Food'estroyer.tlog\Food'estroyer.lastbuildstate".
-       PrepareForBuild:
+﻿La génération a démarré 20/12/2024 23:15:02.
+La verbosité de la journalisation a la valeur Normal.     1>Projet "C:\Users\PC\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\Food'estroyer.vcxproj" sur le nœud 2 (Build cible(s)).
+     1>PrepareForBuild:
          La sortie structurée est activée. La mise en forme du compilateur diagnostics reflète la hiérarchie des erreurs. Pour plus d’informations, consultez https://aka.ms/cpp/structured-output.
        InitializeBuildStatus:
          Création de "x64\Release\Food'estroyer.tlog\unsuccessfulbuild", car "AlwaysCreate" a été spécifié.
@@ -44,11 +42,11 @@ La verbosité de la journalisation a la valeur Normal.     1>Projet "C:\Users\PC
        FinalizeBuildStatus:
          Suppression du fichier "x64\Release\Food'estroyer.tlog\unsuccessfulbuild".
          Mise à jour de l'horodatage "x64\Release\Food'estroyer.tlog\Food'estroyer.lastbuildstate".
-     1>Génération du projet "C:\Users\PC\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\Food'estroyer.vcxproj" terminée (Rebuild cible(s)).
+     1>Génération du projet "C:\Users\PC\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\Food'estroyer.vcxproj" terminée (Build cible(s)).
 
 La génération a réussi.
 
-       "C:\Users\PC\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\Food'estroyer.vcxproj" (Rebuild cible) (1) ->
+       "C:\Users\PC\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\Food'estroyer.vcxproj" (Build cible) (1) ->
        (ClCompile cible) -> 
          C:\Users\PC\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\enemy.cpp(88,70): warning C4305: '=' : troncation de 'double' à 'float'
          C:\Users\PC\source\repos\dark-dylan-93220\Food-estroyer\Food'estroyer\Food'estroyer\enemy.cpp(90,70): warning C4305: '=' : troncation de 'double' à 'float'
@@ -72,4 +70,4 @@ La génération a réussi.
     18 Avertissement(s)
     0 Erreur(s)
 
-Temps écoulé 00:00:13.89
+Temps écoulé 00:00:13.00
