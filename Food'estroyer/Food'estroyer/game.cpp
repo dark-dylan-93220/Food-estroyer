@@ -4,11 +4,12 @@
 
 namespace {
 	// DATA STL (STandard Library)
-	int mouseLastDownX, mouseLastDownY;
-	float scoreCounter;
-	float bonusDropTimer;
-	float factorSugarScaling;
-	bool isMouseDragging;
+	int mouseLastDownX = 0;
+	int mouseLastDownY = 0;
+	float scoreCounter = 0.f;
+	float bonusDropTimer = 0.f;
+	float factorSugarScaling = 0.f;
+	bool isMouseDragging = false;
 	bool isFullscreen = true;
 	std::vector<sf::VideoMode> modes = sf::VideoMode::getFullscreenModes(); // Gets the native resolutions of the machine this program is running on
 	float clownWalkAnimationTime = 0.f;
@@ -1650,7 +1651,7 @@ void Game::setShooterPositions() {
 }
 
 void Game::setEnemySpawn(int numberOfEnnemies, bool isBonusSpawning) {
-	int randomYPosition, randomSize, randomClass, randomBonusName, randomBonusXPos;
+	int randomYPosition(0), randomSize(0), randomClass(0), randomBonusName(0), randomBonusXPos(0);
 	const float xSpawnPosition = window.getSize().x + 100.f;
 	const float randomHeights[9] = {
 		window.getSize().y * 0.10f, window.getSize().y * 0.20f, window.getSize().y * 0.30f, 
@@ -1696,7 +1697,7 @@ void Game::setEnemySpawn(int numberOfEnnemies, bool isBonusSpawning) {
 }
 
 void Game::endScreenInit() {
-	std::string totalScore;
+	std::string totalScore = "";
 	if (language == "FR")
 		totalScore = "Score final : " + std::to_string((int)scoreCounter);
 	else if (language == "EN")
@@ -2571,734 +2572,735 @@ void Game::run() {
 
 void Game::pollEvents() {
 	sf::Event event;
-	window.pollEvent(event);
-	switch (event.type) {
-	case sf::Event::Closed:
-		m_isRunning = false;
-		break;
-	case sf::Event::MouseMoved:
-		if (startUpScreenOn) {
-			if (playText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				playText.setFillColor(LIGHT_GREEN);
-			else
-				playText.setFillColor(sf::Color::White);
-			if (howToPlayText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				howToPlayText.setFillColor(LIGHT_YELLOW);
-			else
-				howToPlayText.setFillColor(sf::Color::White);
-			if (quitText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				quitText.setFillColor(LIGHT_RED);
-			else
-				quitText.setFillColor(sf::Color::White);
-			if (settingsIconSprite.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				settingsIconSprite.setColor(LIGHT_GRAY);
-			else
-				settingsIconSprite.setColor(sf::Color::White);
-		}
-		if (settingsScreenOn) {
-			// TOPBAR
-			if (menuPauseTopBarResolution.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				menuPauseTopBarResolution.setFillColor(LIGHT_GRAY);
-			else
-				menuPauseTopBarResolution.setFillColor(sf::Color::Transparent);
-			if (menuPauseTopBarFPS.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				menuPauseTopBarFPS.setFillColor(LIGHT_GRAY);
-			else
-				menuPauseTopBarFPS.setFillColor(sf::Color::Transparent);
-			if (menuPauseTopBarColorTheme.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				menuPauseTopBarColorTheme.setFillColor(LIGHT_GRAY);
-			else
-				menuPauseTopBarColorTheme.setFillColor(sf::Color::Transparent);
-			if (menuPauseTopBarLanguage.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				menuPauseTopBarLanguage.setFillColor(LIGHT_GRAY);
-			else
-				menuPauseTopBarLanguage.setFillColor(sf::Color::Transparent);
-			// RESOLUTION SETTINGS
-			if (pauseResolutionMode0Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				pauseResolutionMode0Text.setFillColor(LIGHT_GRAY);
-			else
-				pauseResolutionMode0Text.setFillColor(sf::Color::White);
-			if (pauseResolutionMode1Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				pauseResolutionMode1Text.setFillColor(LIGHT_GRAY);
-			else
-				pauseResolutionMode1Text.setFillColor(sf::Color::White);
-			if (pauseResolutionMode2Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				pauseResolutionMode2Text.setFillColor(LIGHT_GRAY);
-			else
-				pauseResolutionMode2Text.setFillColor(sf::Color::White);
-			if (pauseResolutionMode3Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				pauseResolutionMode3Text.setFillColor(LIGHT_GRAY);
-			else
-				pauseResolutionMode3Text.setFillColor(sf::Color::White);
-			if (pauseResolutionMode4Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				pauseResolutionMode4Text.setFillColor(LIGHT_GRAY);
-			else
-				pauseResolutionMode4Text.setFillColor(sf::Color::White);
-			if (pauseResolutionMode5Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				pauseResolutionMode5Text.setFillColor(LIGHT_GRAY);
-			else
-				pauseResolutionMode5Text.setFillColor(sf::Color::White);
-			if (pauseResolutionMode6Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				pauseResolutionMode6Text.setFillColor(LIGHT_GRAY);
-			else
-				pauseResolutionMode6Text.setFillColor(sf::Color::White);
-			if (pauseResolutionMode7Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				pauseResolutionMode7Text.setFillColor(LIGHT_GRAY);
-			else
-				pauseResolutionMode7Text.setFillColor(sf::Color::White);
-			if (pauseResolutionMode8Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				pauseResolutionMode8Text.setFillColor(LIGHT_GRAY);
-			else
-				pauseResolutionMode8Text.setFillColor(sf::Color::White);
-			if (pauseResolutionMode9Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				pauseResolutionMode9Text.setFillColor(LIGHT_GRAY);
-			else
-				pauseResolutionMode9Text.setFillColor(sf::Color::White);
-			if (pauseResolutionMode10Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				pauseResolutionMode10Text.setFillColor(LIGHT_GRAY);
-			else
-				pauseResolutionMode10Text.setFillColor(sf::Color::White);
-			// FPS SETTINGS
-			if (pauseFPS60Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				pauseFPS60Text.setFillColor(LIGHT_GRAY);
-			else
-				pauseFPS60Text.setFillColor(sf::Color::White);
-			if (pauseFPS120Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				pauseFPS120Text.setFillColor(LIGHT_GRAY);
-			else
-				pauseFPS120Text.setFillColor(sf::Color::White);
-			if (pauseFPS240Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				pauseFPS240Text.setFillColor(LIGHT_GRAY);
-			else
-				pauseFPS240Text.setFillColor(sf::Color::White);
-			if (pauseFPS360Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				pauseFPS360Text.setFillColor(LIGHT_GRAY);
-			else
-				pauseFPS360Text.setFillColor(sf::Color::White);
-			if (pauseFPSVsyncText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				pauseFPSVsyncText.setFillColor(LIGHT_GRAY);
-			else
-				pauseFPSVsyncText.setFillColor(sf::Color::White);
-			if (pauseFPSMaxText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				pauseFPSMaxText.setFillColor(LIGHT_GRAY);
-			else
-				pauseFPSMaxText.setFillColor(sf::Color::White);
-			// LANGUAGE SETTINGS
-			if (pauseLanguageENText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				pauseLanguageENText.setFillColor(LIGHT_GRAY);
-			else
-				pauseLanguageENText.setFillColor(sf::Color::White);
-			if (pauseLanguageFRText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				pauseLanguageFRText.setFillColor(LIGHT_GRAY);
-			else
-				pauseLanguageFRText.setFillColor(sf::Color::White);
-		}
-		if (howToPlayScreenOn) {
-			if (howToPlayPreviousSlide.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				howToPlayPreviousSlide.setColor(LIGHT_GRAY);
-			else
-				howToPlayPreviousSlide.setColor(sf::Color::White);
-			if (howToPlayNextSlide.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				howToPlayNextSlide.setColor(LIGHT_GRAY);
-			else
-				howToPlayNextSlide.setColor(sf::Color::White);
-		}
-		if (levelSelectionScreenOn) {
-			if (levelSelectionScreenOne.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				levelSelectionScreenOne.setFillColor(sf::Color::Green);
-			else
-				levelSelectionScreenOne.setFillColor(sf::Color::White);
-			if (levelTwoUnlocked) {
-				if (levelSelectionScreenTwo.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-					levelSelectionScreenTwo.setFillColor(sf::Color::Green);
+	while (window.pollEvent(event)) {
+		switch (event.type) {
+		case sf::Event::Closed:
+			m_isRunning = false;
+			break;
+		case sf::Event::MouseMoved:
+			if (startUpScreenOn) {
+				if (playText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					playText.setFillColor(LIGHT_GREEN);
 				else
-					levelSelectionScreenTwo.setFillColor(sf::Color::White);
+					playText.setFillColor(sf::Color::White);
+				if (howToPlayText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					howToPlayText.setFillColor(LIGHT_YELLOW);
+				else
+					howToPlayText.setFillColor(sf::Color::White);
+				if (quitText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					quitText.setFillColor(LIGHT_RED);
+				else
+					quitText.setFillColor(sf::Color::White);
+				if (settingsIconSprite.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					settingsIconSprite.setColor(LIGHT_GRAY);
+				else
+					settingsIconSprite.setColor(sf::Color::White);
 			}
-			else {
-				if (levelSelectionScreenTwo.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-					levelSelectionScreenTwo.setFillColor(sf::Color::Red);
-				else
-					levelSelectionScreenTwo.setFillColor(LIGHT_GRAY);
-			}
-			if (levelThreeUnlocked) {
-				if (levelSelectionScreenThree.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-					levelSelectionScreenThree.setFillColor(sf::Color::Green);
-				else
-					levelSelectionScreenThree.setFillColor(sf::Color::White);
-			}
-			else {
-				if (levelSelectionScreenThree.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-					levelSelectionScreenThree.setFillColor(sf::Color::Red);
-				else
-					levelSelectionScreenThree.setFillColor(LIGHT_GRAY);
-			}
-		}
-		if (playScreenOn &&!levelSelectionScreenOn) {
-			if (gameOverScreenOn) {
-				if (retryText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-					retryText.setFillColor(LIGHT_YELLOW);
-				else
-					retryText.setFillColor(sf::Color::White);
-				if (giveUpText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-					giveUpText.setFillColor(LIGHT_YELLOW);
-				else
-					giveUpText.setFillColor(sf::Color::White);
-			}
-			if (showPauseMenu) {
-				if (gameplayPauseExitBtn.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-					gameplayPauseExitText.setFillColor(LIGHT_RED);
-				else
-					gameplayPauseExitText.setFillColor(sf::Color::White);
-				if (gameplayPauseGoBackBtn.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-					gameplayPauseGoBackText.setFillColor(LIGHT_GREEN);
-				else
-					gameplayPauseGoBackText.setFillColor(sf::Color::White);
-				if (gameplayPausePlusSoundTextSFX.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-					gameplayPausePlusSoundTextSFX.setFillColor(sf::Color::White);
-				else
-					gameplayPausePlusSoundTextSFX.setFillColor(sf::Color(DARK_THEME));
-				if (gameplayPauseMinusSoundTextSFX.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-					gameplayPauseMinusSoundTextSFX.setFillColor(sf::Color::White);
-				else
-					gameplayPauseMinusSoundTextSFX.setFillColor(sf::Color(DARK_THEME));
-				if (gameplayPausePlusSoundTextMusic.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-					gameplayPausePlusSoundTextMusic.setFillColor(sf::Color::White);
-				else
-					gameplayPausePlusSoundTextMusic.setFillColor(sf::Color(DARK_THEME));
-				if (gameplayPauseMinusSoundTextMusic.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-					gameplayPauseMinusSoundTextMusic.setFillColor(sf::Color::White);
-				else
-					gameplayPauseMinusSoundTextMusic.setFillColor(sf::Color(DARK_THEME));
-			}
-			if (levelOneCompleted || levelTwoCompleted || levelThreeCompleted) {
-				if (levelEndScreenNextButton.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-					levelEndScreenNextButton.setFillColor(sf::Color::Green);
-				else
-					levelEndScreenNextButton.setFillColor(sf::Color::White);
-				if (levelEndScreenQuitButton.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-					levelEndScreenQuitButton.setFillColor(LIGHT_RED);
-				else
-					levelEndScreenQuitButton.setFillColor(sf::Color::White);
-			}
-			if (gameplayUIStatAtkText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				gameplayUIStatAtkText.setFillColor(LIGHT_YELLOW);
-			else
-				gameplayUIStatAtkText.setFillColor(sf::Color::White);
-			if (gameplayUIStatMaxHpText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				gameplayUIStatMaxHpText.setFillColor(LIGHT_YELLOW);
-			else
-				gameplayUIStatMaxHpText.setFillColor(sf::Color::White);
-			if (gameplayUIStatSpeedText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				gameplayUIStatSpeedText.setFillColor(LIGHT_YELLOW);
-			else
-				gameplayUIStatSpeedText.setFillColor(sf::Color::White);
-			if (gameplayUISetSpecialBase.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				gameplayUISetSpecialBase.setFillColor(LIGHT_YELLOW);
-			else
-				gameplayUISetSpecialBase.setFillColor(sf::Color::White);
-			if (gameplayUISetSpecialTriple.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				gameplayUISetSpecialTriple.setFillColor(LIGHT_YELLOW);
-			else
-				gameplayUISetSpecialTriple.setFillColor(sf::Color::White);
-			if (gameplayUISetSpecialRain.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
-				gameplayUISetSpecialRain.setFillColor(LIGHT_YELLOW);
-			else
-				gameplayUISetSpecialRain.setFillColor(sf::Color::White);
-		}
-		break;
-	case sf::Event::MouseButtonPressed:
-		if (event.mouseButton.button == sf::Mouse::Left) {
 			if (settingsScreenOn) {
-				if (!menuPauseContent.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y) && !menuPauseTopBar.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+				// TOPBAR
+				if (menuPauseTopBarResolution.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					menuPauseTopBarResolution.setFillColor(LIGHT_GRAY);
+				else
+					menuPauseTopBarResolution.setFillColor(sf::Color::Transparent);
+				if (menuPauseTopBarFPS.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					menuPauseTopBarFPS.setFillColor(LIGHT_GRAY);
+				else
+					menuPauseTopBarFPS.setFillColor(sf::Color::Transparent);
+				if (menuPauseTopBarColorTheme.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					menuPauseTopBarColorTheme.setFillColor(LIGHT_GRAY);
+				else
+					menuPauseTopBarColorTheme.setFillColor(sf::Color::Transparent);
+				if (menuPauseTopBarLanguage.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					menuPauseTopBarLanguage.setFillColor(LIGHT_GRAY);
+				else
+					menuPauseTopBarLanguage.setFillColor(sf::Color::Transparent);
+				// RESOLUTION SETTINGS
+				if (pauseResolutionMode0Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					pauseResolutionMode0Text.setFillColor(LIGHT_GRAY);
+				else
+					pauseResolutionMode0Text.setFillColor(sf::Color::White);
+				if (pauseResolutionMode1Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					pauseResolutionMode1Text.setFillColor(LIGHT_GRAY);
+				else
+					pauseResolutionMode1Text.setFillColor(sf::Color::White);
+				if (pauseResolutionMode2Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					pauseResolutionMode2Text.setFillColor(LIGHT_GRAY);
+				else
+					pauseResolutionMode2Text.setFillColor(sf::Color::White);
+				if (pauseResolutionMode3Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					pauseResolutionMode3Text.setFillColor(LIGHT_GRAY);
+				else
+					pauseResolutionMode3Text.setFillColor(sf::Color::White);
+				if (pauseResolutionMode4Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					pauseResolutionMode4Text.setFillColor(LIGHT_GRAY);
+				else
+					pauseResolutionMode4Text.setFillColor(sf::Color::White);
+				if (pauseResolutionMode5Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					pauseResolutionMode5Text.setFillColor(LIGHT_GRAY);
+				else
+					pauseResolutionMode5Text.setFillColor(sf::Color::White);
+				if (pauseResolutionMode6Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					pauseResolutionMode6Text.setFillColor(LIGHT_GRAY);
+				else
+					pauseResolutionMode6Text.setFillColor(sf::Color::White);
+				if (pauseResolutionMode7Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					pauseResolutionMode7Text.setFillColor(LIGHT_GRAY);
+				else
+					pauseResolutionMode7Text.setFillColor(sf::Color::White);
+				if (pauseResolutionMode8Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					pauseResolutionMode8Text.setFillColor(LIGHT_GRAY);
+				else
+					pauseResolutionMode8Text.setFillColor(sf::Color::White);
+				if (pauseResolutionMode9Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					pauseResolutionMode9Text.setFillColor(LIGHT_GRAY);
+				else
+					pauseResolutionMode9Text.setFillColor(sf::Color::White);
+				if (pauseResolutionMode10Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					pauseResolutionMode10Text.setFillColor(LIGHT_GRAY);
+				else
+					pauseResolutionMode10Text.setFillColor(sf::Color::White);
+				// FPS SETTINGS
+				if (pauseFPS60Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					pauseFPS60Text.setFillColor(LIGHT_GRAY);
+				else
+					pauseFPS60Text.setFillColor(sf::Color::White);
+				if (pauseFPS120Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					pauseFPS120Text.setFillColor(LIGHT_GRAY);
+				else
+					pauseFPS120Text.setFillColor(sf::Color::White);
+				if (pauseFPS240Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					pauseFPS240Text.setFillColor(LIGHT_GRAY);
+				else
+					pauseFPS240Text.setFillColor(sf::Color::White);
+				if (pauseFPS360Text.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					pauseFPS360Text.setFillColor(LIGHT_GRAY);
+				else
+					pauseFPS360Text.setFillColor(sf::Color::White);
+				if (pauseFPSVsyncText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					pauseFPSVsyncText.setFillColor(LIGHT_GRAY);
+				else
+					pauseFPSVsyncText.setFillColor(sf::Color::White);
+				if (pauseFPSMaxText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					pauseFPSMaxText.setFillColor(LIGHT_GRAY);
+				else
+					pauseFPSMaxText.setFillColor(sf::Color::White);
+				// LANGUAGE SETTINGS
+				if (pauseLanguageENText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					pauseLanguageENText.setFillColor(LIGHT_GRAY);
+				else
+					pauseLanguageENText.setFillColor(sf::Color::White);
+				if (pauseLanguageFRText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					pauseLanguageFRText.setFillColor(LIGHT_GRAY);
+				else
+					pauseLanguageFRText.setFillColor(sf::Color::White);
+			}
+			if (howToPlayScreenOn) {
+				if (howToPlayPreviousSlide.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					howToPlayPreviousSlide.setColor(LIGHT_GRAY);
+				else
+					howToPlayPreviousSlide.setColor(sf::Color::White);
+				if (howToPlayNextSlide.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					howToPlayNextSlide.setColor(LIGHT_GRAY);
+				else
+					howToPlayNextSlide.setColor(sf::Color::White);
+			}
+			if (levelSelectionScreenOn) {
+				if (levelSelectionScreenOne.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					levelSelectionScreenOne.setFillColor(sf::Color::Green);
+				else
+					levelSelectionScreenOne.setFillColor(sf::Color::White);
+				if (levelTwoUnlocked) {
+					if (levelSelectionScreenTwo.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+						levelSelectionScreenTwo.setFillColor(sf::Color::Green);
+					else
+						levelSelectionScreenTwo.setFillColor(sf::Color::White);
+				}
+				else {
+					if (levelSelectionScreenTwo.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+						levelSelectionScreenTwo.setFillColor(sf::Color::Red);
+					else
+						levelSelectionScreenTwo.setFillColor(LIGHT_GRAY);
+				}
+				if (levelThreeUnlocked) {
+					if (levelSelectionScreenThree.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+						levelSelectionScreenThree.setFillColor(sf::Color::Green);
+					else
+						levelSelectionScreenThree.setFillColor(sf::Color::White);
+				}
+				else {
+					if (levelSelectionScreenThree.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+						levelSelectionScreenThree.setFillColor(sf::Color::Red);
+					else
+						levelSelectionScreenThree.setFillColor(LIGHT_GRAY);
+				}
+			}
+			if (playScreenOn && !levelSelectionScreenOn) {
+				if (gameOverScreenOn) {
+					if (retryText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+						retryText.setFillColor(LIGHT_YELLOW);
+					else
+						retryText.setFillColor(sf::Color::White);
+					if (giveUpText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+						giveUpText.setFillColor(LIGHT_YELLOW);
+					else
+						giveUpText.setFillColor(sf::Color::White);
+				}
+				if (showPauseMenu) {
+					if (gameplayPauseExitBtn.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+						gameplayPauseExitText.setFillColor(LIGHT_RED);
+					else
+						gameplayPauseExitText.setFillColor(sf::Color::White);
+					if (gameplayPauseGoBackBtn.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+						gameplayPauseGoBackText.setFillColor(LIGHT_GREEN);
+					else
+						gameplayPauseGoBackText.setFillColor(sf::Color::White);
+					if (gameplayPausePlusSoundTextSFX.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+						gameplayPausePlusSoundTextSFX.setFillColor(sf::Color::White);
+					else
+						gameplayPausePlusSoundTextSFX.setFillColor(sf::Color(DARK_THEME));
+					if (gameplayPauseMinusSoundTextSFX.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+						gameplayPauseMinusSoundTextSFX.setFillColor(sf::Color::White);
+					else
+						gameplayPauseMinusSoundTextSFX.setFillColor(sf::Color(DARK_THEME));
+					if (gameplayPausePlusSoundTextMusic.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+						gameplayPausePlusSoundTextMusic.setFillColor(sf::Color::White);
+					else
+						gameplayPausePlusSoundTextMusic.setFillColor(sf::Color(DARK_THEME));
+					if (gameplayPauseMinusSoundTextMusic.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+						gameplayPauseMinusSoundTextMusic.setFillColor(sf::Color::White);
+					else
+						gameplayPauseMinusSoundTextMusic.setFillColor(sf::Color(DARK_THEME));
+				}
+				if (levelOneCompleted || levelTwoCompleted || levelThreeCompleted) {
+					if (levelEndScreenNextButton.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+						levelEndScreenNextButton.setFillColor(sf::Color::Green);
+					else
+						levelEndScreenNextButton.setFillColor(sf::Color::White);
+					if (levelEndScreenQuitButton.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+						levelEndScreenQuitButton.setFillColor(LIGHT_RED);
+					else
+						levelEndScreenQuitButton.setFillColor(sf::Color::White);
+				}
+				if (gameplayUIStatAtkText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					gameplayUIStatAtkText.setFillColor(LIGHT_YELLOW);
+				else
+					gameplayUIStatAtkText.setFillColor(sf::Color::White);
+				if (gameplayUIStatMaxHpText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					gameplayUIStatMaxHpText.setFillColor(LIGHT_YELLOW);
+				else
+					gameplayUIStatMaxHpText.setFillColor(sf::Color::White);
+				if (gameplayUIStatSpeedText.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					gameplayUIStatSpeedText.setFillColor(LIGHT_YELLOW);
+				else
+					gameplayUIStatSpeedText.setFillColor(sf::Color::White);
+				if (gameplayUISetSpecialBase.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					gameplayUISetSpecialBase.setFillColor(LIGHT_YELLOW);
+				else
+					gameplayUISetSpecialBase.setFillColor(sf::Color::White);
+				if (gameplayUISetSpecialTriple.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					gameplayUISetSpecialTriple.setFillColor(LIGHT_YELLOW);
+				else
+					gameplayUISetSpecialTriple.setFillColor(sf::Color::White);
+				if (gameplayUISetSpecialRain.getGlobalBounds().contains((float)event.mouseMove.x, (float)event.mouseMove.y))
+					gameplayUISetSpecialRain.setFillColor(LIGHT_YELLOW);
+				else
+					gameplayUISetSpecialRain.setFillColor(sf::Color::White);
+			}
+			break;
+		case sf::Event::MouseButtonPressed:
+			if (event.mouseButton.button == sf::Mouse::Left) {
+				if (settingsScreenOn) {
+					if (!menuPauseContent.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y) && !menuPauseTopBar.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						settingsScreenOn = false;
+						startUpScreenOn = true;
+						settingsIconSprite.setColor(sf::Color::White);
+						bgStartUpScreenMusic.play();
+					}
+					if (pauseResolutionMode0Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						window.create(sf::VideoMode(modes[0].width, modes[0].height), "Food'estroyer", sf::Style::Fullscreen);
+						window.setFramerateLimit(currentFramerateLimit);
+						loadSettings();
+						loadTextPositions();
+						isFullscreen = true;
+					}
+					if (pauseResolutionMode1Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						window.create(sf::VideoMode(modes[1].width, modes[1].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
+						window.setFramerateLimit(currentFramerateLimit);
+						loadSettings();
+						loadTextPositions();
+						isFullscreen = false;
+					}
+					if (pauseResolutionMode2Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						window.create(sf::VideoMode(modes[2].width, modes[2].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
+						window.setFramerateLimit(currentFramerateLimit);
+						loadSettings();
+						loadTextPositions();
+						isFullscreen = false;
+					}
+					if (pauseResolutionMode3Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						window.create(sf::VideoMode(modes[3].width, modes[3].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
+						window.setFramerateLimit(currentFramerateLimit);
+						loadSettings();
+						loadTextPositions();
+						isFullscreen = false;
+					}
+					if (pauseResolutionMode4Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						window.create(sf::VideoMode(modes[4].width, modes[4].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
+						window.setFramerateLimit(currentFramerateLimit);
+						loadSettings();
+						loadTextPositions();
+						isFullscreen = false;
+					}
+					if (pauseResolutionMode5Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						window.create(sf::VideoMode(modes[5].width, modes[5].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
+						window.setFramerateLimit(currentFramerateLimit);
+						loadSettings();
+						loadTextPositions();
+						isFullscreen = false;
+					}
+					if (pauseResolutionMode6Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						window.create(sf::VideoMode(modes[6].width, modes[6].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
+						window.setFramerateLimit(currentFramerateLimit);
+						loadSettings();
+						loadTextPositions();
+						isFullscreen = false;
+					}
+					if (pauseResolutionMode7Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						window.create(sf::VideoMode(modes[7].width, modes[7].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
+						window.setFramerateLimit(currentFramerateLimit);
+						loadSettings();
+						loadTextPositions();
+						isFullscreen = false;
+					}
+					if (pauseResolutionMode8Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						window.create(sf::VideoMode(modes[8].width, modes[8].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
+						window.setFramerateLimit(currentFramerateLimit);
+						loadSettings();
+						loadTextPositions();
+						isFullscreen = false;
+					}
+					if (pauseResolutionMode9Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						window.create(sf::VideoMode(modes[9].width, modes[9].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
+						window.setFramerateLimit(currentFramerateLimit);
+						loadSettings();
+						loadTextPositions();
+						isFullscreen = false;
+					}
+					if (pauseResolutionMode10Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						window.create(sf::VideoMode(modes[10].width, modes[10].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
+						window.setFramerateLimit(currentFramerateLimit);
+						loadSettings();
+						loadTextPositions();
+						isFullscreen = false;
+					}
+					if (pauseFPS60Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						window.setVerticalSyncEnabled(false);
+						currentFramerateLimit = 60;
+						window.setFramerateLimit(currentFramerateLimit);
+					}
+					if (pauseFPS120Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						window.setVerticalSyncEnabled(false);
+						currentFramerateLimit = 120;
+						window.setFramerateLimit(currentFramerateLimit);
+					}
+					if (pauseFPS240Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						window.setVerticalSyncEnabled(false);
+						currentFramerateLimit = 240;
+						window.setFramerateLimit(currentFramerateLimit);
+					}
+					if (pauseFPS360Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						window.setVerticalSyncEnabled(false);
+						currentFramerateLimit = 360;
+						window.setFramerateLimit(currentFramerateLimit);
+					}
+					if (pauseFPSVsyncText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						window.setVerticalSyncEnabled(true);
+					}
+					if (pauseFPSMaxText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						window.setVerticalSyncEnabled(false);
+						currentFramerateLimit = 9999;
+						window.setFramerateLimit(currentFramerateLimit);
+					}
+					if (pauseLanguageENText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y) && language != "EN") {
+						language = "EN";
+						changeLanguages();
+						loadTextPositions();
+					}
+					if (pauseLanguageFRText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y) && language != "FR") {
+						language = "FR";
+						changeLanguages();
+						loadTextPositions();
+					}
+				}
+				if (startUpScreenOn) {
+					// Options
+					if (settingsIconSprite.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						settingsScreenOn = true;
+						startUpScreenOn = false;
+						loadSettings();
+						loadTextPositions();
+						bgStartUpScreenMusic.pause();
+					}
+					// Jouer
+					if (playText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						levelProgression = 0;
+						playScreenOn = true;
+						startUpScreenOn = false;
+						bgLvl1Music.setLoop(false);
+						bgLvl2Music.setLoop(false);
+						bgLvl3Music.setLoop(false);
+						levelSelectionScreenOn = true;
+						setupLevelSelectionScreen();
+					}
+					if (howToPlayText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						howToPlayScreenOn = true;
+						startUpScreenOn = false;
+						loadGameplayAssets();
+					}
+					// Quitter
+					if (quitText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						m_isRunning = false;
+					}
+				}
+				if (howToPlayScreenOn) {
+					if (howToPlayPreviousSlide.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						if (howToPlayActiveIndex == 0) howToPlayActiveIndex = 3;
+						else howToPlayActiveIndex--;
+					}
+					if (howToPlayNextSlide.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						if (howToPlayActiveIndex == 3) howToPlayActiveIndex = 0;
+						else howToPlayActiveIndex++;
+					}
+				}
+				if (playScreenOn && !levelSelectionScreenOn) {
+					if (showPauseMenu) {
+						if (gameplayPauseExitBtn.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+							gameOverAnimation = 0;
+							deathCounter = 0;
+							player.resetVariables();
+							bgLvl1Music.stop();
+							bgLvl2Music.stop();
+							bgLvl3Music.stop();
+							levelOneOn = false;
+							levelTwoOn = false;
+							levelThreeOn = false;
+							backgroundActive = false;
+							showPauseMenu = false;
+							clearAllVectors();
+							for (int i = 0; i < 15; ++i)
+								positionsOccupied[i] = false;
+							startUpScreenOn = true;
+							bgBossfightMusic.stop();
+							bgStartUpScreenMusic.play();
+						}
+						if (gameplayPauseGoBackBtn.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+							backgroundActive = true;
+							showPauseMenu = false;
+							if (levelOneOn)
+								bgLvl1Music.play();
+							if (levelTwoOn)
+								bgLvl2Music.play();
+							if (levelThreeOn) {
+								if (!bossFightStarted)
+									bgLvl3Music.play();
+								else
+									bgBossfightMusic.play();
+							}
+						}
+						if (gameplayPausePlusSoundTextSFX.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
+						{
+							if (gameplayPauseSFXControlInnerZone.getScale().x < 1.f) {
+								gameplayPauseSFXControlInnerZone.setScale(sf::Vector2f(gameplayPauseSFXControlInnerZone.getScale().x + 0.05f, 1.f));
+								oofSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
+								playerDeathSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
+								sugarCrunchSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
+								vineBoomSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
+							}
+						}
+						if (gameplayPauseMinusSoundTextSFX.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
+						{
+							if (gameplayPauseSFXControlInnerZone.getScale().x > 0.f) {
+								gameplayPauseSFXControlInnerZone.setScale(sf::Vector2f(gameplayPauseSFXControlInnerZone.getScale().x - 0.05f, 1.f));
+								oofSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
+								playerDeathSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
+								sugarCrunchSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
+								vineBoomSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
+							}
+						}
+						if (gameplayPausePlusSoundTextMusic.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
+						{
+							if (gameplayPauseMusicControlInnerZone.getScale().x < 1.f && gameplayPauseMusicControlInnerZone.getScale().x >= 0.f) {
+								gameplayPauseMusicControlInnerZone.setScale(sf::Vector2f(gameplayPauseMusicControlInnerZone.getScale().x + 0.05f, 1.f));
+								bgStartUpScreenMusic.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
+								if (levelOneOn) {
+									bgLvl1Music.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
+								}
+								if (levelTwoOn) {
+									bgLvl2Music.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
+								}
+								if (levelThreeOn) {
+									bgLvl3Music.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
+									bgBossfightMusic.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
+								}
+							}
+						}
+						if (gameplayPauseMinusSoundTextMusic.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
+						{
+							if (gameplayPauseMusicControlInnerZone.getScale().x <= 1.f && gameplayPauseMusicControlInnerZone.getScale().x > 0.f) {
+								gameplayPauseMusicControlInnerZone.setScale(sf::Vector2f(gameplayPauseMusicControlInnerZone.getScale().x - 0.05f, 1.f));
+								bgStartUpScreenMusic.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
+								if (levelOneOn) {
+									bgLvl1Music.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
+								}
+								if (levelTwoOn) {
+									bgLvl2Music.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
+								}
+								if (levelThreeOn) {
+									bgLvl3Music.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
+									bgBossfightMusic.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
+								}
+							}
+						}
+					}
+					if (levelOneCompleted || levelTwoCompleted || levelThreeCompleted) {
+						if (levelEndScreenNextButton.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+							clearAllVectors();
+							player.resetVariables();
+							backgroundActive = true;
+							levelProgression = 0.f;
+							scoreCounter = 0;
+							if (levelOneOn) {
+								loadGameplayAssets();
+								loadLevel2();
+								bgLvl1Music.stop();
+								bgLvl2Music.play();
+								levelOneOn = false;
+								levelTwoOn = true;
+								loadTextPositions();
+								return;
+							}
+							else if (levelTwoOn) {
+								loadGameplayAssets();
+								loadLevel3();
+								bgLvl2Music.stop();
+								bgLvl3Music.play();
+								levelThreeOn = true;
+								levelTwoOn = false;
+								return;
+							}
+							else if (levelThreeOn) {
+								bgLvl3Music.stop();
+								bgBossfightMusic.stop();
+								bossFightStarted = false;
+								bgStartUpScreenMusic.play();
+								startUpScreenOn = true;
+								levelThreeOn = false;
+								boss.spawned = false;
+								boss.spawning = false;
+								return;
+							}
+						}
+						if (levelEndScreenQuitButton.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+							levelOneOn = false; levelTwoOn = false; levelThreeOn = false; bossFightStarted = false;
+							bgLvl1Music.stop(); bgLvl2Music.stop(); bgLvl3Music.stop(); bgBossfightMusic.stop();
+							boss.spawned = false;
+							boss.spawning = false;
+							startUpScreenOn = true;
+							bgStartUpScreenMusic.play();
+						}
+					}
+					if (gameplayUIStatAtkText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						if (player.getSugarCount() >= player.atkLvlUpCost) {
+							player.setSugarCount(-player.atkLvlUpCost);
+							player.setAtkPower(1.25f); // *= 1.25
+							player.atkLvl++;
+							player.atkLvlUpCost *= 1.25f;
+						}
+					}
+					if (gameplayUIStatMaxHpText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						if (player.getSugarCount() >= player.maxHpLvlUpCost) {
+							player.setSugarCount(-player.maxHpLvlUpCost);
+							player.setPlayerMaxHP(10.f); // += 10
+							player.maxHpLvl++;
+							player.maxHpLvlUpCost *= 1.25f;
+						}
+					}
+					if (gameplayUIStatSpeedText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						if (player.getSugarCount() >= player.speedLvlUpCost) {
+							player.setSugarCount(-player.speedLvlUpCost);
+							player.setPlayerSpeed(100.f); // += 100
+							player.speedLvl++;
+							player.speedLvlUpCost *= 1.25f;
+						}
+					}
+					if (gameplayUISetSpecialBase.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						player.setSpecialAtkType("base"); player.resetSpecialTimer(0);
+						gameplayUISetSpecialTriple.setFillColor(sf::Color::White);
+						gameplayUISetSpecialRain.setFillColor(sf::Color::White);
+					}
+					if (gameplayUISetSpecialTriple.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						if (!player.tripleBought && player.getSugarCount() >= player.tripleCost) {
+							player.tripleBought = true;
+							player.setSugarCount(-player.tripleCost);
+							player.setSpecialAtkType("triple");
+							player.resetSpecialTimer(0);
+						}
+						else if (player.tripleBought) {
+							player.setSpecialAtkType("triple"); player.resetSpecialTimer(0);
+							gameplayUISetSpecialBase.setFillColor(sf::Color::White);
+							gameplayUISetSpecialRain.setFillColor(sf::Color::White);
+						}
+					}
+					if (gameplayUISetSpecialRain.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						if (!player.rainBought && player.getSugarCount() >= player.rainCost) {
+							player.rainBought = true;
+							player.setSugarCount(-player.rainCost);
+							player.setSpecialAtkType("rain");
+							player.resetSpecialTimer(0);
+						}
+						else if (player.rainBought) {
+							player.setSpecialAtkType("rain"); player.resetSpecialTimer(0);
+							gameplayUISetSpecialBase.setFillColor(sf::Color::White);
+							gameplayUISetSpecialTriple.setFillColor(sf::Color::White);
+						}
+					}
+				}
+				if (gameOverScreenOn) {
+					bgStartUpScreenMusic.stop();
+					bgBossfightMusic.stop();
+					bgLvl1Music.stop();
+					bgLvl2Music.stop();
+					bgLvl3Music.stop();
+					if (retryText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						gameOverAnimation = 0;
+						deathCounter = 0;
+						backgroundActive = true;
+						gameOverScreenOn = false;
+						player.resetVariables();
+						clearAllVectors();
+						loadGameplayAssets();
+						setEnemySpawn(numberOfStartingEnnemies, false);
+						levelProgression = 0;
+						if (levelOneOn) {
+							bgLvl1Music.stop();
+							loadLevel1();
+							bgLvl1Music.play();
+						}
+						else if (levelTwoOn) {
+							bgLvl2Music.stop();
+							loadLevel2();
+							bgLvl2Music.play();
+						}
+						else if (levelThreeOn) {
+							boss.setupBoss();
+							boss.spawned = false;
+							boss.spawning = false;
+							bgBossfightMusic.stop();
+							bgLvl3Music.stop();
+							loadLevel3();
+							bgLvl3Music.play();
+						}
+					}
+					if (giveUpText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						gameOverAnimation = 0;
+						deathCounter = 0;
+						levelOneOn = false;
+						levelTwoOn = false;
+						levelThreeOn = false;
+						showPauseMenu = false;
+						backgroundActive = false;
+						gameOverScreenOn = false;
+						startUpScreenOn = true;
+						boss.setupBoss();
+						boss.spawned = false;
+						boss.spawning = false;
+						clearAllVectors();
+						player.resetVariables();
+						setShooterPositions();
+						bgStartUpScreenMusic.play();
+					}
+				}
+				if (levelSelectionScreenOn) {
+					playerCurrentSprite.setColor(sf::Color::White);
+					if (levelSelectionScreenOne.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						clearAllVectors();
+						loadGameplayAssets();
+						loadLevel1();
+						levelOneOn = true;
+						backgroundActive = true;
+						levelSelectionScreenOn = false;
+						bgStartUpScreenMusic.pause();
+						bgLvl1Music.play();
+					}
+					if (levelSelectionScreenTwo.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						if (levelTwoUnlocked) {
+							clearAllVectors();
+							loadGameplayAssets();
+							loadLevel2();
+							levelTwoOn = true;
+							backgroundActive = true;
+							levelSelectionScreenOn = false;
+							bgStartUpScreenMusic.pause();
+							bgLvl2Music.play();
+						}
+					}
+					if (levelSelectionScreenThree.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+						if (levelThreeUnlocked) {
+							clearAllVectors();
+							loadGameplayAssets();
+							loadLevel3();
+							boss.setupBoss();
+							bossFightCompleted = false;
+							bossFightStarted = false;
+							bgBossfightMusic.stop();
+							levelThreeOn = true;
+							backgroundActive = true;
+							levelSelectionScreenOn = false;
+							bgStartUpScreenMusic.pause();
+							bgLvl3Music.play();
+						}
+					}
+				}
+			}
+			// For dragging
+			mouseLastDownX = event.mouseButton.x;
+			mouseLastDownY = event.mouseButton.y;
+			isMouseDragging = true;
+			break;
+		case sf::Event::MouseButtonReleased:
+			isMouseDragging = false;
+			break;
+		case sf::Event::KeyPressed:
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+				if (settingsScreenOn) {
 					settingsScreenOn = false;
 					startUpScreenOn = true;
 					settingsIconSprite.setColor(sf::Color::White);
 					bgStartUpScreenMusic.play();
 				}
-				if (pauseResolutionMode0Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					window.create(sf::VideoMode(modes[0].width, modes[0].height), "Food'estroyer", sf::Style::Fullscreen);
-					window.setFramerateLimit(currentFramerateLimit);
-					loadSettings();
-					loadTextPositions();
-					isFullscreen = true;
-				}
-				if (pauseResolutionMode1Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					window.create(sf::VideoMode(modes[1].width, modes[1].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
-					window.setFramerateLimit(currentFramerateLimit);
-					loadSettings();
-					loadTextPositions();
-					isFullscreen = false;
-				}
-				if (pauseResolutionMode2Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					window.create(sf::VideoMode(modes[2].width, modes[2].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
-					window.setFramerateLimit(currentFramerateLimit);
-					loadSettings();
-					loadTextPositions();
-					isFullscreen = false;
-				}
-				if (pauseResolutionMode3Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					window.create(sf::VideoMode(modes[3].width, modes[3].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
-					window.setFramerateLimit(currentFramerateLimit);
-					loadSettings();
-					loadTextPositions();
-					isFullscreen = false;
-				}
-				if (pauseResolutionMode4Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					window.create(sf::VideoMode(modes[4].width, modes[4].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
-					window.setFramerateLimit(currentFramerateLimit);
-					loadSettings();
-					loadTextPositions();
-					isFullscreen = false;
-				}
-				if (pauseResolutionMode5Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					window.create(sf::VideoMode(modes[5].width, modes[5].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
-					window.setFramerateLimit(currentFramerateLimit);
-					loadSettings();
-					loadTextPositions();
-					isFullscreen = false;
-				}
-				if (pauseResolutionMode6Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					window.create(sf::VideoMode(modes[6].width, modes[6].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
-					window.setFramerateLimit(currentFramerateLimit);
-					loadSettings();
-					loadTextPositions();
-					isFullscreen = false;
-				}
-				if (pauseResolutionMode7Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					window.create(sf::VideoMode(modes[7].width, modes[7].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
-					window.setFramerateLimit(currentFramerateLimit);
-					loadSettings();
-					loadTextPositions();
-					isFullscreen = false;
-				}
-				if (pauseResolutionMode8Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					window.create(sf::VideoMode(modes[8].width, modes[8].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
-					window.setFramerateLimit(currentFramerateLimit);
-					loadSettings();
-					loadTextPositions();
-					isFullscreen = false;
-				}
-				if (pauseResolutionMode9Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					window.create(sf::VideoMode(modes[9].width, modes[9].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
-					window.setFramerateLimit(currentFramerateLimit);
-					loadSettings();
-					loadTextPositions();
-					isFullscreen = false;
-				}
-				if (pauseResolutionMode10Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					window.create(sf::VideoMode(modes[10].width, modes[10].height), "Food'estroyer", sf::Style::Titlebar | sf::Style::Close);
-					window.setFramerateLimit(currentFramerateLimit);
-					loadSettings();
-					loadTextPositions();
-					isFullscreen = false;
-				}
-				if (pauseFPS60Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					window.setVerticalSyncEnabled(false);
-					currentFramerateLimit = 60;
-					window.setFramerateLimit(currentFramerateLimit);
-				}
-				if (pauseFPS120Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					window.setVerticalSyncEnabled(false);
-					currentFramerateLimit = 120;
-					window.setFramerateLimit(currentFramerateLimit);
-				}
-				if (pauseFPS240Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					window.setVerticalSyncEnabled(false);
-					currentFramerateLimit = 240;
-					window.setFramerateLimit(currentFramerateLimit);
-				}
-				if (pauseFPS360Text.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					window.setVerticalSyncEnabled(false);
-					currentFramerateLimit = 360;
-					window.setFramerateLimit(currentFramerateLimit);
-				}
-				if (pauseFPSVsyncText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					window.setVerticalSyncEnabled(true);
-				}
-				if (pauseFPSMaxText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					window.setVerticalSyncEnabled(false);
-					currentFramerateLimit = 9999;
-					window.setFramerateLimit(currentFramerateLimit);
-				}
-				if (pauseLanguageENText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y) && language != "EN") {
-					language = "EN";
-					changeLanguages();
-					loadTextPositions();
-				}
-				if (pauseLanguageFRText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y) && language != "FR") {
-					language = "FR";
-					changeLanguages();
-					loadTextPositions();
-				}
-			}
-			if (startUpScreenOn) {
-				// Options
-				if (settingsIconSprite.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					settingsScreenOn = true;
-					startUpScreenOn = false;
-					loadSettings();
-					loadTextPositions();
-					bgStartUpScreenMusic.pause();
-				}
-				// Jouer
-				if (playText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					levelProgression = 0;
-					playScreenOn = true;
-					startUpScreenOn = false;
-					bgLvl1Music.setLoop(false);
-					bgLvl2Music.setLoop(false);
-					bgLvl3Music.setLoop(false);
-					levelSelectionScreenOn = true;
-					setupLevelSelectionScreen();
-				}
-				if (howToPlayText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					howToPlayScreenOn = true;
-					startUpScreenOn = false;
-					loadGameplayAssets();
-				}
-				// Quitter
-				if (quitText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
+				else if (startUpScreenOn) {
 					m_isRunning = false;
 				}
-			}
-			if (howToPlayScreenOn) {
-				if (howToPlayPreviousSlide.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					if (howToPlayActiveIndex == 0) howToPlayActiveIndex = 3;
-					else howToPlayActiveIndex--;
-				}
-				if (howToPlayNextSlide.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					if (howToPlayActiveIndex == 3) howToPlayActiveIndex = 0;
-					else howToPlayActiveIndex++;
-				}
-			}
-			if (playScreenOn && !levelSelectionScreenOn) {
-				if (showPauseMenu) {
-					if (gameplayPauseExitBtn.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-						gameOverAnimation = 0;
-						deathCounter = 0;
-						player.resetVariables();
-						bgLvl1Music.stop();
-						bgLvl2Music.stop();
-						bgLvl3Music.stop();
-						levelOneOn = false;
-						levelTwoOn = false;
-						levelThreeOn = false;
-						backgroundActive = false;
-						showPauseMenu = false;
-						clearAllVectors();
-						for (int i = 0; i < 15; ++i)
-							positionsOccupied[i] = false;
-						startUpScreenOn = true;
-						bgBossfightMusic.stop();
-						bgStartUpScreenMusic.play();
-					}
-					if (gameplayPauseGoBackBtn.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-						backgroundActive = true;
-						showPauseMenu = false;
-						if (levelOneOn)
-							bgLvl1Music.play();
-						if (levelTwoOn)
-							bgLvl2Music.play();
-						if (levelThreeOn) {
-							if (!bossFightStarted)
-								bgLvl3Music.play();
-							else
-								bgBossfightMusic.play();
-						}
-					}
-					if (gameplayPausePlusSoundTextSFX.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
-					{
-						if (gameplayPauseSFXControlInnerZone.getScale().x < 1.f) {
-							gameplayPauseSFXControlInnerZone.setScale(sf::Vector2f(gameplayPauseSFXControlInnerZone.getScale().x + 0.05f, 1.f));
-							oofSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
-							playerDeathSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
-							sugarCrunchSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
-							vineBoomSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
-						}
-					}
-					if (gameplayPauseMinusSoundTextSFX.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
-					{
-						if (gameplayPauseSFXControlInnerZone.getScale().x > 0.f) {
-							gameplayPauseSFXControlInnerZone.setScale(sf::Vector2f(gameplayPauseSFXControlInnerZone.getScale().x - 0.05f, 1.f));
-							oofSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
-							playerDeathSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
-							sugarCrunchSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
-							vineBoomSound.setVolume(100 * gameplayPauseSFXControlInnerZone.getScale().x);
-						}
-					}
-					if (gameplayPausePlusSoundTextMusic.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
-					{
-						if (gameplayPauseMusicControlInnerZone.getScale().x < 1.f && gameplayPauseMusicControlInnerZone.getScale().x >= 0.f) {
-							gameplayPauseMusicControlInnerZone.setScale(sf::Vector2f(gameplayPauseMusicControlInnerZone.getScale().x + 0.05f, 1.f));
-							bgStartUpScreenMusic.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
-							if (levelOneOn) {
-								bgLvl1Music.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
-							}
-							if (levelTwoOn) {
-								bgLvl2Music.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
-							}
-							if (levelThreeOn) {
-								bgLvl3Music.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
-								bgBossfightMusic.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
-							}
-						}
-					}
-					if (gameplayPauseMinusSoundTextMusic.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
-					{
-						if (gameplayPauseMusicControlInnerZone.getScale().x <= 1.f && gameplayPauseMusicControlInnerZone.getScale().x > 0.f) {
-							gameplayPauseMusicControlInnerZone.setScale(sf::Vector2f(gameplayPauseMusicControlInnerZone.getScale().x - 0.05f, 1.f));
-							bgStartUpScreenMusic.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
-							if (levelOneOn) {
-								bgLvl1Music.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
-							}
-							if (levelTwoOn) {
-								bgLvl2Music.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
-							}
-							if (levelThreeOn) {
-								bgLvl3Music.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
-								bgBossfightMusic.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
-							}
-						}
-					}
-				}
-				if (levelOneCompleted || levelTwoCompleted || levelThreeCompleted) {
-					if (levelEndScreenNextButton.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-						clearAllVectors();
-						player.resetVariables();
-						backgroundActive = true;
-						levelProgression = 0.f;
-						scoreCounter = 0;
-						if (levelOneOn) {
-							loadGameplayAssets();
-							loadLevel2();
-							bgLvl1Music.stop();
-							bgLvl2Music.play();
-							levelOneOn = false;
-							levelTwoOn = true;
-							loadTextPositions();
-							return;
-						}
-						else if (levelTwoOn) {
-							loadGameplayAssets();
-							loadLevel3();
-							bgLvl2Music.stop();
-							bgLvl3Music.play();
-							levelThreeOn = true;
-							levelTwoOn = false;
-							return;
-						}
-						else if (levelThreeOn) {
-							bgLvl3Music.stop();
-							bgBossfightMusic.stop();
-							bossFightStarted = false;
-							bgStartUpScreenMusic.play();
-							startUpScreenOn = true;
-							levelThreeOn = false;
-							boss.spawned = false;
-							boss.spawning = false;
-							return;
-						}
-					}
-					if (levelEndScreenQuitButton.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-						levelOneOn = false; levelTwoOn = false; levelThreeOn = false; bossFightStarted = false;
-						bgLvl1Music.stop(); bgLvl2Music.stop(); bgLvl3Music.stop(); bgBossfightMusic.stop();
-						boss.spawned = false;
-						boss.spawning = false;
-						startUpScreenOn = true;
-						bgStartUpScreenMusic.play();
-					}
-				}
-				if (gameplayUIStatAtkText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					if (player.getSugarCount() >= player.atkLvlUpCost) {
-						player.setSugarCount(-player.atkLvlUpCost);
-						player.setAtkPower(1.25f); // *= 1.25
-						player.atkLvl++;
-						player.atkLvlUpCost *= 1.25f;
-					}
-				}
-				if (gameplayUIStatMaxHpText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					if (player.getSugarCount() >= player.maxHpLvlUpCost) {
-						player.setSugarCount(-player.maxHpLvlUpCost);
-						player.setPlayerMaxHP(10.f); // += 10
-						player.maxHpLvl++;
-						player.maxHpLvlUpCost *= 1.25f;
-					}
-				}
-				if (gameplayUIStatSpeedText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					if (player.getSugarCount() >= player.speedLvlUpCost) {
-						player.setSugarCount(-player.speedLvlUpCost);
-						player.setPlayerSpeed(100.f); // += 100
-						player.speedLvl++;
-						player.speedLvlUpCost *= 1.25f;
-					}
-				}
-				if (gameplayUISetSpecialBase.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					player.setSpecialAtkType("base"); player.resetSpecialTimer(0);
-					gameplayUISetSpecialTriple.setFillColor(sf::Color::White);
-					gameplayUISetSpecialRain.setFillColor(sf::Color::White);
-				}
-				if (gameplayUISetSpecialTriple.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					if (!player.tripleBought && player.getSugarCount() >= player.tripleCost) {
-						player.tripleBought = true;
-						player.setSugarCount(-player.tripleCost);
-						player.setSpecialAtkType("triple");
-						player.resetSpecialTimer(0);
-					}
-					else if (player.tripleBought) {
-						player.setSpecialAtkType("triple"); player.resetSpecialTimer(0);
-						gameplayUISetSpecialBase.setFillColor(sf::Color::White);
-						gameplayUISetSpecialRain.setFillColor(sf::Color::White);
-					}
-				}
-				if (gameplayUISetSpecialRain.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					if (!player.rainBought && player.getSugarCount() >= player.rainCost) {
-						player.rainBought = true;
-						player.setSugarCount(-player.rainCost);
-						player.setSpecialAtkType("rain");
-						player.resetSpecialTimer(0);
-					}
-					else if (player.rainBought) {
-						player.setSpecialAtkType("rain"); player.resetSpecialTimer(0);
-						gameplayUISetSpecialBase.setFillColor(sf::Color::White);
-						gameplayUISetSpecialTriple.setFillColor(sf::Color::White);
-					}
-				}
-			}
-			if (gameOverScreenOn) {
-				bgStartUpScreenMusic.stop();
-				bgBossfightMusic.stop();
-				bgLvl1Music.stop();
-				bgLvl2Music.stop();
-				bgLvl3Music.stop();
-				if (retryText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					gameOverAnimation = 0;
-					deathCounter = 0;
-					backgroundActive = true;
-					gameOverScreenOn = false;
-					player.resetVariables();
-					clearAllVectors();
-					loadGameplayAssets();
-					setEnemySpawn(numberOfStartingEnnemies, false);
-					levelProgression = 0;
-					if (levelOneOn) {
-						bgLvl1Music.stop();
-						loadLevel1();
-						bgLvl1Music.play();
-					}
-					else if (levelTwoOn) {
-						bgLvl2Music.stop();
-						loadLevel2();
-						bgLvl2Music.play();
-					}
-					else if (levelThreeOn) {
-						boss.setupBoss();
-						boss.spawned = false;
-						boss.spawning = false;
-						bgBossfightMusic.stop();
-						bgLvl3Music.stop();
-						loadLevel3();
-						bgLvl3Music.play();
-					}
-				}
-				if (giveUpText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					gameOverAnimation = 0;
-					deathCounter = 0;
-					levelOneOn = false;
-					levelTwoOn = false;
-					levelThreeOn = false;
-					showPauseMenu = false;
-					backgroundActive = false;
-					gameOverScreenOn = false;
+				else if (howToPlayScreenOn) {
+					howToPlayScreenOn = false;
 					startUpScreenOn = true;
-					boss.setupBoss();
-					boss.spawned = false;
-					boss.spawning = false;
-					clearAllVectors();
-					player.resetVariables();
-					setShooterPositions();
-					bgStartUpScreenMusic.play();
+					howToPlayText.setFillColor(sf::Color::White);
 				}
-			}
-			if (levelSelectionScreenOn) {
-				playerCurrentSprite.setColor(sf::Color::White);
-				if (levelSelectionScreenOne.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					clearAllVectors();
-					loadGameplayAssets();
-					loadLevel1();
-					levelOneOn = true;
-					backgroundActive = true;
+				else if (playScreenOn && !levelSelectionScreenOn) {
+					loadTextPositions();
+					if (bossFightStarted) {
+						bgBossfightMusic.pause();
+					}
+				}
+				else if (levelSelectionScreenOn) {
 					levelSelectionScreenOn = false;
-					bgStartUpScreenMusic.pause();
-					bgLvl1Music.play();
-				}
-				if (levelSelectionScreenTwo.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					if (levelTwoUnlocked) {
-						clearAllVectors();
-						loadGameplayAssets();
-						loadLevel2();
-						levelTwoOn = true;
-						backgroundActive = true;
-						levelSelectionScreenOn = false;
-						bgStartUpScreenMusic.pause();
-						bgLvl2Music.play();
-					}
-				}
-				if (levelSelectionScreenThree.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
-					if (levelThreeUnlocked) {
-						clearAllVectors();
-						loadGameplayAssets();
-						loadLevel3();
-						boss.setupBoss();
-						bossFightCompleted = false;
-						bossFightStarted = false;
-						bgBossfightMusic.stop();
-						levelThreeOn = true;
-						backgroundActive = true;
-						levelSelectionScreenOn = false;
-						bgStartUpScreenMusic.pause();
-						bgLvl3Music.play();
-					}
+					startUpScreenOn = true;
 				}
 			}
+			break;
+		default:
+			break;
 		}
-		// For dragging
-		mouseLastDownX = event.mouseButton.x;
-		mouseLastDownY = event.mouseButton.y;
-		isMouseDragging = true;
-		break;
-	case sf::Event::MouseButtonReleased:
-		isMouseDragging = false;
-		break;
-	case sf::Event::KeyPressed:
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-			if (settingsScreenOn) {
-				settingsScreenOn = false;
-				startUpScreenOn = true;
-				settingsIconSprite.setColor(sf::Color::White);
-				bgStartUpScreenMusic.play();
-			}
-			else if (startUpScreenOn) {
-				m_isRunning = false;
-			}
-			else if (howToPlayScreenOn) {
-				howToPlayScreenOn = false;
-				startUpScreenOn = true;
-				howToPlayText.setFillColor(sf::Color::White);
-			}
-			else if (playScreenOn && !levelSelectionScreenOn) {
-				loadTextPositions();
-				if (bossFightStarted) {
-					bgBossfightMusic.pause();
-				}
-			}
-			else if (levelSelectionScreenOn) {
-				levelSelectionScreenOn = false;
-				startUpScreenOn = true;
-			}
-		}
-		break;
-	default:
-		break;
 	}
 }
 
