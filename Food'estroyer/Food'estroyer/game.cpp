@@ -499,6 +499,7 @@ void Game::changeLanguages() const {
 		quitText.setString("Quitter");
 		pauseTopBarResolutionText.setString("Résolution");
 		pauseTopBarColorThemeText.setString("Thème");
+		pauseTopBarLanguageText.setString("Langue");
 		pauseFPSMaxText.setString("Pas de limite");
 		gameplayPauseGoBackText.setString("Reprendre");
 		gameplayPauseExitText.setString("Quitter");
@@ -719,6 +720,7 @@ void Game::loadLevelAssets() { // Only loaded once
 	bgLvl1Music.openFromFile("Assets/Songs/Music/bgMusicLevel1.mp3");
 	bgLvl2Music.openFromFile("Assets/Songs/Music/bgMusicLevel2.mp3");
 	bgLvl3Music.openFromFile("Assets/Songs/Music/bgMusicLevel3.mp3");
+	bgStartUpScreenMusic.setVolume(50);
 	bgBossfightMusic.setVolume(50);
 	bgLvl1Music.setVolume(50);
 	bgLvl2Music.setVolume(50);
@@ -1650,15 +1652,19 @@ void Game::setShooterPositions() {
 void Game::setEnemySpawn(int numberOfEnnemies, bool isBonusSpawning) {
 	int randomYPosition, randomSize, randomClass, randomBonusName, randomBonusXPos;
 	const float xSpawnPosition = window.getSize().x + 100.f;
-	const int randomHeights[10] = { 0, 100, 200, 300, 400, 500, 600, 700, 800, 900 };
+	const float randomHeights[9] = {
+		window.getSize().x * 0.10f, window.getSize().x * 0.20f, window.getSize().x * 0.30f, 
+		window.getSize().x * 0.40f, window.getSize().x * 0.50f, window.getSize().x * 0.60f,
+		window.getSize().x * 0.70f, window.getSize().x * 0.80f, window.getSize().x * 0.90f
+	};
 	const char randomSizes[3] = { 's', 'm', 'l' };
 	const char* bonusNames[3] = { "shield", "x2", "oneUp" };
-	const float bonusXSpawn[3] = { (float)window.getSize().x * 0.1f, (float)window.getSize().x * 0.2f, (float)window.getSize().x * 0.3f };
+	const float bonusXSpawn[2] = { (float)window.getSize().x * 0.1f, (float)window.getSize().x * 0.2f };
 	std::vector<sf::Texture*> randomEnemySkins = { &apple, &burger, &banana, &painBizarre, &carrot, &tomato, &fries, &salad, &avocado, &pepper };
 	for (int i = 0; i < numberOfEnnemies; ++i) {
 		randomClass = rand() % 3 + 1;
 		randomSize = rand() % 3;
-		randomYPosition = rand() % 10;
+		randomYPosition = rand() % 9;
 
 		Normal normal  (xSpawnPosition, randomHeights[randomYPosition], randomSizes[randomSize], window, candy/**randomEnemySkins[rand() % 10]*/);
 		//COMPORTEMENT DE BASE
@@ -1683,7 +1689,7 @@ void Game::setEnemySpawn(int numberOfEnnemies, bool isBonusSpawning) {
 	}
 	if (isBonusSpawning) { // Paramètre optionnel, valeur par défaut set à false.
 		randomBonusName = rand() % 3;
-		randomBonusXPos = rand() % 3;
+		randomBonusXPos = rand() % 2;
 		Bonus* bonus = new Bonus(bonusXSpawn[randomBonusXPos], -50.f, bonusNames[randomBonusName], player);
 		vectorBonus.push_back(bonus);
 	}
@@ -1910,8 +1916,8 @@ void Game::playerInput() {
 			if (player.getPosition().x <= 0)
 				player.setPosition(0, player.getPosition().y);
 			playerCurrentSprite.setPosition(player.getPosition());
-		}
-		if (!boss.spawning) {                                                // EFFET DE CINEMATIQUE
+		}                                           // EFFET DE CINEMATIQUE
+		if (!boss.spawning) {
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
 				if (backgroundActive) {
 					// Ici y'aura le shoot
@@ -2049,6 +2055,7 @@ void Game::playerCollisions() {
 			{
 				player.setSugarCount(sugar->getValue());
 				player.healPlayer(player.getPlayerMaxHP() * sugar->healValue);
+				if (player.getPlayerHP() > player.getPlayerMaxHP()) player.setPlayerHP(player.getPlayerMaxHP());
 				sugarCrunchSound.play();
 				sugar->setState(false);
 			}
@@ -2220,7 +2227,7 @@ bool Game::playerDeath() {
 	if (player.getPlayerHP() == 0) {
 		if (player.getOneUp()) {
 			player.setOneUp(false);
-			player.setPlayerHP(50);
+			player.setPlayerHP(player.getPlayerMaxHP() / 2.f);
 		}
 		else { player.setPlayerLife(false); }
 
@@ -3021,8 +3028,9 @@ void Game::pollEvents() {
 					}
 					if (gameplayPausePlusSoundTextMusic.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
 					{
-						if (gameplayPauseMusicControlInnerZone.getScale().x < 1.f) {
+						if (gameplayPauseMusicControlInnerZone.getScale().x < 1.f && gameplayPauseMusicControlInnerZone.getScale().x >= 0.f) {
 							gameplayPauseMusicControlInnerZone.setScale(sf::Vector2f(gameplayPauseMusicControlInnerZone.getScale().x + 0.05f, 1.f));
+							bgStartUpScreenMusic.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
 							if (levelOneOn) {
 								bgLvl1Music.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
 							}
@@ -3037,8 +3045,9 @@ void Game::pollEvents() {
 					}
 					if (gameplayPauseMinusSoundTextMusic.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y))
 					{
-						if (gameplayPauseMusicControlInnerZone.getScale().x < 1.f) {
+						if (gameplayPauseMusicControlInnerZone.getScale().x <= 1.f && gameplayPauseMusicControlInnerZone.getScale().x > 0.f) {
 							gameplayPauseMusicControlInnerZone.setScale(sf::Vector2f(gameplayPauseMusicControlInnerZone.getScale().x - 0.05f, 1.f));
+							bgStartUpScreenMusic.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
 							if (levelOneOn) {
 								bgLvl1Music.setVolume(100 * gameplayPauseMusicControlInnerZone.getScale().x);
 							}
@@ -3085,12 +3094,16 @@ void Game::pollEvents() {
 							bgStartUpScreenMusic.play();
 							startUpScreenOn = true;
 							levelThreeOn = false;
+							boss.spawned = false;
+							boss.spawning = false;
 							return;
 						}
 					}
 					if (levelEndScreenQuitButton.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 						levelOneOn = false; levelTwoOn = false; levelThreeOn = false; bossFightStarted = false;
 						bgLvl1Music.stop(); bgLvl2Music.stop(); bgLvl3Music.stop(); bgBossfightMusic.stop();
+						boss.spawned = false;
+						boss.spawning = false;
 						startUpScreenOn = true;
 						bgStartUpScreenMusic.play();
 					}
@@ -3153,6 +3166,10 @@ void Game::pollEvents() {
 			}
 			if (gameOverScreenOn) {
 				bgStartUpScreenMusic.stop();
+				bgBossfightMusic.stop();
+				bgLvl1Music.stop();
+				bgLvl2Music.stop();
+				bgLvl3Music.stop();
 				if (retryText.getGlobalBounds().contains((float)event.mouseButton.x, (float)event.mouseButton.y)) {
 					gameOverAnimation = 0;
 					deathCounter = 0;
@@ -3174,6 +3191,10 @@ void Game::pollEvents() {
 						bgLvl2Music.play();
 					}
 					else if (levelThreeOn) {
+						boss.setupBoss();
+						boss.spawned = false;
+						boss.spawning = false;
+						bgBossfightMusic.stop();
 						bgLvl3Music.stop();
 						loadLevel3();
 						bgLvl3Music.play();
@@ -3189,6 +3210,9 @@ void Game::pollEvents() {
 					backgroundActive = false;
 					gameOverScreenOn = false;
 					startUpScreenOn = true;
+					boss.setupBoss();
+					boss.spawned = false;
+					boss.spawning = false;
 					clearAllVectors();
 					player.resetVariables();
 					setShooterPositions();
@@ -3414,6 +3438,7 @@ void Game::update() {
 		if (backgroundActive) {
 			// Phase normale du niveau 3 (avec le timer)
 			if (levelProgression < levelThreeDuration) {
+				bossFightStarted = false;
 				levelProgression += f_ElapsedTime;
 				levelProgressionBarFG.setScale(sf::Vector2f((levelProgression / levelThreeDuration), 1.f));
 				clownWalkAnimationTime += f_ElapsedTime;
@@ -3475,6 +3500,7 @@ void Game::update() {
 				levelProgressionBarBG.setOutlineThickness(0);
 				boss.setupBoss();
 				boss.setTexture(bossTexture1);
+				boss.spawning = true;
 				boss.spawned = true;
 				bossFightStarted = true;
 				bgBossfightMusic.play();
@@ -3512,11 +3538,12 @@ void Game::update() {
 			else {
 				bossFightCompleted = true;
 				bossFightStarted = false;
-				levelProgression = levelThreeDuration + 1;
+				levelProgression = 0;
+				levelThreeOn = false;
 			}
 		}
 	}
-	if (playerDeath() && backgroundActive) { gameOverScreenOn = true; vineBoomSound.play(); }
+	if (playerDeath() && backgroundActive) { gameOverScreenOn = true; vineBoomSound.play(); bgBossfightMusic.stop(); bgLvl1Music.stop(); bgLvl2Music.stop(); bgLvl3Music.stop(); }
 
 	if (gameOverScreenOn) {
 		gameOverText.setFont(puppy);

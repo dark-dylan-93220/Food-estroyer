@@ -25,11 +25,7 @@
 *.a
 
 # Executables
-*.exe
 *.out
 *.app
 .vs/
 *.tlog
-/Food'estroyer/Food'estroyer/x64/Release/Food'estroyer.tlog/CL.write.1.tlog
-/Food'estroyer/Food'estroyer/x64/Release/Food'estroyer.tlog/CL.read.1.tlog
-/Food'estroyer/Food'estroyer/x64/Release/Food'estroyer.tlog/CL.command.1.tlog
