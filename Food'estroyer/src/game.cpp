@@ -368,7 +368,7 @@ namespace {
 	std::vector<sf::Vector2f> shooterPositions; ////////////////////////////////
 	std::vector<Projectile*> vectorProjectile;
 	std::vector<Sugar*> vectorSugar;
-	std::vector<Pie*> vectorPie;
+	std::vector<Tarte*> vectorPie;
 	std::vector<Normal> vectorNormal;
 	std::vector<Shooter> vectorShooter;
 	std::vector<Elite> vectorElite;
@@ -383,7 +383,7 @@ namespace {
 	Projectile projectileDraw;
 	Projectile projectileDrawRound;
 	Sugar sugarDraw;
-	Pie pieDraw;
+	Tarte pieDraw;
 	Bonus bonusDraw(1.f, 1.f, "shield", player);
 	//ICONES UI
 	Sugar sugarIcone;
@@ -1085,12 +1085,12 @@ void Game::loadGameplayAssets() {
 	gameplayUINoMissBonus.setPosition(gameplayUIScoreText.getPosition().x + gameplayUIScoreText.getGlobalBounds().width - gameplayUINoMissBonus.getGlobalBounds().width, gameplayUINoHitBonus.getPosition().y + gameplayUINoHitBonus.getCharacterSize());
 	sugarIcone.setPosition(window.getSize().x / 2 - sugarIcone.getGlobalBounds().width / 2 + gameplayUISugarText.getLocalBounds().width / 2, window.getSize().y - (sugarIcone.getLocalBounds().height * sugarIcone.getScale().y) * 1.8f);
 	boss.setTexture(bossTexture1);
-	boss.setPosition(window.getSize().x * 1.1, 0/*window.getSize().y / 2 - (boss.getLocalBounds().height * boss.getScale().y) / 2*/); //taille boss texture : 640x1080 donc le calcul égale à 0 en ajustant le scaling
+	boss.setPosition(window.getSize().x * 1.1f, 0/*window.getSize().y / 2 - (boss.getLocalBounds().height * boss.getScale().y) / 2*/); //taille boss texture : 640x1080 donc le calcul égale à 0 en ajustant le scaling
 	boss.setScale(window.getSize().x / 3 / boss.getLocalBounds().width, window.getSize().y / boss.getLocalBounds().height);
 	bossEye.setTexture(bossEyeTexture1);
-	bossEye.setScale(window.getSize().x * 0.05 / bossEye.getLocalBounds().width, window.getSize().y * 0.09 / bossEye.getLocalBounds().height);
+	bossEye.setScale(window.getSize().x * 0.05f / bossEye.getLocalBounds().width, window.getSize().y * 0.09f / bossEye.getLocalBounds().height);
 	bossEye2.setTexture(bossEyeTexture1);
-	bossEye2.setScale(window.getSize().x * 0.05 / bossEye2.getLocalBounds().width, window.getSize().y * 0.09 / bossEye2.getLocalBounds().height);
+	bossEye2.setScale(window.getSize().x * 0.05f / bossEye2.getLocalBounds().width, window.getSize().y * 0.09f / bossEye2.getLocalBounds().height);
 	// HOW TO PLAY SECTION
 	howToPlayEnglish1.setScale((window.getSize().y * 0.40f) / howToPlayEnglish1.getLocalBounds().width, ((window.getSize().y * 0.40f) / howToPlayEnglish1.getLocalBounds().width));
 	howToPlayEnglish2.setScale((window.getSize().y * 0.40f) / howToPlayEnglish2.getLocalBounds().width, ((window.getSize().y * 0.40f) / howToPlayEnglish2.getLocalBounds().width));
@@ -2308,7 +2308,7 @@ void Game::nonPlayerBehavior() {
 		}
 	}
 	for (auto it = vectorPie.begin(); it != vectorPie.end(); ) {
-		Pie* pie = *it;
+		auto pie = *it;
 		if (!pie->behavior(f_ElapsedTime, window, vectorPie)) {
 			if (pie->missed) { player.accuracyCounter = 0; }                                         //RESET ACCURACY COUNTER ICI
 			delete pie;                  // Free memory
@@ -2342,7 +2342,7 @@ void Game::nonPlayerBehavior() {
 		if (vectorNormal[i].getAlive()) {
 			vectorNormal[i].behavior(f_ElapsedTime, vectorNormal, window);
 			vectorNormal[i].dropSugar(vectorSugar, vectorNormal[i]);
-			for (Pie*& pie : vectorPie) {
+			for (auto& pie : vectorPie) {
 				if (vectorNormal[i].getGlobalBounds().intersects(pie->getGlobalBounds())) {
 					vectorNormal[i].setHp(-pie->getAtkPower());
 					if (pie->maxHitNumber == 1) player.accuracyCounter++; //POUR SET LE MULTIPLIER, IL FAUT UNIQUEMENT TOUCHER HIT AVEC UNE NORMAL ATK
@@ -2373,7 +2373,7 @@ void Game::nonPlayerBehavior() {
 			//NOUVEAU COMPORTEMENT
 			vectorShooter[i].behavior(f_ElapsedTime, vectorShooter, vectorProjectile, window);
 			vectorShooter[i].dropSugar(vectorSugar, vectorShooter[i]);
-			for (Pie*& pie : vectorPie) {
+			for (auto& pie : vectorPie) {
 				if (vectorShooter[i].getGlobalBounds().intersects(pie->getGlobalBounds())) {
 					vectorShooter[i].setHp(-pie->getAtkPower());
 					if (pie->maxHitNumber == 1) player.accuracyCounter++;
@@ -2402,7 +2402,7 @@ void Game::nonPlayerBehavior() {
 		if (vectorElite[i].getAlive()) {
 			vectorElite[i].behavior(f_ElapsedTime, player, vectorProjectile, window);
 			vectorElite[i].dropSugar(vectorSugar, vectorElite[i]);
-			for (Pie*& pie : vectorPie) {
+			for (auto& pie : vectorPie) {
 				if (vectorElite[i].getGlobalBounds().intersects(pie->getGlobalBounds())) {
 					vectorElite[i].setHp(-pie->getAtkPower());
 					if (pie->maxHitNumber == 1) player.accuracyCounter++;
@@ -2432,9 +2432,9 @@ void Game::nonPlayerBehavior() {
 			window.getSize().y / 3 - (bossEye.getLocalBounds().height * bossEye.getScale().y) / 2);
 
 		bossEye2.setPosition(boss.getPosition().x,
-			window.getSize().y / 1.5 - (bossEye2.getLocalBounds().height * bossEye2.getScale().y) / 2);
+			window.getSize().y / 1.5f - (bossEye2.getLocalBounds().height * bossEye2.getScale().y) / 2);
 
-		for (Pie*& pie : vectorPie) {
+		for (auto& pie : vectorPie) {
 			if (boss.getGlobalBounds().intersects(pie->getGlobalBounds())) {
 				boss.setHp(-pie->getAtkPower());
 				spriteUpdateTimer = 0;
@@ -2471,7 +2471,7 @@ void Game::nonPlayerBehavior() {
 		}
 
 		if (!boss.behavior(f_ElapsedTime, player, vectorProjectile, window)) {
-			boss.setPosition(window.getSize().x * 1.1, boss.getPosition().y);
+			boss.setPosition(window.getSize().x * 1.1f, boss.getPosition().y);
 			player.resetVariables();
 			levelThreeCompleted = true;
 			loadTextPositions();
@@ -2494,7 +2494,7 @@ void Game::nonPlayerDraw() {
 		bonusDraw.setPosition(bonus->getPosition());
 		window.draw(bonusDraw);
 	}
-	for (Pie*& pie : vectorPie) {
+	for (Tarte*& pie : vectorPie) {
 		pieDraw.setRadius(pie->getRadius());
 		pieDraw.setTexture(&pieTexture);
 		pieDraw.setPosition(pie->getPosition());
@@ -3562,7 +3562,7 @@ void Game::update() {
 		retryText.setOutlineColor(sf::Color::Black);
 		retryText.setOutlineThickness(1.f);
 		retryText.setPosition((window.getSize().x - retryText.getLocalBounds().width) / 2,
-			gameOverText.getPosition().y + gameOverText.getCharacterSize() + window.getSize().y * 0.1);
+			gameOverText.getPosition().y + gameOverText.getCharacterSize() + window.getSize().y * 0.1f);
 		giveUpText.setFont(puppy);
 		giveUpText.setCharacterSize(50);
 		giveUpText.setLetterSpacing(1.1f);

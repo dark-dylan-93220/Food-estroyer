@@ -3,7 +3,7 @@
 
 #include "game.h"
 
-class Pie : public sf::CircleShape {
+class Tarte : public sf::CircleShape {
 protected:
 
 	bool state = true;
@@ -31,7 +31,7 @@ public:
 	void setSpeedY(float newSpeed)      { speedY = newSpeed; }
 	void setSize(float newSize)         { size = newSize; }
 
-	bool behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Pie*>& vectorPie);
+	bool behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Tarte*>& vectorPie);
 };
 
 class Player : public sf::CircleShape {
@@ -81,9 +81,9 @@ public:
 
 	Player();
 
-	void throwPie(std::vector<Pie*>& vectorPie, sf::RenderWindow& window);
+	void throwPie(std::vector<Tarte*>& vectorPie, sf::RenderWindow& window);
 
-	void specialAtk(std::vector<Pie*>& vectorPies, sf::RenderWindow& window);
+	void specialAtk(std::vector<Tarte*>& vectorPies, sf::RenderWindow& window);
 
 	// Allez un peu d'encapsulation :)
 	// Getters

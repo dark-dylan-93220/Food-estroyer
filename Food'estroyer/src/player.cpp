@@ -21,15 +21,15 @@ Bonus::Bonus(float PosX, float PosY, std::string setId, Player& player) : posX(P
 	}
 }
 
-void Player::throwPie(std::vector<Pie*>& vectorPie, sf::RenderWindow& window) {
+void Player::throwPie(std::vector<Tarte*>& vectorPie, sf::RenderWindow& window) {
 	if (x2) {
-		Pie* pie = new Pie;
+		Tarte* pie = new Tarte;
 		pie->setAtkPower(atkPower);
 		pie->setRadius(getPieSize() * window.getSize().x);
 		pie->setSpeedX(getPieSpeedX());
 		pie->setPosition(getPosition().x + getRadius() + pie->getRadius(), getPosition().y + pie->getRadius());
 		vectorPie.push_back(pie);
-		Pie* pie2 = new Pie;
+		Tarte* pie2 = new Tarte;
 		pie2->setAtkPower(atkPower);
 		pie2->setRadius(getPieSize() * window.getSize().x);
 		pie2->setSpeedX(getPieSpeedX());
@@ -37,7 +37,7 @@ void Player::throwPie(std::vector<Pie*>& vectorPie, sf::RenderWindow& window) {
 		vectorPie.push_back(pie2);
 	}
 	else {
-		Pie* pie = new Pie;
+		Tarte* pie = new Tarte;
 		pie->setAtkPower(atkPower);
 		pie->setRadius(getPieSize() * window.getSize().x);
 		pie->setSpeedX(getPieSpeedX());
@@ -46,9 +46,9 @@ void Player::throwPie(std::vector<Pie*>& vectorPie, sf::RenderWindow& window) {
 	}
 }
 
-void Player::specialAtk(std::vector<Pie*>& vectorPie, sf::RenderWindow& window) {
+void Player::specialAtk(std::vector<Tarte*>& vectorPie, sf::RenderWindow& window) {
 	if (specialAtkType == "base") {
-		Pie* specialPie = new Pie;
+		Tarte* specialPie = new Tarte;
 		specialPie->specialType = specialAtkType;
 		specialPie->maxHitNumber = 10;
 		specialPie->setAtkPower(atkPower * 1.5f);
@@ -58,14 +58,14 @@ void Player::specialAtk(std::vector<Pie*>& vectorPie, sf::RenderWindow& window) 
 		vectorPie.push_back(specialPie);
 	}
 	else if (specialAtkType == "triple") {
-		Pie* specialPie = new Pie;
+		Tarte* specialPie = new Tarte;
 		specialPie->specialType = specialAtkType;
 		specialPie->setAtkPower(atkPower * 5);
 		specialPie->setRadius(getPieSize() * 3 * window.getSize().x);
 		specialPie->setSpeedX(getPieSpeedX());
 		specialPie->setPosition(getPosition().x + getRadius() + specialPie->getRadius(), getPosition().y + getRadius() - specialPie->getRadius());
 		vectorPie.push_back(specialPie);
-		Pie* specialPie1 = new Pie;
+		Tarte* specialPie1 = new Tarte;
 		specialPie1->specialType = specialAtkType;
 		specialPie1->setAtkPower(atkPower * 5);
 		specialPie1->setRadius(getPieSize() * 3 * window.getSize().x);
@@ -73,7 +73,7 @@ void Player::specialAtk(std::vector<Pie*>& vectorPie, sf::RenderWindow& window) 
 		specialPie1->setSpeedY(getPieSpeedX() / 2);
 		specialPie1->setPosition(getPosition().x + getRadius() + specialPie1->getRadius(), getPosition().y + getRadius() - specialPie1->getRadius());
 		vectorPie.push_back(specialPie1);
-		Pie* specialPie2 = new Pie;
+		Tarte* specialPie2 = new Tarte;
 		specialPie2->specialType = specialAtkType;
 		specialPie2->setAtkPower(atkPower * 5);
 		specialPie2->setRadius(getPieSize() * 3 * window.getSize().x);
@@ -83,7 +83,7 @@ void Player::specialAtk(std::vector<Pie*>& vectorPie, sf::RenderWindow& window) 
 		vectorPie.push_back(specialPie2);
 	}
 	else if (specialAtkType == "rain") {
-		Pie* pie = new Pie;
+		Tarte* pie = new Tarte;
 		pie->maxHitNumber = 5;
 		pie->setAtkPower(atkPower);
 		pie->setRadius(getPieSize() * window.getSize().x);
@@ -104,7 +104,7 @@ bool Bonus::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Bo
 	else { return false; }
 }
 
-bool Pie::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Pie*>& vectorPie) {
+bool Tarte::behavior(float timeElapsed, sf::RenderWindow& window, std::vector<Tarte*>& vectorPie) {
 	if (state) {
 		move(speedX * timeElapsed, speedY * timeElapsed);
 		if (getPosition().x > window.getSize().x + getRadius() * 2) {

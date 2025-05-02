@@ -85,12 +85,12 @@ void Enemy::dropSugar(std::vector<Sugar*>& vectorSugar, Enemy& enemy) {
 		sugar->setPosition(enemy.getPosition().x - (enemy.getLocalBounds().width * enemy.getScale().x) / 2,
 			enemy.getPosition().y + (enemy.getLocalBounds().height * enemy.getScale().y) / 2 - (sugar->getLocalBounds().height * sugar->getScale().y) / 2);
 		switch (getSize()) {
-		case 's': sugar->setScale(0.05f, 0.05f); sugar->healValuePerSize = -0.02; break;
+		case 's': sugar->setScale(0.05f, 0.05f); sugar->healValuePerSize = -0.02f; break;
 		case 'm': sugar->setScale(0.08f, 0.08f); sugar->healValuePerSize = 0; break;
-		case 'l': sugar->setScale(0.11f, 0.11f); sugar->healValuePerSize = 0.02; break;
+		case 'l': sugar->setScale(0.11f, 0.11f); sugar->healValuePerSize = 0.02f; break;
 		}
-		if (idForSugar == "normal") sugar->healValuePerType = 0.05;
-		else { sugar->healValuePerType = 0.03; }
+		if (idForSugar == "normal") sugar->healValuePerType = 0.05f;
+		else { sugar->healValuePerType = 0.03f; }
 		sugar->healValue = sugar->healValuePerType + sugar->healValuePerSize;
 		vectorSugar.push_back(sugar);
 	}
@@ -193,7 +193,7 @@ void Normal::behavior(float timeElapsed, std::vector<Normal>& vectorNormal, sf::
 //NOUVEAU COMPORTEMENT
 void  Shooter::behavior(float timeElapsed, std::vector<Shooter>& vectorShooters, std::vector<Projectile*>& vectorProjectile, sf::RenderWindow& window) {
 	if (hp <= 0 || getPosition().x < -(getLocalBounds().width * getScale().x)) { alive = false; }
-	move(moveSpeedX * 0.25 * timeElapsed, 0);
+	move(moveSpeedX * 0.25f * timeElapsed, 0);
 	if (shootCooldown >= 3.f) {
 		Projectile* projectile = new Projectile;
 		projectile->setId(getId());
@@ -335,7 +335,7 @@ bool Boss::behavior(float timeElapsed, Player& player, std::vector<Projectile*>&
 	if (alive) {
 
 		if (getPosition().x - (getLocalBounds().width * getScale().x) / 2 > window.getSize().x / 1.9) {
-			move(moveSpeedX * 0.24 * timeElapsed, moveSpeedY * timeElapsed);
+			move(moveSpeedX * 0.24f * timeElapsed, moveSpeedY * timeElapsed);
 			spawning = true;
 		}
 		else {
